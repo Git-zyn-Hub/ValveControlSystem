@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ValveControlSystem.Windows;
 
 namespace ValveControlSystem
 {
@@ -66,6 +67,28 @@ namespace ValveControlSystem
                         MessageBox.Show("校验和出错！");
                         continue;
                     }
+                    if (bytesActualRecv[0] == 0xff && bytesActualRecv[1] == 0 && bytesActualRecv[2] == 0xaa && bytesActualRecv[3] == 0x55)
+                    {
+                        if (bytesActualRecv[4] == 0x0f)
+                        {
+                            if (bytesActualRecv[5] == 0x01)
+                            {
+
+                            }
+                            else
+                            {
+                                MessageBox.Show("接收数据类型错误！");
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("接收数据地址错误！");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("接收数据帧头错误！");
+                    }
                 }
             }
             catch (Exception ee)
@@ -80,8 +103,14 @@ namespace ValveControlSystem
             {
                 if (_socketConnect != null)
                 {
-                    byte[] sendData = _sendDataPackage.PackageSendData(0xff, 0x01, 0x01);
-                    _socketConnect.Send(sendData, SocketFlags.None);
+                    SelectToolNoWindow theSelectToolNoWin = new SelectToolNoWindow();
+                    theSelectToolNoWin.Owner = this;
+                    theSelectToolNoWin.ShowDialog();
+                    if (theSelectToolNoWin.DialogResult.Value)
+                    {
+                        byte[] sendData = _sendDataPackage.PackageSendData(0xff, 0x01, (byte)theSelectToolNoWin.ToolNo);
+                        _socketConnect.Send(sendData, SocketFlags.None);
+                    }
                 }
                 else
                 {
