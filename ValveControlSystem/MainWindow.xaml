@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ValveControlSystem"
         mc:Ignorable="d"
-        Title="阀控系统采集" Height="350" Width="525">
+        Title="阀控系统采集" Height="700" Width="1000">
     <Grid>
-        
+        <Menu x:Name="menuMain" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <MenuItem x:Name="miConnect" Header="连接" Click="miConnect_Click"></MenuItem>
+            <MenuItem x:Name="miReadData" Header="读取" Click="miReadData_Click"></MenuItem>
+        </Menu>
     </Grid>
 </Window>
