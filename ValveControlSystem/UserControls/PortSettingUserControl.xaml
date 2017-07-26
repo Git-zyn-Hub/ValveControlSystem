@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="ValveControlSystem.UserControls.PortSettingUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:ValveControlSystem"
+             x:Name="settingUserCtrl"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Width="280">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="37*"/>
+            <ColumnDefinition Width="63*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18">串口设置</Label>
+        <Label Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15">串口：</Label>
+        <Label Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15">波特率：</Label>
+        <Label Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15">校验位：</Label>
+        <Label Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15">数据位：</Label>
+        <Label Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15">停止位：</Label>
+        <ComboBox x:Name="cmbSerialPort" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Loaded="cmbSerialPort_Loaded"
+                  ItemsSource="{Binding SerialPortItems,ElementName=settingUserCtrl}" SelectedIndex="0"></ComboBox>
+        <ComboBox x:Name="cmbBaudRate" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" SelectedIndex="9" SelectedValuePath="Content">
+            <ComboBoxItem>256000</ComboBoxItem>
+            <ComboBoxItem>128000</ComboBoxItem>
+            <ComboBoxItem>115200</ComboBoxItem>
+            <ComboBoxItem>57600</ComboBoxItem>
+            <ComboBoxItem>56000</ComboBoxItem>
+            <ComboBoxItem>43000</ComboBoxItem>
+            <ComboBoxItem>38400</ComboBoxItem>
+            <ComboBoxItem>28800</ComboBoxItem>
+            <ComboBoxItem>19200</ComboBoxItem>
+            <ComboBoxItem>9600</ComboBoxItem>
+            <ComboBoxItem>4800</ComboBoxItem>
+            <ComboBoxItem>2400</ComboBoxItem>
+            <ComboBoxItem>1200</ComboBoxItem>
+            <ComboBoxItem>600</ComboBoxItem>
+            <ComboBoxItem>300</ComboBoxItem>
+            <ComboBoxItem>110</ComboBoxItem>
+        </ComboBox>
+        <ComboBox x:Name="cmbCheckBit" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" SelectedIndex="0" SelectedValuePath="Content">
+            <ComboBoxItem>NONE</ComboBoxItem>
+            <ComboBoxItem>ODD</ComboBoxItem>
+            <ComboBoxItem>EVEN</ComboBoxItem>
+            <ComboBoxItem>MARK</ComboBoxItem>
+            <ComboBoxItem>SPACE</ComboBoxItem>
+        </ComboBox>
+        <ComboBox x:Name="cmbDataBit" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" SelectedIndex="0" SelectedValuePath="Content">
+            <ComboBoxItem>8</ComboBoxItem>
+            <ComboBoxItem>7</ComboBoxItem>
+            <ComboBoxItem>6</ComboBoxItem>
+        </ComboBox>
+        <ComboBox x:Name="cmbStopBit" Grid.Column="1" Grid.Row="5" VerticalAlignment="Center" SelectedIndex="0" SelectedValuePath="Content">
+            <ComboBoxItem>1</ComboBoxItem>
+            <ComboBoxItem>1.5</ComboBoxItem>
+            <ComboBoxItem>2</ComboBoxItem>
+        </ComboBox>
+        <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="btnOK" Height="30" Width="60" Click="btnOK_Click">确认</Button>
+            <Button x:Name="btnQuit" Height="30" Width="60" Margin="30,0,0,0" Click="btnQuit_Click">取消</Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

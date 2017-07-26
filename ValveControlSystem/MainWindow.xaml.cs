@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -15,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ValveControlSystem.UserControls;
 using ValveControlSystem.Windows;
 
 namespace ValveControlSystem
@@ -26,7 +28,22 @@ namespace ValveControlSystem
     {
         private Socket _socketConnect;
         private Thread _socketListenThread;
+        private Window _container;
+        private SerialPort _serialPort1 = new SerialPort();
         private SendDataPackage _sendDataPackage = new SendDataPackage();
+        private ConnectType _connType = ConnectType.Notconnected;
+
+        public SerialPort SerialPort
+        {
+            get { return _serialPort1; }
+            set
+            {
+                if (_serialPort1 != value)
+                {
+                    _serialPort1 = value;
+                }
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -93,28 +110,93 @@ namespace ValveControlSystem
             }
             catch (Exception ee)
             {
-                MessageBox.Show("Socket接收线程异常" + ee.Message);
+                MessageBox.Show("Socket接收线程异常:" + ee.Message);
+                DisableEthernetConnect();
             }
         }
-
-        private void miReadData_Click(object sender, RoutedEventArgs e)
+        public void SettingWinClose()
+        {
+            this._container.Close();
+            this._container = null;
+        }
+        public bool SerialPortInitialize()
+        {
+            if (_serialPort1.IsOpen)
+            {
+                MessageBox.Show("串口早就打开了有木有!");
+                return false;
+            }
+            else
+            {
+                try
+                {
+                    _serialPort1.Open();
+                    _serialPort1.DataReceived += new SerialDataReceivedEventHandler(serialPort1_DataReceived);
+                    MessageBox.Show("端口打开！");
+                    SettingWinClose();
+                    return true;
+                }
+                catch (Exception ee)
+                {
+                    MessageBox.Show("端口无法打开! " + ee.Message);
+                    return false;
+                }
+            }
+        }
+        private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             try
             {
-                if (_socketConnect != null)
+                byte[] buffer = new byte[4096];
+                int bytesCount = _serialPort1.Read(buffer, 0, 4096);
+
+                int checkSum;
+                byte[] receivedData = new byte[bytesCount];
+                for (int i = 0; i < bytesCount; i++)
                 {
-                    SelectToolNoWindow theSelectToolNoWin = new SelectToolNoWindow();
-                    theSelectToolNoWin.Owner = this;
-                    theSelectToolNoWin.ShowDialog();
-                    if (theSelectToolNoWin.DialogResult.Value)
+                    receivedData[i] = buffer[i];
+                }
+
+                //计算校验和
+                checkSum = 0;
+                for (int i = 0; i < receivedData.Length; i++)
+                {
+                    if (i < receivedData.Length - 2)
                     {
-                        byte[] sendData = _sendDataPackage.PackageSendData(0xff, 0x01, (byte)theSelectToolNoWin.ToolNo);
-                        _socketConnect.Send(sendData, SocketFlags.None);
+                        checkSum += receivedData[i];
+                    }
+                }
+                if (receivedData.Length - 2 < 0)
+                {
+                    MessageBox.Show("接收数据长度小于2");
+                    return;
+                }
+                if (!checkCheckSum(checkSum, receivedData))
+                {
+                    MessageBox.Show("校验和出错！");
+                    return;
+                }
+                if (receivedData[0] == 0xff && receivedData[1] == 0 && receivedData[2] == 0xaa && receivedData[3] == 0x55)
+                {
+                    if (receivedData[4] == 0x0f)
+                    {
+                        if (receivedData[5] == 0x01)
+                        {
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("接收数据类型错误！");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("接收数据地址错误！");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Socket为空，请先连接！");
+                    MessageBox.Show("接收数据帧头错误！");
                 }
             }
             catch (Exception ee)
@@ -123,7 +205,64 @@ namespace ValveControlSystem
             }
         }
 
-        private void miConnect_Click(object sender, RoutedEventArgs e)
+        private void miReadData_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                switch (_connType)
+                {
+                    case ConnectType.Notconnected:
+                        MessageBox.Show("未连接，请先连接！");
+                        break;
+                    case ConnectType.Ethernet:
+                        {
+                            if (_socketConnect != null)
+                            {
+                                SelectToolNoWindow theSelectToolNoWin = new SelectToolNoWindow();
+                                theSelectToolNoWin.Owner = this;
+                                theSelectToolNoWin.ShowDialog();
+                                if (theSelectToolNoWin.DialogResult.Value)
+                                {
+                                    byte[] sendData = _sendDataPackage.PackageSendData(0xff, 0x01, (byte)theSelectToolNoWin.ToolNo);
+                                    _socketConnect.Send(sendData, SocketFlags.None);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Socket为空，请检查‘以太网’是否连接！");
+                            }
+                        }
+                        break;
+                    case ConnectType.SerialPort:
+                        {
+                            if (_serialPort1.IsOpen)
+                            {
+                                SelectToolNoWindow theSelectToolNoWin = new SelectToolNoWindow();
+                                theSelectToolNoWin.Owner = this;
+                                theSelectToolNoWin.ShowDialog();
+                                if (theSelectToolNoWin.DialogResult.Value)
+                                {
+                                    byte[] buffer = _sendDataPackage.PackageSendData(0xff, 0x01, (byte)theSelectToolNoWin.ToolNo);
+                                    _serialPort1.Write(buffer, 0, buffer.Length);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("串口已经关闭。");
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
+        }
+
+        private void miEthernetConnect_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -132,14 +271,64 @@ namespace ValveControlSystem
                 _socketConnect = new Socket(groundBoxIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _socketConnect.Connect(groundBoxIP);
 
-                MessageBox.Show("连接成功！");
-                this.miConnect.Background = new SolidColorBrush(Colors.LightGreen);
+                MessageBox.Show("以太网连接成功！");
+                EnableEthernetConnect();
                 _socketListenThread.Start();
             }
             catch (Exception ee)
             {
-                MessageBox.Show("连接异常：" + ee.Message);
+                MessageBox.Show("以太网连接异常：" + ee.Message);
             }
+        }
+
+        private void miPortConnect_Click(object sender, RoutedEventArgs e)
+        {
+            PortSettingUserControl newSettings = new PortSettingUserControl(this);
+            if (_container == null)
+            {
+                _container = new Window();
+                _container.Height = 300;
+                _container.Width = 300;
+                _container.Owner = this;
+                _container.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                _container.Closed += container_Closed;
+
+                _container.Content = newSettings;
+                _container.Show();
+            }
+        }
+        private void container_Closed(object sender, EventArgs e)
+        {
+            SettingWinClose();
+            this.Activate();
+        }
+
+        public void EnableEthernetConnect()
+        {
+            this.miEthernetConnect.Background = new SolidColorBrush(Colors.LightGreen);
+            this.miPortConnect.IsEnabled = false;
+            _connType = ConnectType.Ethernet;
+        }
+
+        public void EnablePortConnect()
+        {
+            this.miEthernetConnect.IsEnabled = false;
+            this.miPortConnect.Background = new SolidColorBrush(Colors.LightGreen);
+            _connType = ConnectType.SerialPort;
+        }
+
+        public void DisableEthernetConnect()
+        {
+            this.miEthernetConnect.Background = new SolidColorBrush(Color.FromArgb(0, 0xff, 0xff, 0xff));
+            this.miPortConnect.IsEnabled = true;
+            _connType = ConnectType.Notconnected;
+        }
+
+        public void DisablePortConnect()
+        {
+            this.miEthernetConnect.IsEnabled = true;
+            this.miPortConnect.Background = new SolidColorBrush(Color.FromArgb(0, 0xff, 0xff, 0xff));
+            _connType = ConnectType.Notconnected;
         }
 
         /// <summary>
