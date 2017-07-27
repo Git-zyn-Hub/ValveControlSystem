@@ -111,7 +111,10 @@ namespace ValveControlSystem
             catch (Exception ee)
             {
                 MessageBox.Show("Socket接收线程异常:" + ee.Message);
-                DisableEthernetConnect();
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    DisableEthernetConnect();
+                }));
             }
         }
         public void SettingWinClose()
@@ -359,6 +362,11 @@ namespace ValveControlSystem
             {
                 return false;
             }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

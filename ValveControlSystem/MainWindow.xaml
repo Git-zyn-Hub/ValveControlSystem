@@ -4,8 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ValveControlSystem"
-        mc:Ignorable="d"
-        Title="阀控系统采集" Height="700" Width="1000">
+        mc:Ignorable="d" Closed="Window_Closed"
+        Title="智能高温脉冲接收系统"
+        Height="700" Width="1000"
+        MinHeight="300" MinWidth="450">
     <Grid>
         <Menu x:Name="menuMain" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top">
             <MenuItem x:Name="miEthernetConnect" Header="以太网连接" Click="miEthernetConnect_Click"></MenuItem>
