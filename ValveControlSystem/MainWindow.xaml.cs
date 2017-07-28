@@ -227,7 +227,7 @@ namespace ValveControlSystem
                                 theSelectToolNoWin.ShowDialog();
                                 if (theSelectToolNoWin.DialogResult.Value)
                                 {
-                                    byte[] sendData = _sendDataPackage.PackageSendData(0xff, 0x01, (byte)theSelectToolNoWin.ToolNo);
+                                    byte[] sendData = _sendDataPackage.PackageSendData((byte)theSelectToolNoWin.ToolNo);
                                     _socketConnect.Send(sendData, SocketFlags.None);
                                 }
                             }
@@ -246,7 +246,7 @@ namespace ValveControlSystem
                                 theSelectToolNoWin.ShowDialog();
                                 if (theSelectToolNoWin.DialogResult.Value)
                                 {
-                                    byte[] buffer = _sendDataPackage.PackageSendData(0xff, 0x01, (byte)theSelectToolNoWin.ToolNo);
+                                    byte[] buffer = _sendDataPackage.PackageSendData((byte)theSelectToolNoWin.ToolNo);
                                     _serialPort1.Write(buffer, 0, buffer.Length);
                                 }
                             }
@@ -398,8 +398,69 @@ namespace ValveControlSystem
 
         private void CommandMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            if (_connType == ConnectType.Notconnected)
+            {
+                MessageBox.Show("未连接，请先连接！");
+                return;
+            }
             MenuItem miCommandSender = sender as MenuItem;
+            int? toolNo = getFirstNumInString(miCommandSender.Tag.ToString());
+            if (!toolNo.HasValue)
+            {
+                toolNo = 0;
+            }
+            CommandType cmdType = (CommandType)Enum.Parse(typeof(CommandType), miCommandSender.Tag.ToString());
+            byte[] sendData = _sendDataPackage.PackageSendData((byte)toolNo.Value, cmdType);
+            switch (_connType)
+            {
+                case ConnectType.Notconnected:
+                    break;
+                case ConnectType.Ethernet:
+                    {
+                        if (_socketConnect != null)
+                        {
+                            _socketConnect.Send(sendData, SocketFlags.None);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Socket为空，请检查‘以太网’是否连接！");
+                        }
+                    }
+                    break;
+                case ConnectType.SerialPort:
+                    {
+                        if (_serialPort1.IsOpen)
+                        {
+                            _serialPort1.Write(sendData, 0, sendData.Length);
+                        }
+                        else
+                        {
+                            MessageBox.Show("串口已经关闭。");
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
+        private int? getFirstNumInString(string str)
+        {
+
+            char[] charArray = str.ToCharArray();
+            int num;
+            for (int i = 0; i < charArray.Length; i++)
+            {
+                if (!int.TryParse(charArray[i].ToString(), out num))
+                {
+                    continue;
+                }
+                else
+                {
+                    return num;
+                }
+            }
+            return null;
         }
     }
 }
