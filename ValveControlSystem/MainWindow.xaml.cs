@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ValveControlSystem.Classes;
 using ValveControlSystem.UserControls;
 using ValveControlSystem.Windows;
 
@@ -367,6 +368,38 @@ namespace ValveControlSystem
         private void Window_Closed(object sender, EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void miCommand_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                foreach (int cmdNo in Enum.GetValues(typeof(CommandType)))
+                {
+                    string strName = Enum.GetName(typeof(CommandType), cmdNo);//获取名称
+                    CommandType cmdType = (CommandType)Enum.Parse(typeof(CommandType), strName);
+                    MenuItem oneMenuItem = new MenuItem();
+                    oneMenuItem.Header = CommandType2StringConverter.CommandType2String(cmdType);
+                    oneMenuItem.Click += CommandMenuItem_Click;
+                    oneMenuItem.Tag = cmdType;
+                    this.miCommand.Items.Add(oneMenuItem);
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("窗口加载异常：" + ee.Message);
+            }
+        }
+
+        private void CommandMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem miCommandSender = sender as MenuItem;
+
         }
     }
 }

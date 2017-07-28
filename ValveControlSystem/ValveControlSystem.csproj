@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\CommandType2String.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="UserControls\PortSettingUserControl.xaml.cs">
       <DependentUpon>PortSettingUserControl.xaml</DependentUpon>
