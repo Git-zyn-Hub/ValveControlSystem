@@ -66,6 +66,17 @@ namespace ValveControlSystem
                     {
                         bytesActualRecv[i] = receivedBytes[i];
                     }
+
+                    string strTest = string.Empty;
+                    for (int i = 0; i < bytesActualRecv.Length; i++)
+                    {
+                        strTest += bytesActualRecv[i].ToString("X2");
+                    }
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        this.txtTestReceive.Text = strTest;
+                        this.originalData.AddReceiveData(bytesActualRecv, bytesActualRecv.Length);
+                    }));
                     //计算校验和
                     checkSum = 0;
                     for (int i = 0; i < bytesActualRecv.Length; i++)
@@ -85,28 +96,11 @@ namespace ValveControlSystem
                         MessageBox.Show("校验和出错！");
                         continue;
                     }
-                    if (bytesActualRecv[0] == 0xff && bytesActualRecv[1] == 0 && bytesActualRecv[2] == 0xaa && bytesActualRecv[3] == 0x55)
-                    {
-                        if (bytesActualRecv[4] == 0x0f)
-                        {
-                            if (bytesActualRecv[5] == 0x01)
-                            {
 
-                            }
-                            else
-                            {
-                                MessageBox.Show("接收数据类型错误！");
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("接收数据地址错误！");
-                        }
-                    }
-                    else
+                    this.Dispatcher.Invoke(new Action(() =>
                     {
-                        MessageBox.Show("接收数据帧头错误！");
-                    }
+                        handleReceivedData(bytesActualRecv);
+                    }));
                 }
             }
             catch (Exception ee)
@@ -151,6 +145,7 @@ namespace ValveControlSystem
         {
             try
             {
+                Thread.Sleep(800);
                 byte[] buffer = new byte[4096];
                 int bytesCount = _serialPort1.Read(buffer, 0, 4096);
 
@@ -160,6 +155,17 @@ namespace ValveControlSystem
                 {
                     receivedData[i] = buffer[i];
                 }
+
+                string strTest = string.Empty;
+                for (int i = 0; i < receivedData.Length; i++)
+                {
+                    strTest += receivedData[i].ToString("X2");
+                }
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.txtTestReceive.Text = strTest;
+                    this.originalData.AddReceiveData(receivedData, receivedData.Length);
+                }));
 
                 //计算校验和
                 checkSum = 0;
@@ -180,28 +186,10 @@ namespace ValveControlSystem
                     MessageBox.Show("校验和出错！");
                     return;
                 }
-                if (receivedData[0] == 0xff && receivedData[1] == 0 && receivedData[2] == 0xaa && receivedData[3] == 0x55)
+                this.Dispatcher.Invoke(new Action(() =>
                 {
-                    if (receivedData[4] == 0x0f)
-                    {
-                        if (receivedData[5] == 0x01)
-                        {
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("接收数据类型错误！");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("接收数据地址错误！");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("接收数据帧头错误！");
-                }
+                    handleReceivedData(receivedData);
+                }));
             }
             catch (Exception ee)
             {
@@ -270,7 +258,7 @@ namespace ValveControlSystem
         {
             try
             {
-                string strIP = "192.168.1.10";
+                string strIP = "192.168.1.12";
                 IPEndPoint groundBoxIP = new IPEndPoint(IPAddress.Parse(strIP), 1032);
                 _socketConnect = new Socket(groundBoxIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _socketConnect.Connect(groundBoxIP);
@@ -411,10 +399,11 @@ namespace ValveControlSystem
             }
             CommandType cmdType = (CommandType)Enum.Parse(typeof(CommandType), miCommandSender.Tag.ToString());
             byte[] sendData = _sendDataPackage.PackageSendData((byte)toolNo.Value, cmdType);
+
             switch (_connType)
             {
                 case ConnectType.Notconnected:
-                    break;
+                    return;
                 case ConnectType.Ethernet:
                     {
                         if (_socketConnect != null)
@@ -424,6 +413,7 @@ namespace ValveControlSystem
                         else
                         {
                             MessageBox.Show("Socket为空，请检查‘以太网’是否连接！");
+                            return;
                         }
                     }
                     break;
@@ -436,12 +426,26 @@ namespace ValveControlSystem
                         else
                         {
                             MessageBox.Show("串口已经关闭。");
+                            return;
                         }
                     }
                     break;
                 default:
-                    break;
+                    return;
             }
+
+            string strTest = string.Empty;
+            for (int i = 0; i < sendData.Length; i++)
+            {
+                strTest += sendData[i].ToString("X2");
+            }
+            string dataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType);
+            this.Dispatcher.Invoke(new Action(() =>
+            {
+                this.txtTestSend.Text = strTest;
+                this.originalData.AddSendData(sendData);
+                this.originalData.AddDataInfo(dataInfo, DataLevel.Default);
+            }));
         }
 
         private int? getFirstNumInString(string str)
@@ -461,6 +465,40 @@ namespace ValveControlSystem
                 }
             }
             return null;
+        }
+
+        private void handleReceivedData(byte[] receivedData)
+        {
+            if (receivedData[0] == 0xff && receivedData[1] == 0 && receivedData[2] == 0xaa && receivedData[3] == 0x55)
+            {
+                if (receivedData[4] == 0x00)
+                {
+                    CommandType cmdType = (CommandType)receivedData[7];
+                    string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType) + " ";
+                    if (receivedData[8] == (byte)CommandState.状态正常)
+                    {
+                        receiveDataInfo += CommandState.状态正常.ToString();
+                        this.originalData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                    }
+                    else if (receivedData[8] == (byte)CommandState.状态异常)
+                    {
+                        receiveDataInfo += CommandState.状态异常.ToString();
+                        this.originalData.AddDataInfo(receiveDataInfo, DataLevel.Error);
+                    }
+                    else
+                    {
+                        this.originalData.AddDataInfo("回送的状态位错误", DataLevel.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("接收数据方向错误！");
+                }
+            }
+            else
+            {
+                MessageBox.Show("接收数据帧头错误！");
+            }
         }
     }
 }

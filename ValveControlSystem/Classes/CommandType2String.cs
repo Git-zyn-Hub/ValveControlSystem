@@ -58,5 +58,11 @@ namespace ValveControlSystem.Classes
             }
             return ((int)cmdType).ToString() + "." + result;
         }
+
+
+        public static string CommandType2StringWithNo(CommandType cmdType)
+        {
+            return "指令" + CommandType2String(cmdType);
+        }
     }
 }

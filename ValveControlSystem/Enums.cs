@@ -43,4 +43,18 @@ namespace ValveControlSystem
         阀自动序列B型指令_AVS_B,
         阀自动序列A型或者B型_AVS
     }
+
+    public enum DataLevel
+    {
+        Default,
+        Normal,
+        Warning,
+        Error
+    }
+
+    public enum CommandState
+    {
+        状态正常 = 0x00,
+        状态异常 = 0x99
+    }
 }

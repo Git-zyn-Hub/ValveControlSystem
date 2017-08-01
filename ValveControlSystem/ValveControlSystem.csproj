@@ -60,6 +60,9 @@
     </ApplicationDefinition>
     <Compile Include="Classes\CommandType2String.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="UserControls\OriginalDataUserControl.xaml.cs">
+      <DependentUpon>OriginalDataUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\PortSettingUserControl.xaml.cs">
       <DependentUpon>PortSettingUserControl.xaml</DependentUpon>
     </Compile>
@@ -79,6 +82,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\OriginalDataUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\PortSettingUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
