@@ -33,6 +33,7 @@ namespace ValveControlSystem
         private SerialPort _serialPort1 = new SerialPort();
         private SendDataPackage _sendDataPackage = new SendDataPackage();
         private ConnectType _connType = ConnectType.Notconnected;
+        private CommandType _cmdTypeLastSend;
 
         public SerialPort SerialPort
         {
@@ -48,7 +49,6 @@ namespace ValveControlSystem
         public MainWindow()
         {
             InitializeComponent();
-            _socketListenThread = new Thread(socketListening);
         }
 
         private void socketListening()
@@ -102,6 +102,23 @@ namespace ValveControlSystem
                         handleReceivedData(bytesActualRecv);
                     }));
                 }
+            }
+            catch (SocketException ex)
+            {
+                MessageBox.Show("Socket接收线程异常:编号" + ex.ErrorCode + "," + ex.Message);
+                switch (ex.ErrorCode)
+                {
+                    case 10053:
+                    case 10054:
+                        break;
+                    default:
+                        MessageBox.Show("发生未处理异常！");
+                        break;
+                }
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    DisableEthernetConnect();
+                }));
             }
             catch (Exception ee)
             {
@@ -217,6 +234,9 @@ namespace ValveControlSystem
                                 {
                                     byte[] sendData = _sendDataPackage.PackageSendData((byte)theSelectToolNoWin.ToolNo);
                                     _socketConnect.Send(sendData, SocketFlags.None);
+
+                                    this.originalData.AddSendData(sendData);
+                                    this.originalData.AddDataInfo("回放指令", DataLevel.Default);
                                 }
                             }
                             else
@@ -236,6 +256,9 @@ namespace ValveControlSystem
                                 {
                                     byte[] buffer = _sendDataPackage.PackageSendData((byte)theSelectToolNoWin.ToolNo);
                                     _serialPort1.Write(buffer, 0, buffer.Length);
+
+                                    this.originalData.AddSendData(buffer);
+                                    this.originalData.AddDataInfo("回放指令", DataLevel.Default);
                                 }
                             }
                             else
@@ -258,13 +281,14 @@ namespace ValveControlSystem
         {
             try
             {
-                string strIP = "192.168.1.12";
+                string strIP = "192.168.1.10";
                 IPEndPoint groundBoxIP = new IPEndPoint(IPAddress.Parse(strIP), 1032);
                 _socketConnect = new Socket(groundBoxIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _socketConnect.Connect(groundBoxIP);
 
                 MessageBox.Show("以太网连接成功！");
                 EnableEthernetConnect();
+                _socketListenThread = new Thread(socketListening);
                 _socketListenThread.Start();
             }
             catch (Exception ee)
@@ -386,66 +410,90 @@ namespace ValveControlSystem
 
         private void CommandMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (_connType == ConnectType.Notconnected)
+            try
             {
-                MessageBox.Show("未连接，请先连接！");
-                return;
-            }
-            MenuItem miCommandSender = sender as MenuItem;
-            int? toolNo = getFirstNumInString(miCommandSender.Tag.ToString());
-            if (!toolNo.HasValue)
-            {
-                toolNo = 0;
-            }
-            CommandType cmdType = (CommandType)Enum.Parse(typeof(CommandType), miCommandSender.Tag.ToString());
-            byte[] sendData = _sendDataPackage.PackageSendData((byte)toolNo.Value, cmdType);
-
-            switch (_connType)
-            {
-                case ConnectType.Notconnected:
+                if (_connType == ConnectType.Notconnected)
+                {
+                    MessageBox.Show("未连接，请先连接！");
                     return;
-                case ConnectType.Ethernet:
-                    {
-                        if (_socketConnect != null)
-                        {
-                            _socketConnect.Send(sendData, SocketFlags.None);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Socket为空，请检查‘以太网’是否连接！");
-                            return;
-                        }
-                    }
-                    break;
-                case ConnectType.SerialPort:
-                    {
-                        if (_serialPort1.IsOpen)
-                        {
-                            _serialPort1.Write(sendData, 0, sendData.Length);
-                        }
-                        else
-                        {
-                            MessageBox.Show("串口已经关闭。");
-                            return;
-                        }
-                    }
-                    break;
-                default:
-                    return;
-            }
+                }
+                MenuItem miCommandSender = sender as MenuItem;
+                int? toolNo = getFirstNumInString(miCommandSender.Tag.ToString());
+                if (!toolNo.HasValue)
+                {
+                    toolNo = 0;
+                }
+                CommandType cmdType = (CommandType)Enum.Parse(typeof(CommandType), miCommandSender.Tag.ToString());
+                byte[] sendData = _sendDataPackage.PackageSendData((byte)toolNo.Value, cmdType);
 
-            string strTest = string.Empty;
-            for (int i = 0; i < sendData.Length; i++)
-            {
-                strTest += sendData[i].ToString("X2");
+                switch (_connType)
+                {
+                    case ConnectType.Notconnected:
+                        return;
+                    case ConnectType.Ethernet:
+                        {
+                            if (_socketConnect != null)
+                            {
+                                _socketConnect.Send(sendData, SocketFlags.None);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Socket为空，请检查‘以太网’是否连接！");
+                                return;
+                            }
+                        }
+                        break;
+                    case ConnectType.SerialPort:
+                        {
+                            if (_serialPort1.IsOpen)
+                            {
+                                _serialPort1.Write(sendData, 0, sendData.Length);
+                            }
+                            else
+                            {
+                                MessageBox.Show("串口已经关闭。");
+                                return;
+                            }
+                        }
+                        break;
+                    default:
+                        return;
+                }
+
+                string strTest = string.Empty;
+                for (int i = 0; i < sendData.Length; i++)
+                {
+                    strTest += sendData[i].ToString("X2");
+                }
+                string dataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType);
+                _cmdTypeLastSend = cmdType;
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.txtTestSend.Text = strTest;
+                    this.originalData.AddSendData(sendData);
+                    this.originalData.AddDataInfo(dataInfo, DataLevel.Default);
+                }));
             }
-            string dataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType);
-            this.Dispatcher.Invoke(new Action(() =>
+            catch (SocketException ex)
             {
-                this.txtTestSend.Text = strTest;
-                this.originalData.AddSendData(sendData);
-                this.originalData.AddDataInfo(dataInfo, DataLevel.Default);
-            }));
+                MessageBox.Show("Socket发送异常:编号" + ex.ErrorCode + "," + ex.Message);
+                switch (ex.ErrorCode)
+                {
+                    case 10054:
+                        break;
+                    default:
+                        MessageBox.Show("发生未处理异常！");
+                        break;
+                }
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    DisableEthernetConnect();
+                }));
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
         }
 
         private int? getFirstNumInString(string str)
@@ -473,21 +521,22 @@ namespace ValveControlSystem
             {
                 if (receivedData[4] == 0x00)
                 {
-                    CommandType cmdType = (CommandType)receivedData[7];
-                    string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType) + " ";
-                    if (receivedData[8] == (byte)CommandState.状态正常)
+                    if (receivedData[5] == 3 && receivedData[8] == (byte)CommandState.状态异常)
                     {
-                        receiveDataInfo += CommandState.状态正常.ToString();
-                        this.originalData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
-                    }
-                    else if (receivedData[8] == (byte)CommandState.状态异常)
-                    {
+                        string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(_cmdTypeLastSend) + " ";
                         receiveDataInfo += CommandState.状态异常.ToString();
                         this.originalData.AddDataInfo(receiveDataInfo, DataLevel.Error);
                     }
+                    else if (receivedData[5] == 5 && receivedData[8] == (byte)CommandState.状态正常)
+                    {
+                        CommandType cmdType = (CommandType)receivedData[7];
+                        string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType) + " ";
+                        receiveDataInfo += CommandState.状态正常.ToString();
+                        this.originalData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                    }
                     else
                     {
-                        this.originalData.AddDataInfo("回送的状态位错误", DataLevel.Error);
+                        this.originalData.AddDataInfo("回送的状态位错误或长度错误", DataLevel.Error);
                     }
                 }
                 else
