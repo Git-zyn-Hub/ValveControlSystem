@@ -57,4 +57,10 @@ namespace ValveControlSystem
         状态正常 = 0x00,
         状态异常 = 0x99
     }
+
+    public enum ReceiveCommandType
+    {
+        普通指令 = 0x00,
+        回放指令 = 0x01
+    }
 }

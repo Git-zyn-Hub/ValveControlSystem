@@ -34,6 +34,8 @@ namespace ValveControlSystem
         private SendDataPackage _sendDataPackage = new SendDataPackage();
         private ConnectType _connType = ConnectType.Notconnected;
         private CommandType _cmdTypeLastSend;
+        private List<Window> _childrenWindow = new List<Window>();
+        private OriginalDataUserControl _originData = new OriginalDataUserControl();
 
         public SerialPort SerialPort
         {
@@ -67,15 +69,15 @@ namespace ValveControlSystem
                         bytesActualRecv[i] = receivedBytes[i];
                     }
 
-                    string strTest = string.Empty;
-                    for (int i = 0; i < bytesActualRecv.Length; i++)
-                    {
-                        strTest += bytesActualRecv[i].ToString("X2");
-                    }
+                    //string strTest = string.Empty;
+                    //for (int i = 0; i < bytesActualRecv.Length; i++)
+                    //{
+                    //    strTest += bytesActualRecv[i].ToString("X2");
+                    //}
                     this.Dispatcher.Invoke(new Action(() =>
                     {
-                        this.txtTestReceive.Text = strTest;
-                        this.originalData.AddReceiveData(bytesActualRecv, bytesActualRecv.Length);
+                        //this.txtTestReceive.Text = strTest;
+                        this._originData.AddReceiveData(bytesActualRecv, bytesActualRecv.Length);
                     }));
                     //计算校验和
                     checkSum = 0;
@@ -173,15 +175,15 @@ namespace ValveControlSystem
                     receivedData[i] = buffer[i];
                 }
 
-                string strTest = string.Empty;
-                for (int i = 0; i < receivedData.Length; i++)
-                {
-                    strTest += receivedData[i].ToString("X2");
-                }
+                //string strTest = string.Empty;
+                //for (int i = 0; i < receivedData.Length; i++)
+                //{
+                //    strTest += receivedData[i].ToString("X2");
+                //}
                 this.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.txtTestReceive.Text = strTest;
-                    this.originalData.AddReceiveData(receivedData, receivedData.Length);
+                    //this.txtTestReceive.Text = strTest;
+                    this._originData.AddReceiveData(receivedData, receivedData.Length);
                 }));
 
                 //计算校验和
@@ -235,8 +237,8 @@ namespace ValveControlSystem
                                     byte[] sendData = _sendDataPackage.PackageSendData((byte)theSelectToolNoWin.ToolNo);
                                     _socketConnect.Send(sendData, SocketFlags.None);
 
-                                    this.originalData.AddSendData(sendData);
-                                    this.originalData.AddDataInfo("回放指令", DataLevel.Default);
+                                    this._originData.AddSendData(sendData);
+                                    this._originData.AddDataInfo("回放指令", DataLevel.Default);
                                 }
                             }
                             else
@@ -257,8 +259,8 @@ namespace ValveControlSystem
                                     byte[] buffer = _sendDataPackage.PackageSendData((byte)theSelectToolNoWin.ToolNo);
                                     _serialPort1.Write(buffer, 0, buffer.Length);
 
-                                    this.originalData.AddSendData(buffer);
-                                    this.originalData.AddDataInfo("回放指令", DataLevel.Default);
+                                    this._originData.AddSendData(buffer);
+                                    this._originData.AddDataInfo("回放指令", DataLevel.Default);
                                 }
                             }
                             else
@@ -460,18 +462,18 @@ namespace ValveControlSystem
                         return;
                 }
 
-                string strTest = string.Empty;
-                for (int i = 0; i < sendData.Length; i++)
-                {
-                    strTest += sendData[i].ToString("X2");
-                }
+                //string strTest = string.Empty;
+                //for (int i = 0; i < sendData.Length; i++)
+                //{
+                //    strTest += sendData[i].ToString("X2");
+                //}
                 string dataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType);
                 _cmdTypeLastSend = cmdType;
                 this.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.txtTestSend.Text = strTest;
-                    this.originalData.AddSendData(sendData);
-                    this.originalData.AddDataInfo(dataInfo, DataLevel.Default);
+                    //this.txtTestSend.Text = strTest;
+                    this._originData.AddSendData(sendData);
+                    this._originData.AddDataInfo(dataInfo, DataLevel.Default);
                 }));
             }
             catch (SocketException ex)
@@ -521,23 +523,38 @@ namespace ValveControlSystem
             {
                 if (receivedData[4] == 0x00)
                 {
-                    if (receivedData[5] == 3 && receivedData[8] == (byte)CommandState.状态异常)
+                    //指令类型不能为3，因为已经被“状态异常”占用。
+                    if (receivedData[5] == 3 && receivedData[6] == (byte)CommandState.状态异常)
                     {
                         string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(_cmdTypeLastSend) + " ";
                         receiveDataInfo += CommandState.状态异常.ToString();
-                        this.originalData.AddDataInfo(receiveDataInfo, DataLevel.Error);
-                    }
-                    else if (receivedData[5] == 5 && receivedData[8] == (byte)CommandState.状态正常)
-                    {
-                        CommandType cmdType = (CommandType)receivedData[7];
-                        string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType) + " ";
-                        receiveDataInfo += CommandState.状态正常.ToString();
-                        this.originalData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                        this._originData.AddDataInfo(receiveDataInfo, DataLevel.Error);
                     }
                     else
                     {
-                        this.originalData.AddDataInfo("回送的状态位错误或长度错误", DataLevel.Error);
+                        switch (receivedData[5])
+                        {
+                            case (byte)ReceiveCommandType.普通指令:
+                                {
+                                    if (receivedData[6] == 5 && receivedData[9] == (byte)CommandState.状态正常)
+                                    {
+                                        CommandType cmdType = (CommandType)receivedData[8];
+                                        string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType) + " ";
+                                        receiveDataInfo += CommandState.状态正常.ToString();
+                                        this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                    }
+                                }
+                                break;
+                            case (byte)ReceiveCommandType.回放指令:
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    //else
+                    //{
+                    //    this.originalData.AddDataInfo("回送的状态位错误或长度错误", DataLevel.Error);
+                    //}
                 }
                 else
                 {
@@ -549,5 +566,17 @@ namespace ValveControlSystem
                 MessageBox.Show("接收数据帧头错误！");
             }
         }
+        public List<Window> ChildrenWindow
+        {
+            get
+            {
+                return _childrenWindow;
+            }
+
+            set
+            {
+                _childrenWindow = value;
+            }
+        } 
     }
 }
