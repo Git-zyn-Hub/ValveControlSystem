@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ValveControlSystem.Classes;
 using ValveControlSystem.UserControls;
 using ValveControlSystem.Windows;
+using Floatable = FloatableUserControl;
 
 namespace ValveControlSystem
 {
@@ -36,7 +29,22 @@ namespace ValveControlSystem
         private CommandType _cmdTypeLastSend;
         private List<Window> _childrenWindow = new List<Window>();
         private OriginalDataUserControl _originData = new OriginalDataUserControl();
+        private DataTableUserControl _dataTable = new DataTableUserControl();
+        private List<Floatable.FloatableUserControl> _floatUserCtrlList = new List<Floatable.FloatableUserControl>();
+        private double _rowDataTableAndOriginDataHeight;
 
+        public List<Window> ChildrenWindow
+        {
+            get
+            {
+                return _childrenWindow;
+            }
+
+            set
+            {
+                _childrenWindow = value;
+            }
+        }
         public SerialPort SerialPort
         {
             get { return _serialPort1; }
@@ -393,6 +401,17 @@ namespace ValveControlSystem
         {
             try
             {
+                //绑定可悬浮窗口关闭事件。
+                fucCurve.Closed += FucCurve_Closed;
+                fucOriginData.Closed += FucOriginData_Closed;
+                fucDataTable.Closed += FucDataTable_Closed;
+
+                this.fucOriginData.GridContainer.Children.Add(_originData);
+                this.fucDataTable.GridContainer.Children.Add(_dataTable);
+
+                //添加_dataTable的左键单击事件。
+                _dataTable.MouseLeftButtonDown += DataTable_MouseLeftButtonDown;
+                //加载27条指令菜单。
                 foreach (int cmdNo in Enum.GetValues(typeof(CommandType)))
                 {
                     string strName = Enum.GetName(typeof(CommandType), cmdNo);//获取名称
@@ -546,6 +565,7 @@ namespace ValveControlSystem
                                 }
                                 break;
                             case (byte)ReceiveCommandType.回放指令:
+                                _dataTable.HandleData(receivedData);
                                 break;
                             default:
                                 break;
@@ -566,17 +586,97 @@ namespace ValveControlSystem
                 MessageBox.Show("接收数据帧头错误！");
             }
         }
-        public List<Window> ChildrenWindow
-        {
-            get
-            {
-                return _childrenWindow;
-            }
 
-            set
+        private void miCurve_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in _floatUserCtrlList)
             {
-                _childrenWindow = value;
+                if (item.Name == "fucCurve")
+                {
+                    item.AddControlAndSetGrid();
+                    item.State = Floatable.UserControlState.Dock;
+                    _floatUserCtrlList.Remove(item);
+                    break;
+                }
             }
-        } 
+            this.fucCurve.FocusTitleRect();
+        }
+
+        private void miOriginData_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in _floatUserCtrlList)
+            {
+                if (item.Name == "fucOriginData")
+                {
+                    item.AddControlAndSetGrid();
+                    item.State = Floatable.UserControlState.Dock;
+                    _floatUserCtrlList.Remove(item);
+                    break;
+                }
+            }
+            if (this.rowDataTableAndOriginData.Height.Value == 0)
+            {
+                this.rowDataTableAndOriginData.Height = new GridLength(_rowDataTableAndOriginDataHeight, GridUnitType.Star);
+            }
+            this.fucOriginData.FocusTitleRect();
+        }
+
+        private void miDataTable_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in _floatUserCtrlList)
+            {
+                if (item.Name == "fucDataTable")
+                {
+                    item.AddControlAndSetGrid();
+                    item.State = FloatableUserControl.UserControlState.Dock;
+                    _floatUserCtrlList.Remove(item);
+                    break;
+                }
+            }
+            if (this.rowDataTableAndOriginData.Height.Value == 0)
+            {
+                this.rowDataTableAndOriginData.Height = new GridLength(_rowDataTableAndOriginDataHeight, GridUnitType.Star);
+            }
+            this.fucDataTable.FocusTitleRect();
+        }
+
+
+        private void FucCurve_Closed()
+        {
+            if (!_floatUserCtrlList.Contains(fucCurve))
+            {
+                _floatUserCtrlList.Add(fucCurve);
+            }
+        }
+
+        private void FucOriginData_Closed()
+        {
+            if (!_floatUserCtrlList.Contains(fucOriginData))
+            {
+                _floatUserCtrlList.Add(fucOriginData);
+            }
+            if (this.gridDataTableAndOriginData.Children.Count == 1)
+            {
+                _rowDataTableAndOriginDataHeight = this.rowDataTableAndOriginData.ActualHeight;
+                this.rowDataTableAndOriginData.Height = new GridLength(0);
+            }
+        }
+
+        private void FucDataTable_Closed()
+        {
+            if (!_floatUserCtrlList.Contains(fucDataTable))
+            {
+                _floatUserCtrlList.Add(fucDataTable);
+            }
+            if (this.gridDataTableAndOriginData.Children.Count == 1)
+            {
+                _rowDataTableAndOriginDataHeight = this.rowDataTableAndOriginData.ActualHeight;
+                this.rowDataTableAndOriginData.Height = new GridLength(0);
+            }
+        }
+        private void DataTable_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.fucDataTable.FocusTitleRect();
+        }
     }
 }

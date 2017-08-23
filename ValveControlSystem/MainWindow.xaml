@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ValveControlSystem"
         xmlns:userCtrl="clr-namespace:ValveControlSystem.UserControls"
-        xmlns:floatable="clr-namespace:FloatableUserControl;assembly=FloatableUserControl" 
+        xmlns:floatable="clr-namespace:FloatableUserControl;assembly=FloatableUserControl"
         mc:Ignorable="d"
         Title="智能高温脉冲接收系统"
         Height="700" Width="1000"
@@ -20,6 +20,11 @@
         <Menu x:Name="menuMain" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top">
             <MenuItem x:Name="miEthernetConnect" Header="以太网连接" Click="miEthernetConnect_Click"></MenuItem>
             <MenuItem x:Name="miPortConnect" Header="串口连接" Click="miPortConnect_Click"></MenuItem>
+            <MenuItem x:Name="miView" Header="视图">
+                <MenuItem x:Name="miCurve" Header="曲线" Click="miCurve_Click"></MenuItem>
+                <MenuItem x:Name="miDataTable" Header="数据表" Click="miDataTable_Click"></MenuItem>
+                <MenuItem x:Name="miOriginData" Header="原始数据" Click="miOriginData_Click"></MenuItem>
+            </MenuItem>
             <MenuItem x:Name="miReadData" Header="读取" Click="miReadData_Click"></MenuItem>
             <MenuItem x:Name="miCommand" Header="指令" Click="miCommand_Click"></MenuItem>
         </Menu>
@@ -30,7 +35,7 @@
                 <RowDefinition x:Name="rowDataTableAndOriginData" Height="240*"/>
             </Grid.RowDefinitions>
             <GridSplitter Grid.Row="1" Background="AntiqueWhite" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="3"></GridSplitter>
-            <floatable:FloatableUserControl x:Name="fucCurve" StrTitle="{DynamicResource curve}">
+            <floatable:FloatableUserControl x:Name="fucCurve" StrTitle="曲线">
             </floatable:FloatableUserControl>
             <Grid Grid.Row="2" x:Name="gridDataTableAndOriginData">
                 <Grid.ColumnDefinitions>
@@ -39,10 +44,10 @@
                     <ColumnDefinition Width="400*"/>
                 </Grid.ColumnDefinitions>
                 <GridSplitter Grid.Column="1" Background="AntiqueWhite" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="3"></GridSplitter>
-                <!--<floatable:FloatableUserControl x:Name="fucOriginData" StrTitle="{DynamicResource originData}" Grid.Column="2">
+                <floatable:FloatableUserControl x:Name="fucOriginData" StrTitle="原始数据" Grid.Column="2">
                 </floatable:FloatableUserControl>
-                <floatable:FloatableUserControl x:Name="fucDataTable" StrTitle="{DynamicResource dataTable}">
-                </floatable:FloatableUserControl>-->
+                <floatable:FloatableUserControl x:Name="fucDataTable" StrTitle="数据表">
+                </floatable:FloatableUserControl>
             </Grid>
         </Grid>
         <!--<StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0.333,0">
