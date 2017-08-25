@@ -70,6 +70,7 @@
     <Compile Include="Classes\CommandType2String.cs" />
     <Compile Include="Classes\CurveGeneralSetting.cs" />
     <Compile Include="Classes\CurveSetting.cs" />
+    <Compile Include="Classes\CurveSetXmlHelper.cs" />
     <Compile Include="Classes\GetBrushes.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Enums.cs" />

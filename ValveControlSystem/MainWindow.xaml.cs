@@ -642,7 +642,20 @@ namespace ValveControlSystem
             }
             this.fucDataTable.FocusTitleRect();
         }
-
+        private void miCurveSet_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                CurveSetWindow newCurveSetWin = new CurveSetWindow(this._curve);
+                newCurveSetWin.Owner = this;
+                newCurveSetWin.SetCurve += _curve.SetCurveColorAndLineThickness;
+                newCurveSetWin.ShowDialog();
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
+        }
 
         private void FucCurve_Closed()
         {

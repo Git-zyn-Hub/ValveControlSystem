@@ -9,7 +9,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         x:Name="curveSetWin"
-        Title="曲线设置窗口" Height="400"
+        Title="曲线设置窗口" Height="300" Width="400"
         Loaded="Window_Loaded"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="AliceBlue">
     <Window.Resources>
@@ -110,7 +110,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="64*"/>
+            <RowDefinition Height="30*"/>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
@@ -119,10 +119,10 @@
                   CanUserAddRows="False" CanUserDeleteRows="False" x:Name="dgCurveSetting"
                   LoadingRow="dataGrid_LoadingRow" AlternationCount="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{DynamicResource curveName}" MinWidth="91" Binding="{Binding CurveName}" 
+                <DataGridTextColumn Header="名称" MinWidth="91" Binding="{Binding CurveName}" Width="*"
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True"></DataGridTextColumn>
-                <DataGridComboBoxColumn Header="{DynamicResource lineThickness}" MinWidth="60"
+                <DataGridComboBoxColumn Header="粗细" MinWidth="60"
                                         TextBinding="{Binding LineThickness}"
                                         SelectedItemBinding="{Binding LineThickness,UpdateSourceTrigger=PropertyChanged}"
                                         ElementStyle="{StaticResource dgComboBoxCell}"
@@ -142,12 +142,12 @@
                         </col:ArrayList>
                     </DataGridComboBoxColumn.ItemsSource>
                 </DataGridComboBoxColumn>
-                <DataGridTemplateColumn Header="{DynamicResource lineColor}" MinWidth="60"
+                <DataGridTemplateColumn Header="颜色" MinWidth="60"
                                         HeaderStyle="{StaticResource dgHeader}" Width="*"
                                         CellTemplate="{StaticResource DateTemplate}"
                                         CellEditingTemplate="{StaticResource EditingDateTemplate}">
                 </DataGridTemplateColumn>
-                <DataGridCheckBoxColumn  Width="*" Header="{DynamicResource show}"
+                <DataGridCheckBoxColumn  Width="*" Header="显示"
                                          HeaderStyle="{StaticResource dgHeader}"
                                          ElementStyle="{StaticResource dgCheckBoxCell}"
                                          Binding="{Binding Show,UpdateSourceTrigger=PropertyChanged}">
@@ -166,70 +166,55 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="38"/>
-                </Grid.ColumnDefinitions>
                 <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                    <Label Content="{DynamicResource pressureRange}"></Label>
+                    <Label Content="压力范围"></Label>
                     <TextBox x:Name="txtPressureRange" Text="{Binding CurveGeneralSet.PressureRange,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                         KeyDown="TextBoxDouble_KeyDown" TextChanged="TextBoxDouble_TextChanged" VerticalContentAlignment="Center"></TextBox>
+                         KeyDown="TextBox_KeyDown" TextChanged="TextBox_TextChanged" VerticalContentAlignment="Center"></TextBox>
                 </DockPanel>
-                <Label x:Name="lblPressureUnit" Width="38" Grid.Column="1"></Label>
             </Grid>
             <DockPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Label Content="{DynamicResource fontFamily}"></Label>
+                <Label Content="字体"></Label>
                 <ComboBox x:Name="cbFontFamily" SelectedItem="{Binding CurveGeneralSet.FontFamily,ElementName=curveSetWin}" 
                           SelectionChanged="cbFontFamily_SelectionChanged"></ComboBox>
             </DockPanel>
             <DockPanel Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <CheckBox x:Name="ckbDisplayGrid" Content="{DynamicResource displayGrid}" Checked="ckbDisplayGrid_Checked" Unchecked="ckbDisplayGrid_Unchecked"
+                <CheckBox x:Name="ckbDisplayGrid" Content="显示栅格" Checked="ckbDisplayGrid_Checked" Unchecked="ckbDisplayGrid_Unchecked"
                           IsChecked="{Binding CurveGeneralSet.DisplayGrid ,ElementName=curveSetWin}"></CheckBox>
             </DockPanel>
             <Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="38"/>
-                </Grid.ColumnDefinitions>
                 <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                    <Label Content="{DynamicResource temperatureRange}"></Label>
+                    <Label Content="温度范围"></Label>
                     <TextBox x:Name="txtTemperatureRange" Text="{Binding CurveGeneralSet.TemperatureRange,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                          KeyDown="TextBox_KeyDown" TextChanged="TextBox_TextChanged" VerticalContentAlignment="Center"></TextBox>
                 </DockPanel>
-                <Label x:Name="lblTemperatureUnit" Width="38" Grid.Column="1"></Label>
             </Grid>
             <DockPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Label Content="{DynamicResource fontSize}"></Label>
+                <Label Content="字号"></Label>
                 <ComboBox x:Name="cbFontSize" SelectedItem="{Binding CurveGeneralSet.FontSize,ElementName=curveSetWin}" 
                           ItemsSource="{Binding ElementName=curveSetWin,Path=CurveFontSizeList}" SelectionChanged="cbFontSize_SelectionChanged"></ComboBox>
             </DockPanel>
             <Grid Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="38"/>
-                </Grid.ColumnDefinitions>
                 <DockPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                    <Label Content="{DynamicResource pressureThreshold}"></Label>
+                    <Label Content="压力门限"></Label>
                     <TextBox x:Name="txtPressureThreshold" Text="{Binding CurveGeneralSet.PressureThreshold,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                         KeyDown="TextBoxDouble_KeyDown" TextChanged="TextBoxDouble_TextChanged" VerticalContentAlignment="Center">
+                         KeyDown="TextBox_KeyDown" TextChanged="TextBox_TextChanged" VerticalContentAlignment="Center">
                         <TextBox.ToolTip>
-                            <DynamicResource ResourceKey="tipSet2Zero2DisablePressureThreshold"/>
+                            <sys:String>设置成0以禁用压力门限</sys:String>
                         </TextBox.ToolTip>
                     </TextBox>
                 </DockPanel>
-                <Label x:Name="lblPressureThresholdUnit" Width="38" Grid.Column="1"></Label>
             </Grid>
             <DockPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Label Content="{DynamicResource backgroundColor}"></Label>
+                <Label Content="底色"></Label>
                 <ComboBox x:Name="cbBackgroundColor" SelectedItem="{Binding Rect4Binding,ElementName=curveSetWin}" 
                           ItemsSource="{Binding Source={StaticResource colorBrushes4Background}}" SelectionChanged="cbBackgroundColor_SelectionChanged"
                           SelectedValuePath="Fill" GotFocus="cbBackgroundColor_GotFocus" ></ComboBox>
             </DockPanel>
         </Grid>
         <DockPanel Grid.Row="2" HorizontalAlignment="Center">
-            <Button x:Name="btnDefault" Width="70" Height="26" Content="{DynamicResource btnDefault}" Click="btnDefault_Click"></Button>
-            <Button x:Name="btnEnter" Width="70" Height="26" Content="{DynamicResource btnEnter}" IsDefault="True" Margin="30,0,0,0" Click="btnEnter_Click"></Button>
-            <Button x:Name="btnCancel" Width="70" Height="26" Content="{DynamicResource btnCancel}" Margin="30,0,0,0" Click="btnCancel_Click"></Button>
+            <Button x:Name="btnDefault" Width="70" Height="26" Content="默认" Click="btnDefault_Click"></Button>
+            <Button x:Name="btnEnter" Width="70" Height="26" Content="确认" IsDefault="True" Margin="30,0,0,0" Click="btnEnter_Click"></Button>
+            <Button x:Name="btnCancel" Width="70" Height="26" Content="取消" Margin="30,0,0,0" Click="btnCancel_Click"></Button>
         </DockPanel>
     </Grid>
 </Window>

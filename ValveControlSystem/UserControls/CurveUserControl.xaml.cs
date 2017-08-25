@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ValveControlSystem.Classes;
 using Visifire.Charts;
 
 namespace ValveControlSystem.UserControls
@@ -16,10 +17,13 @@ namespace ValveControlSystem.UserControls
         //温度曲线
         private DataSeries _dataSeries2;
         private bool _showChartGrid;
+        private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
 
         public CurveUserControl()
         {
             InitializeComponent();
+            _curveSetXmlHelper.XmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
+            _curveSetXmlHelper.CurveSettingXmlInitial();
             if (chartCurve.Series.Count == 0)
             {
                 _dataSeries1 = new DataSeries();
@@ -29,9 +33,6 @@ namespace ValveControlSystem.UserControls
                 _dataSeries1.AxisYType = AxisTypes.Primary;
                 _dataSeries1.MarkerEnabled = false;
                 _dataSeries1.LegendText = "压力";
-                _dataSeries1.Color = new SolidColorBrush(Colors.Red);
-                _dataSeries1.LineThickness = 2;
-                _dataSeries1.Enabled = true;
             }
             if (chartCurve.Series.Count == 1)
             {
@@ -42,9 +43,6 @@ namespace ValveControlSystem.UserControls
                 _dataSeries2.AxisYType = AxisTypes.Secondary;
                 _dataSeries2.MarkerEnabled = false;
                 _dataSeries2.LegendText = "温度";
-                _dataSeries2.Color = new SolidColorBrush(Colors.Green);
-                _dataSeries2.LineThickness = 2;
-                _dataSeries2.Enabled = true;
             }
         }
         private void lineChart_Rendered(object sender, EventArgs e)
@@ -97,7 +95,7 @@ namespace ValveControlSystem.UserControls
             }
         }
 
-        public void ChangePressureAxis(double range)
+        public void ChangePressureAxis(int range)
         {
             this.axisYPressure.AxisMaximum = range;
             this.axisYPressure.Interval = range / 8;
@@ -108,7 +106,7 @@ namespace ValveControlSystem.UserControls
             this.axisYTemperature.AxisMaximum = range;
         }
 
-        public void ChangeTrendLine(double value)
+        public void ChangeTrendLine(int value)
         {
             if (value == 0)
             {
@@ -132,6 +130,37 @@ namespace ValveControlSystem.UserControls
         public void ChangeBackground(Color color)
         {
             this.chartCurve.Background = new SolidColorBrush(color);
+        }
+
+        private void setCurveColorAndLineThickness(DataSeries dataSeries, CurveSetting curveSet)
+        {
+            dataSeries.Color = new SolidColorBrush(curveSet.LineColor);
+            dataSeries.LineThickness = curveSet.LineThickness;
+            dataSeries.Enabled = curveSet.Show;
+        }
+
+        public void SetCurveColorAndLineThickness()
+        {
+            setCurveColorAndLineThickness(_dataSeries1, _curveSetXmlHelper.GetCurveSetting("PressureCurve"));
+            setCurveColorAndLineThickness(_dataSeries2, _curveSetXmlHelper.GetCurveSetting("TemperatureCurve"));
+        }
+
+        public void CurveGeneralSet()
+        {
+            CurveGeneralSetting cgs = _curveSetXmlHelper.GetCurveGeneralSetting();
+            ChangeFontSize(cgs.FontSize);
+            ChangeFontFamily(new FontFamily(cgs.FontFamily));
+            ChangePressureAxis(cgs.PressureRange);
+            ChangeTemperatureAxis(cgs.TemperatureRange);
+            ChangeTrendLine(cgs.PressureThreshold);
+            ChangeChartGrid(cgs.DisplayGrid);
+            ChangeBackground(cgs.BackgroundColor);
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetCurveColorAndLineThickness();
+            CurveGeneralSet();
         }
     }
 }

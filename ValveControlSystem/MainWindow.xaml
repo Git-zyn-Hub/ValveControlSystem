@@ -27,6 +27,7 @@
             </MenuItem>
             <MenuItem x:Name="miReadData" Header="读取" Click="miReadData_Click"></MenuItem>
             <MenuItem x:Name="miCommand" Header="指令" Click="miCommand_Click"></MenuItem>
+            <MenuItem x:Name="miCurveSet" Header="曲线设置" Click="miCurveSet_Click"></MenuItem>
         </Menu>
         <Grid x:Name="gridCurveAndOriginData" Grid.Row="1">
             <Grid.RowDefinitions>

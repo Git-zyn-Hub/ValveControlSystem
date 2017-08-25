@@ -34,6 +34,7 @@ namespace ValveControlSystem.Windows
         private CurveGeneralSetting _curveGeneralSet = new CurveGeneralSetting();
         private Rectangle _rect4Binding;
         private string _xmlPath;
+        private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
 
         //private List<SolidColorBrush> _colorsBrush = new List<SolidColorBrush>();
         public delegate void SetCurveEventHandler();
@@ -105,9 +106,10 @@ namespace ValveControlSystem.Windows
             InitializeComponent();
             this._chart = chart;
             _xmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
+            _curveSetXmlHelper.XmlPath = _xmlPath;
             try
             {
-                curveSettingXmlInitial();
+                _curveSetXmlHelper.CurveSettingXmlInitial();
             }
             catch (Exception ee)
             {
@@ -115,139 +117,8 @@ namespace ValveControlSystem.Windows
             }
         }
 
-        private void curveSettingXmlInitial()
-        {
-            bool curveConfigExists = CheckCurveConfigExists();
-            if (!curveConfigExists)
-            {
-                File.Create(_xmlPath).Close();
-            }
-            else
-            {
-                return;
-            }
-            CurveSetting pressureCurve = new CurveSetting()
-            {
-                CurveName = "压力",
-                LineThickness = 2,
-                LineColor = Colors.Red,
-                Show = true
-            };
-            CurveSetting temperatureCurve = new CurveSetting()
-            {
-                CurveName = "温度",
-                LineThickness = 2,
-                LineColor = Colors.Green,
-                Show = true
-            };
-            CurveGeneralSetting curveGeneralSet = new CurveGeneralSetting()
-            {
-                PressureRange = 66000,
-                TemperatureRange = 100,
-                PressureThreshold = 0,
-                FontFamily = "Microsoft YaHei UI",
-                FontSize = 10,
-                BackgroundColor = Colors.White,
-                DisplayGrid = true,
-            };
 
-            XDocument doc = new XDocument
-            (
-                new XDeclaration("1.0", "utf-8", "yes"),
-                new XElement
-                (
-                    "Config",
-                    new XElement
-                    (
-                        "CurveSet",
-                        new XElement
-                        (
-                            "PressureCurve",
-                            new XAttribute("CurveName", pressureCurve.CurveName),
-                            new XAttribute("LineThickness", pressureCurve.LineThickness),
-                            new XAttribute("LineColor", pressureCurve.LineColor),
-                            new XAttribute("Show", pressureCurve.Show)
-                        ),
-                        new XElement
-                        (
-                            "TemperatureCurve",
-                            new XAttribute("CurveName", pressureCurve.CurveName),
-                            new XAttribute("LineThickness", pressureCurve.LineThickness),
-                            new XAttribute("LineColor", pressureCurve.LineColor),
-                            new XAttribute("Show", pressureCurve.Show)
-                        ),
-                        new XElement
-                        (
-                            "CurveGeneralSetting",
-                            new XAttribute("PressureRange", curveGeneralSet.PressureRange),
-                            new XAttribute("TemperatureRange", curveGeneralSet.TemperatureRange),
-                            new XAttribute("PressureThreshold", curveGeneralSet.PressureThreshold),
-                            new XAttribute("FontFamily", curveGeneralSet.FontFamily),
-                            new XAttribute("FontSize", curveGeneralSet.FontSize),
-                            new XAttribute("BackgroundColor", curveGeneralSet.BackgroundColor),
-                            new XAttribute("DisplayGrid", curveGeneralSet.DisplayGrid)
-                        )
-                    )
-                )
-            );
 
-            // 保存为XML文件
-            doc.Save(_xmlPath);
-        }
-
-        private bool CheckCurveConfigExists()
-        {
-            return File.Exists(_xmlPath);
-        }
-
-        public void ModifyXmlCurveSettingElement(string strElement, CurveSetting curveSet)
-        {
-            XDocument xd = XDocument.Load(_xmlPath);
-            ///查询修改的元素  
-            XElement element = xd.Root.Element(strElement);
-            ///修改元素  
-            if (element != null)
-            {
-                ///设置新的属性  
-                element.SetAttributeValue("CurveName", curveSet.CurveName);
-                element.SetAttributeValue("LineThickness", curveSet.LineThickness);
-                element.SetAttributeValue("LineColor", curveSet.LineColor);
-                element.SetAttributeValue("Show", curveSet.Show);
-            }
-            xd.Save(_xmlPath);
-        }
-
-        public void ModifyXmlCurveGeneralSettingElement(CurveGeneralSetting curveGeneralSet)
-        {
-            XDocument xd = XDocument.Load(_xmlPath);
-            ///查询修改的元素  
-            XElement element = xd.Root.Element("CurveGeneralSetting");
-            ///修改元素  
-            if (element != null)
-            {
-                ///设置新的属性  
-                element.SetAttributeValue("PressureRange", curveGeneralSet.PressureRange);
-                element.SetAttributeValue("TemperatureRange", curveGeneralSet.TemperatureRange);
-                element.SetAttributeValue("PressureThreshold", curveGeneralSet.PressureThreshold);
-                element.SetAttributeValue("FontFamily", curveGeneralSet.FontFamily);
-                element.SetAttributeValue("FontSize", curveGeneralSet.FontSize);
-                element.SetAttributeValue("BackgroundColor", curveGeneralSet.BackgroundColor);
-                element.SetAttributeValue("DisplayGrid", curveGeneralSet.DisplayGrid);
-            }
-            xd.Save(_xmlPath);
-        }
-
-        private string getXmlAttributeValue(string Node, string Attribute)
-        {
-            XDocument xd = XDocument.Load(_xmlPath);
-            ///查询修改的元素  
-            XElement element = xd.Root.Element(Node);
-            if (element != null)
-            {
-                return element.Attribute(Attribute).Value;
-            }
-            return string.Empty;
-        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -255,20 +126,17 @@ namespace ValveControlSystem.Windows
             {
                 this.CurveSettingList.Clear();
 
-                CurveSetting curveSetPressure = new CurveSetting();
-                curveSetPressure.CurveName = getXmlAttributeValue("PressureCurve", "CurveName");
-                curveSetPressure.LineThickness = int.Parse(getXmlAttributeValue("PressureCurve", "LineThickness"));
-                curveSetPressure.LineColor = (Color)ColorConverter.ConvertFromString(getXmlAttributeValue("PressureCurve", "LineColor"));
-                curveSetPressure.Show = bool.Parse(getXmlAttributeValue("PressureCurve", "LineColor"));
+                CurveSetting curveSetPressure = _curveSetXmlHelper.GetCurveSetting("PressureCurve");
                 this.CurveSettingList.Add(curveSetPressure);
 
-                CurveSetting curveSetTemperature = new CurveSetting();
-                curveSetTemperature.CurveName = getXmlAttributeValue("TemperatureCurve", "CurveName");
-                curveSetTemperature.LineThickness = int.Parse(getXmlAttributeValue("TemperatureCurve", "LineThickness"));
-                curveSetTemperature.LineColor = (Color)ColorConverter.ConvertFromString(getXmlAttributeValue("TemperatureCurve", "LineColor"));
-                curveSetTemperature.Show = bool.Parse(getXmlAttributeValue("TemperatureCurve", "LineColor"));
+                CurveSetting curveSetTemperature = _curveSetXmlHelper.GetCurveSetting("TemperatureCurve");
                 this.CurveSettingList.Add(curveSetTemperature);
 
+                CurveGeneralSetting newCGS = _curveSetXmlHelper.GetCurveGeneralSetting();
+                this.CurveGeneralSet = newCGS;
+
+                this.CurveFontSizeList.Clear();
+                this.cbFontFamily.Items.Clear();
                 for (int i = 1; i < 41; i++)
                 {
                     this.CurveFontSizeList.Add(i);
@@ -277,15 +145,6 @@ namespace ValveControlSystem.Windows
                 {
                     this.cbFontFamily.Items.Add(font.Source);
                 }
-                CurveGeneralSetting newCGS = new CurveGeneralSetting();
-                newCGS.PressureRange = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "PressureRange"));
-                newCGS.TemperatureRange = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "TemperatureRange"));
-                newCGS.PressureThreshold = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "PressureThreshold"));
-                newCGS.FontFamily = getXmlAttributeValue("CurveGeneralSetting", "FontFamily");
-                newCGS.FontSize = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "FontSize"));
-                newCGS.BackgroundColor = (Color)ColorConverter.ConvertFromString(getXmlAttributeValue("CurveGeneralSetting", "BackgroundColor"));
-                newCGS.DisplayGrid = bool.Parse(getXmlAttributeValue("CurveGeneralSetting", "DisplayGrid"));
-                this.CurveGeneralSet = newCGS;
 
                 var backgroundSource = this.cbBackgroundColor.ItemsSource;
                 foreach (var item in backgroundSource)
@@ -311,17 +170,26 @@ namespace ValveControlSystem.Windows
 
         private void btnDefault_Click(object sender, RoutedEventArgs e)
         {
-            if (CurveSettingList.Count != 2)
+            try
             {
-                MessageBox.Show("曲线个数不为2，无法设置。");
-                return;
+                if (CurveSettingList.Count != 2)
+                {
+                    MessageBox.Show("曲线个数不为2，无法设置。");
+                    return;
+                }
+                File.Delete(_xmlPath);
+                _curveSetXmlHelper.CurveSettingXmlInitial();
+                this._chart.SetCurveColorAndLineThickness();
+                this._chart.CurveGeneralSet();
+                Window_Loaded(sender, e);
+                CurveGeneralSetting cgs = _curveSetXmlHelper.GetCurveGeneralSetting();
+                this.cbFontSize.SelectedValue = cgs.FontSize;
+                this.cbFontFamily.SelectedItem = cgs.FontFamily;
             }
-            File.Delete(_xmlPath);
-            curveSettingXmlInitial();
-            this._chart.ChangePressureAxis(66000);
-            this._chart.ChangeTemperatureAxis(100);
-            this._chart.ChangeTrendLine(0);
-            Window_Loaded(sender, e);
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
@@ -423,6 +291,16 @@ namespace ValveControlSystem.Windows
         {
             try
             {
+                if (CurveSettingList.Count == 2)
+                {
+                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("PressureCurve", CurveSettingList[0]);
+                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("TemperatureCurve", CurveSettingList[1]);
+                    _curveSetXmlHelper.ModifyXmlCurveGeneralSettingElement(CurveGeneralSet);
+                }
+                else
+                {
+                    MessageBox.Show("保存到配置文件失败！");
+                }
                 txtPressureRange_LostFocus(sender, e);
                 txtTemperatureRange_LostFocus(sender, e);
                 txtPressureThreshold_LostFocus(sender, e);
@@ -446,22 +324,28 @@ namespace ValveControlSystem.Windows
 
         private void cbFontSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int fontSize = (int)this.cbFontSize.SelectedValue;
-            _chart.ChangeFontSize(fontSize);
+            if (this.cbFontSize.SelectedValue != null)
+            {
+                int fontSize = (int)this.cbFontSize.SelectedValue;
+                _chart.ChangeFontSize(fontSize);
+            }
         }
 
         private void cbFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            FontFamily fontFamily = new FontFamily(this.cbFontFamily.SelectedItem.ToString());
-            _chart.ChangeFontFamily(fontFamily);
+            if (this.cbFontFamily.SelectedItem != null)
+            {
+                FontFamily fontFamily = new FontFamily(this.cbFontFamily.SelectedItem.ToString());
+                _chart.ChangeFontFamily(fontFamily);
+            }
         }
 
         private void txtPressureRange_LostFocus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.txtPressureRange.Text.Trim()))
             {
-                double range;
-                if (double.TryParse(this.txtPressureRange.Text.Trim(), out range))
+                int range;
+                if (int.TryParse(this.txtPressureRange.Text.Trim(), out range))
                 {
                     this._chart.ChangePressureAxis(range);
                 }
@@ -500,8 +384,8 @@ namespace ValveControlSystem.Windows
         {
             if (!string.IsNullOrEmpty(this.txtPressureThreshold.Text.Trim()))
             {
-                double integer;
-                if (double.TryParse(this.txtPressureThreshold.Text.Trim(), out integer))
+                int integer;
+                if (int.TryParse(this.txtPressureThreshold.Text.Trim(), out integer))
                 {
                     this._chart.ChangeTrendLine(integer);
                 }
