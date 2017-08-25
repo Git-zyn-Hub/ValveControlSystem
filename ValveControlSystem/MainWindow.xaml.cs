@@ -30,6 +30,7 @@ namespace ValveControlSystem
         private List<Window> _childrenWindow = new List<Window>();
         private OriginalDataUserControl _originData = new OriginalDataUserControl();
         private DataTableUserControl _dataTable = new DataTableUserControl();
+        private CurveUserControl _curve = new CurveUserControl();
         private List<Floatable.FloatableUserControl> _floatUserCtrlList = new List<Floatable.FloatableUserControl>();
         private double _rowDataTableAndOriginDataHeight;
 
@@ -408,9 +409,11 @@ namespace ValveControlSystem
 
                 this.fucOriginData.GridContainer.Children.Add(_originData);
                 this.fucDataTable.GridContainer.Children.Add(_dataTable);
+                this.fucCurve.GridContainer.Children.Add(_curve);
 
                 //添加_dataTable的左键单击事件。
                 _dataTable.MouseLeftButtonDown += DataTable_MouseLeftButtonDown;
+                _curve.MouseLeftButtonDown += Curve_MouseLeftButtonDown;
                 //加载27条指令菜单。
                 foreach (int cmdNo in Enum.GetValues(typeof(CommandType)))
                 {
@@ -677,6 +680,11 @@ namespace ValveControlSystem
         private void DataTable_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.fucDataTable.FocusTitleRect();
+        }
+
+        private void Curve_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.fucCurve.FocusTitleRect();
         }
     }
 }

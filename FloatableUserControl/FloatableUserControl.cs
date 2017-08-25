@@ -12,7 +12,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Drawing = System.Drawing;
-using ValveControlSystem;
+//using ValveControlSystem;
 using System.Runtime.InteropServices;
 
 namespace FloatableUserControl
@@ -275,11 +275,11 @@ namespace FloatableUserControl
             GridContainer.Margin = new Thickness(2,0,2,2);//将标题下边的控件边框距离改成2
 
             HwndSource mainWinHwnd = (HwndSource.FromDependencyObject(this) as HwndSource);
-            MainWindow mainWin = mainWinHwnd.RootVisual as MainWindow;
-            if (mainWin != null)
-            {
-                mainWin.ChildrenWindow.Add(_winFloat);
-            }
+            //MainWindow mainWin = mainWinHwnd.RootVisual as MainWindow;
+            //if (mainWin != null)
+            //{
+            //    mainWin.ChildrenWindow.Add(_winFloat);
+            //}
             //添加最大化按钮。
             Geometry geoMaximize = Geometry.Parse("M4,4H20V20H4V4M6,8V18H18V8H6Z");
             Path maximizePath = new Path() { Data = geoMaximize };
@@ -353,11 +353,11 @@ namespace FloatableUserControl
         private void removeWin()
         {
             HwndSource mainWinHwnd = (HwndSource.FromDependencyObject(_gridParent) as HwndSource);
-            MainWindow mainWin = mainWinHwnd.RootVisual as MainWindow;
-            if (mainWin != null)
-            {
-                mainWin.ChildrenWindow.Remove(_winFloat);
-            }
+            //MainWindow mainWin = mainWinHwnd.RootVisual as MainWindow;
+            //if (mainWin != null)
+            //{
+            //    mainWin.ChildrenWindow.Remove(_winFloat);
+            //}
         }
 
         private void enableDockAndCloseWin()
