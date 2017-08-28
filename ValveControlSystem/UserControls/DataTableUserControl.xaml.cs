@@ -63,6 +63,29 @@ namespace ValveControlSystem.UserControls
 
                     AddData(monitorDataArray);
                 }
+
+                TableData tableDataAverage = new TableData();
+                TableData tableDataSum = new TableData();
+                foreach (var tableData in this.TableDatas)
+                {
+                    tableDataSum.SolenoidValveVoltage += tableData.SolenoidValveVoltage;
+                    tableDataSum.PositivePowerMonitor += tableData.PositivePowerMonitor;
+                    tableDataSum.NegativePowerMonitor += tableData.NegativePowerMonitor;
+                    tableDataSum.Tool1TestValveDriveCurrent += tableData.Tool1TestValveDriveCurrent;
+                    tableDataSum.Tool1CycleValveDriveCurrent += tableData.Tool1CycleValveDriveCurrent;
+                    tableDataSum.Tool2TestValveDriveCurrent += tableData.Tool2TestValveDriveCurrent;
+                    tableDataSum.Tool2CycleValveDriveCurrent += tableData.Tool2CycleValveDriveCurrent;
+                }
+                tableDataAverage.SolenoidValveVoltage = tableDataSum.SolenoidValveVoltage / 8;
+                tableDataAverage.PositivePowerMonitor = tableDataSum.PositivePowerMonitor / 8;
+                tableDataAverage.NegativePowerMonitor = tableDataSum.NegativePowerMonitor / 8;
+                tableDataAverage.Tool1TestValveDriveCurrent = tableDataSum.Tool1TestValveDriveCurrent / 8;
+                tableDataAverage.Tool1CycleValveDriveCurrent = tableDataSum.Tool1CycleValveDriveCurrent / 8;
+                tableDataAverage.Tool2TestValveDriveCurrent = tableDataSum.Tool2TestValveDriveCurrent / 8;
+                tableDataAverage.Tool2CycleValveDriveCurrent = tableDataSum.Tool2CycleValveDriveCurrent / 8;
+
+                this.TableDatas.Add(tableDataAverage);
+                ScrollControl();
             }
             catch (Exception ee)
             {
@@ -140,18 +163,25 @@ namespace ValveControlSystem.UserControls
 
         private void dgDataTable_LoadingRow(object sender, DataGridRowEventArgs e)
         {
+            e.Row.Header = e.Row.GetIndex() + 1;
+
             DataGridRow dgr = e.Row;
+            if (e.Row.GetIndex() == 8)
+            {
+                e.Row.Header = "平均";
+                dgr.Background = new SolidColorBrush(Colors.LightYellow);
+            }
 
             ContextMenu cm = new ContextMenu();
 
             MenuItem copyCellMenu = new MenuItem();
-            copyCellMenu.Header = string.Format(CultureInfo.CurrentCulture, Application.Current.TryFindResource("copyCell").ToString());
+            copyCellMenu.Header = "复制单元格";
             copyCellMenu.Click += CopyCellOnClick;
             copyCellMenu.InputGestureText = "Ctrl+D";
             cm.Items.Add(copyCellMenu);
 
             MenuItem copyLines = new MenuItem();
-            copyLines.Header = string.Format(CultureInfo.CurrentCulture, Application.Current.TryFindResource("copyLines").ToString());
+            copyLines.Header = "复制一行或多行";
             copyLines.Click += CopyLinesOnClick;
             copyLines.InputGestureText = "Ctrl+C";
             cm.Items.Add(copyLines);
@@ -165,12 +195,12 @@ namespace ValveControlSystem.UserControls
                 {
                     int i = dgDataTable.CurrentColumn.DisplayIndex;
                     string sColumnValue = ((TextBlock)this.dgDataTable.Columns[i].GetCellContent(this.dgDataTable.SelectedItem)).Text.Trim();
-                    Clipboard.SetText(sColumnValue);
+                    Clipboard.SetDataObject(sColumnValue);
                 }
             }
-            catch (Exception)
+            catch (Exception ee)
             {
-                throw;
+                MessageBox.Show("复制单元格异常：" + ee.Message);
             }
         }
         private void CopyLinesOnClick(object sender, RoutedEventArgs routedEventArgs)

@@ -568,7 +568,13 @@ namespace ValveControlSystem
                                 }
                                 break;
                             case (byte)ReceiveCommandType.回放指令:
-                                _dataTable.HandleData(receivedData);
+                                {
+                                    _dataTable.ClearTable();
+                                    _curve.ClearCurve();
+                                    _dataTable.HandleData(receivedData);
+                                    _curve.HandleData(receivedData);
+                                    this._originData.AddDataInfo("回放数据", DataLevel.Default);
+                                }
                                 break;
                             default:
                                 break;

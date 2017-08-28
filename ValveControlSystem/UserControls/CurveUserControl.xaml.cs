@@ -18,6 +18,9 @@ namespace ValveControlSystem.UserControls
         private DataSeries _dataSeries2;
         private bool _showChartGrid;
         private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
+        private const int _headerLength = 7;
+        private DataPoint[] _dataPointsTemp;
+        private DataPoint[] _dataPointsPres;
 
         public CurveUserControl()
         {
@@ -161,6 +164,78 @@ namespace ValveControlSystem.UserControls
         {
             SetCurveColorAndLineThickness();
             CurveGeneralSet();
+        }
+
+        public void HandleData(byte[] dataArray)
+        {
+            try
+            {
+                if (dataArray.Length == 265)
+                {
+                    _dataPointsTemp = new DataPoint[8];
+                    _dataPointsPres = new DataPoint[64];
+                    for (int i = 0; i < 256; i++)
+                    {
+                        if (i % 32 == 0)
+                        {
+                            DataPoint dataPointTemperature;
+                            dataPointTemperature = new DataPoint();
+                            dataPointTemperature.XValue = i;
+                            dataPointTemperature.YValue = (dataArray[_headerLength + i] << 8) + dataArray[_headerLength + i + 1];
+                            dataPointTemperature.MarkerEnabled = false;
+                            _dataPointsTemp[i / 32] = dataPointTemperature;
+                        }
+                        if (i % 4 == 0)
+                        {
+                            DataPoint dataPointPressure;
+                            dataPointPressure = new DataPoint();
+                            dataPointPressure.XValue = i;
+                            dataPointPressure.YValue = (dataArray[_headerLength + i + 2] << 8) + dataArray[_headerLength + i + 3];
+                            dataPointPressure.MarkerEnabled = false;
+                            _dataPointsPres[i / 4] = dataPointPressure;
+                        }
+                    }
+                    addData(_dataPointsTemp, _dataPointsPres);
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("处理回放数据异常：" + ee.Message);
+            }
+        }
+
+        private void addData(DataPoint[] dataPointsTemp, DataPoint[] dataPointsPres)
+        {
+            if (dataPointsTemp != null && dataPointsTemp.Length == 8)
+            {
+                foreach (var tempPoint in dataPointsTemp)
+                {
+                    _dataSeries2.DataPoints.Add(tempPoint);
+                }
+            }
+            if (dataPointsPres != null && dataPointsPres.Length == 64)
+            {
+                foreach (var presPoint in dataPointsPres)
+                {
+                    _dataSeries1.DataPoints.Add(presPoint);
+                }
+            }
+        }
+
+        public void ClearCurve()
+        {
+            try
+            {
+                if (_dataSeries1 != null && _dataSeries2 != null)
+                {
+                    _dataSeries1.DataPoints.Clear();
+                    _dataSeries2.DataPoints.Clear();
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("清空曲线异常：" + ee.Message);
+            }
         }
     }
 }
