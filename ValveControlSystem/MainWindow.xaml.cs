@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -402,6 +404,9 @@ namespace ValveControlSystem
         {
             try
             {
+                //显示版本信息
+                string version = "  v" + GetCurrentApplicationVersion();
+                this.Title += version;
                 //绑定可悬浮窗口关闭事件。
                 fucCurve.Closed += FucCurve_Closed;
                 fucOriginData.Closed += FucOriginData_Closed;
@@ -768,5 +773,15 @@ namespace ValveControlSystem
                     return;
             }
         }
+
+        private string GetCurrentApplicationVersion()
+        {
+
+            Assembly asm = Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(asm.Location);
+            string versionStr = string.Format(" {0}.{1}.{2}", fvi.ProductMajorPart, fvi.ProductMinorPart, fvi.ProductBuildPart);
+            return versionStr;
+        }
+
     }
 }
