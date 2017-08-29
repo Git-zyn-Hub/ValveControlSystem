@@ -238,17 +238,17 @@ namespace ValveControlSystem
                         {
                             if (_socketConnect != null)
                             {
-                                SelectToolNoWindow theSelectToolNoWin = new SelectToolNoWindow();
-                                theSelectToolNoWin.Owner = this;
-                                theSelectToolNoWin.ShowDialog();
-                                if (theSelectToolNoWin.DialogResult.Value)
-                                {
-                                    byte[] sendData = _sendDataPackage.PackageSendData((byte)theSelectToolNoWin.ToolNo);
-                                    _socketConnect.Send(sendData, SocketFlags.None);
+                                //SelectToolNoWindow theSelectToolNoWin = new SelectToolNoWindow();
+                                //theSelectToolNoWin.Owner = this;
+                                //theSelectToolNoWin.ShowDialog();
+                                //if (theSelectToolNoWin.DialogResult.Value)
+                                //{
+                                byte[] sendData = _sendDataPackage.PackageSendData(0);
+                                _socketConnect.Send(sendData, SocketFlags.None);
 
-                                    this._originData.AddSendData(sendData);
-                                    this._originData.AddDataInfo("回放指令", DataLevel.Default);
-                                }
+                                this._originData.AddSendData(sendData);
+                                this._originData.AddDataInfo("回放指令", DataLevel.Default);
+                                //}
                             }
                             else
                             {
@@ -260,17 +260,17 @@ namespace ValveControlSystem
                         {
                             if (_serialPort1.IsOpen)
                             {
-                                SelectToolNoWindow theSelectToolNoWin = new SelectToolNoWindow();
-                                theSelectToolNoWin.Owner = this;
-                                theSelectToolNoWin.ShowDialog();
-                                if (theSelectToolNoWin.DialogResult.Value)
-                                {
-                                    byte[] buffer = _sendDataPackage.PackageSendData((byte)theSelectToolNoWin.ToolNo);
-                                    _serialPort1.Write(buffer, 0, buffer.Length);
+                                //SelectToolNoWindow theSelectToolNoWin = new SelectToolNoWindow();
+                                //theSelectToolNoWin.Owner = this;
+                                //theSelectToolNoWin.ShowDialog();
+                                //if (theSelectToolNoWin.DialogResult.Value)
+                                //{
+                                byte[] buffer = _sendDataPackage.PackageSendData(0);
+                                _serialPort1.Write(buffer, 0, buffer.Length);
 
-                                    this._originData.AddSendData(buffer);
-                                    this._originData.AddDataInfo("回放指令", DataLevel.Default);
-                                }
+                                this._originData.AddSendData(buffer);
+                                this._originData.AddDataInfo("回放指令", DataLevel.Default);
+                                //}
                             }
                             else
                             {
@@ -663,6 +663,32 @@ namespace ValveControlSystem
             }
         }
 
+        private void miTimeSet_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_connType == ConnectType.Notconnected)
+                {
+                    MessageBox.Show("未连接，请先连接！");
+                    return;
+                }
+                DateTime now = DateTime.Now;
+                byte[] nowContent = new byte[3] { (byte)now.Hour, (byte)now.Minute, (byte)now.Second };
+                byte[] sendData = _sendDataPackage.PackageSendData(nowContent);
+
+                Send(sendData);
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this._originData.AddSendData(sendData);
+                    this._originData.AddDataInfo("对时 " + now.ToString("HH:mm:ss"), DataLevel.Default);
+                }));
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
+        }
+
         private void FucCurve_Closed()
         {
             if (!_floatUserCtrlList.Contains(fucCurve))
@@ -704,6 +730,43 @@ namespace ValveControlSystem
         private void Curve_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.fucCurve.FocusTitleRect();
+        }
+
+        private void Send(byte[] sendData)
+        {
+            switch (_connType)
+            {
+                case ConnectType.Notconnected:
+                    return;
+                case ConnectType.Ethernet:
+                    {
+                        if (_socketConnect != null)
+                        {
+                            _socketConnect.Send(sendData, SocketFlags.None);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Socket为空，请检查‘以太网’是否连接！");
+                            return;
+                        }
+                    }
+                    break;
+                case ConnectType.SerialPort:
+                    {
+                        if (_serialPort1.IsOpen)
+                        {
+                            _serialPort1.Write(sendData, 0, sendData.Length);
+                        }
+                        else
+                        {
+                            MessageBox.Show("串口已经关闭。");
+                            return;
+                        }
+                    }
+                    break;
+                default:
+                    return;
+            }
         }
     }
 }

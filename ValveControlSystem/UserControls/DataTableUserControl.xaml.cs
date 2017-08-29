@@ -97,8 +97,8 @@ namespace ValveControlSystem.UserControls
         {
             TableData tableData = new TableData();
             tableData.SolenoidValveVoltage = monitorDataArray[0];
-            tableData.PositivePowerMonitor = monitorDataArray[1];
-            tableData.NegativePowerMonitor = monitorDataArray[2];
+            tableData.NegativePowerMonitor= monitorDataArray[1];
+            tableData.PositivePowerMonitor = monitorDataArray[2];
             tableData.Tool1TestValveDriveCurrent = monitorDataArray[3];
             tableData.Tool1CycleValveDriveCurrent = monitorDataArray[4];
             tableData.Tool2TestValveDriveCurrent = monitorDataArray[5];
