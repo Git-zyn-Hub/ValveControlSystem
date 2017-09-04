@@ -783,5 +783,28 @@ namespace ValveControlSystem
             return versionStr;
         }
 
+        private void miEraseFlash_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_connType == ConnectType.Notconnected)
+                {
+                    MessageBox.Show("未连接，请先连接！");
+                    //return;
+                }
+                byte[] sendData = _sendDataPackage.PackageSendData(new byte[2] { 0, 0x28 });
+
+                Send(sendData);
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this._originData.AddSendData(sendData);
+                    this._originData.AddDataInfo("擦除Flash", DataLevel.Default);
+                }));
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
+        }
     }
 }
