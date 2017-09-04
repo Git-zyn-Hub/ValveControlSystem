@@ -581,6 +581,13 @@ namespace ValveControlSystem
                                     this._originData.AddDataInfo("回放数据", DataLevel.Default);
                                 }
                                 break;
+                            case (byte)ReceiveCommandType.擦除指令:
+                                {
+                                    string receiveDataInfo = "指令 擦除Flash";
+                                    receiveDataInfo += CommandState.状态正常.ToString();
+                                    this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                }
+                                break;
                             default:
                                 break;
                         }

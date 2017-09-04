@@ -60,7 +60,8 @@ namespace ValveControlSystem
 
     public enum ReceiveCommandType
     {
-        普通指令 = 0x00,
-        回放指令 = 0x01
+        普通指令 = 0x00,   //27条指令
+        回放指令 = 0x01,
+        擦除指令 = 0x02
     }
 }
