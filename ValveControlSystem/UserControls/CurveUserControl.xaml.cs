@@ -170,6 +170,7 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
+                GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
                 if (dataArray.Length == 265)
                 {
                     _dataPointsTemp = new DataPoint[8];
@@ -181,7 +182,7 @@ namespace ValveControlSystem.UserControls
                             DataPoint dataPointTemperature;
                             dataPointTemperature = new DataPoint();
                             dataPointTemperature.XValue = i;
-                            dataPointTemperature.YValue = (dataArray[_headerLength + i] << 8) + dataArray[_headerLength + i + 1];
+                            dataPointTemperature.YValue = getDoubleTemp.GetTemperature((dataArray[_headerLength + i] << 8) + dataArray[_headerLength + i + 1]);
                             dataPointTemperature.MarkerEnabled = false;
                             _dataPointsTemp[i / 32] = dataPointTemperature;
                         }

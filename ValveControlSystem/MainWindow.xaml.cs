@@ -583,7 +583,7 @@ namespace ValveControlSystem
                                 break;
                             case (byte)ReceiveCommandType.擦除指令:
                                 {
-                                    string receiveDataInfo = "指令 擦除Flash";
+                                    string receiveDataInfo = "指令 擦除Flash ";
                                     receiveDataInfo += CommandState.状态正常.ToString();
                                     this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
                                 }
@@ -797,7 +797,7 @@ namespace ValveControlSystem
                 if (_connType == ConnectType.Notconnected)
                 {
                     MessageBox.Show("未连接，请先连接！");
-                    //return;
+                    return;
                 }
                 byte[] sendData = _sendDataPackage.PackageSendData(new byte[2] { 0, 0x28 });
 

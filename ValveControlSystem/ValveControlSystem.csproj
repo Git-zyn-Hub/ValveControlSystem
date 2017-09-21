@@ -72,6 +72,7 @@
     <Compile Include="Classes\CurveSetting.cs" />
     <Compile Include="Classes\CurveSetXmlHelper.cs" />
     <Compile Include="Classes\GetBrushes.cs" />
+    <Compile Include="Classes\GetTempFromVoltage.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="UserControls\CurveUserControl.xaml.cs">
