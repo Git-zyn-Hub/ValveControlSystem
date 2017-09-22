@@ -1,0 +1,80 @@
+﻿<Window x:Class="ValveControlSystem.Windows.SurfacePresetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ValveControlSystem.Windows"
+        mc:Ignorable="d"
+        Title="地面预设窗口" Height="500" Width="700">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="RadioButton">
+                <Setter Property="Margin" Value="10"></Setter>
+            </Style>
+            <Style TargetType="GroupBox">
+                <Setter Property="Margin" Value="2"></Setter>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="Margin" Value="5"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Width" Value="80"></Setter>
+                <Setter Property="Height" Value="30"></Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  Width="3*"/>
+            <ColumnDefinition  Width="1.2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="自动关闭阀AVC">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <RadioButton>none</RadioButton>
+                <RadioButton>CV</RadioButton>
+                <RadioButton>TV</RadioButton>
+                <RadioButton>TV with N2 Open CV</RadioButton>
+            </StackPanel>
+        </GroupBox>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <Label>自动关闭压力</Label>
+            <TextBox></TextBox>
+        </StackPanel>
+        <GroupBox Header="AVS A选项" Grid.Row="1">
+            <WrapPanel Orientation="Horizontal">
+                <RadioButton>none</RadioButton>
+                <RadioButton>Close TV</RadioButton>
+                <RadioButton>Close TV, 30 sec, Open CV</RadioButton>
+                <RadioButton>Open TV</RadioButton>
+                <RadioButton>Perf-Pac: Open TV, 2 min,Open CV, delay, Close CV</RadioButton>
+                <RadioButton>Close TV, 30 sec, Open CV,(apply Pavs), Close CV, Ena SM</RadioButton>
+            </WrapPanel>
+        </GroupBox>
+        <GroupBox Header="AVS B选项" Grid.Row="2">
+            <WrapPanel Orientation="Horizontal">
+                <RadioButton>none</RadioButton>
+                <RadioButton>Close TV</RadioButton>
+                <RadioButton>Close TV, 30 sec, Open CV</RadioButton>
+                <RadioButton>Open TV</RadioButton>
+                <RadioButton>Perf-Pac: Open TV, 2 min,Open CV, delay, Close CV</RadioButton>
+                <RadioButton>Close TV, 30 sec, Open CV,(apply Pavs), Close CV, Ena SM</RadioButton>
+            </WrapPanel>
+        </GroupBox>
+
+        <GroupBox Header=" AVS 4时间限制">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <RadioButton>none</RadioButton>
+                <RadioButton>CV</RadioButton>
+                <RadioButton>TV</RadioButton>
+                <RadioButton>TV with N2 Open CV</RadioButton>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</Window>

@@ -58,10 +58,15 @@ namespace ValveControlSystem
         状态异常 = 0x99
     }
 
-    public enum ReceiveCommandType
+    public enum CommandTypeCommon
     {
-        普通指令 = 0x00,   //27条指令
+        /// <summary>
+        /// 27条指令
+        /// </summary>
+        普通指令 = 0x00,
         回放指令 = 0x01,
-        擦除指令 = 0x02
+        擦除指令 = 0x02,
+        地面预设指令 = 0x04,
+        对时指令 = 0x05
     }
 }

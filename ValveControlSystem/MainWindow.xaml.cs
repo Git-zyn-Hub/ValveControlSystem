@@ -245,7 +245,7 @@ namespace ValveControlSystem
                                 //theSelectToolNoWin.ShowDialog();
                                 //if (theSelectToolNoWin.DialogResult.Value)
                                 //{
-                                byte[] sendData = _sendDataPackage.PackageSendData(0);
+                                byte[] sendData = _sendDataPackage.PackageSendData(CommandTypeCommon.回放指令, new byte[1] { 0 });
                                 _socketConnect.Send(sendData, SocketFlags.None);
 
                                 this._originData.AddSendData(sendData);
@@ -267,7 +267,7 @@ namespace ValveControlSystem
                                 //theSelectToolNoWin.ShowDialog();
                                 //if (theSelectToolNoWin.DialogResult.Value)
                                 //{
-                                byte[] buffer = _sendDataPackage.PackageSendData(0);
+                                byte[] buffer = _sendDataPackage.PackageSendData(CommandTypeCommon.回放指令, new byte[1] { 0 });
                                 _serialPort1.Write(buffer, 0, buffer.Length);
 
                                 this._originData.AddSendData(buffer);
@@ -444,7 +444,7 @@ namespace ValveControlSystem
                 if (_connType == ConnectType.Notconnected)
                 {
                     MessageBox.Show("未连接，请先连接！");
-                    return;
+                    //return;
                 }
                 MenuItem miCommandSender = sender as MenuItem;
                 int? toolNo = getFirstNumInString(miCommandSender.Tag.ToString());
@@ -561,7 +561,7 @@ namespace ValveControlSystem
                     {
                         switch (receivedData[5])
                         {
-                            case (byte)ReceiveCommandType.普通指令:
+                            case (byte)CommandTypeCommon.普通指令:
                                 {
                                     if (receivedData[6] == 5 && receivedData[9] == (byte)CommandState.状态正常)
                                     {
@@ -572,7 +572,7 @@ namespace ValveControlSystem
                                     }
                                 }
                                 break;
-                            case (byte)ReceiveCommandType.回放指令:
+                            case (byte)CommandTypeCommon.回放指令:
                                 {
                                     _dataTable.ClearTable();
                                     _curve.ClearCurve();
@@ -581,7 +581,7 @@ namespace ValveControlSystem
                                     this._originData.AddDataInfo("回放数据", DataLevel.Default);
                                 }
                                 break;
-                            case (byte)ReceiveCommandType.擦除指令:
+                            case (byte)CommandTypeCommon.擦除指令:
                                 {
                                     string receiveDataInfo = "指令 擦除Flash ";
                                     receiveDataInfo += CommandState.状态正常.ToString();
@@ -686,7 +686,7 @@ namespace ValveControlSystem
                 }
                 DateTime now = DateTime.Now;
                 byte[] nowContent = new byte[3] { (byte)now.Hour, (byte)now.Minute, (byte)now.Second };
-                byte[] sendData = _sendDataPackage.PackageSendData(nowContent);
+                byte[] sendData = _sendDataPackage.PackageSendData(CommandTypeCommon.对时指令, nowContent);
 
                 Send(sendData);
                 this.Dispatcher.Invoke(new Action(() =>
@@ -799,7 +799,7 @@ namespace ValveControlSystem
                     MessageBox.Show("未连接，请先连接！");
                     return;
                 }
-                byte[] sendData = _sendDataPackage.PackageSendData(new byte[2] { 0, 0x28 });
+                byte[] sendData = _sendDataPackage.PackageSendData(CommandTypeCommon.擦除指令, new byte[2] { 0, 0x28 });
 
                 Send(sendData);
                 this.Dispatcher.Invoke(new Action(() =>
@@ -807,6 +807,32 @@ namespace ValveControlSystem
                     this._originData.AddSendData(sendData);
                     this._originData.AddDataInfo("擦除Flash", DataLevel.Default);
                 }));
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
+        }
+
+        private void miSurfacePreset_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_connType == ConnectType.Notconnected)
+                {
+                    MessageBox.Show("未连接，请先连接！");
+                    //return;
+                }
+                SurfacePresetWindow presetWin = new SurfacePresetWindow();
+                presetWin.Show();
+                //byte[] sendData = _sendDataPackage.PackageSendData(CommandTypeCommon.擦除指令, new byte[2] { 0, 0x28 });
+
+                //Send(sendData);
+                //this.Dispatcher.Invoke(new Action(() =>
+                //{
+                //    this._originData.AddSendData(sendData);
+                //    this._originData.AddDataInfo("擦除Flash", DataLevel.Default);
+                //}));
             }
             catch (Exception ee)
             {
