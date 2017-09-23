@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ValveControlSystem.Classes;
 
 namespace ValveControlSystem.Windows
 {
@@ -18,9 +19,11 @@ namespace ValveControlSystem.Windows
     /// </summary>
     public partial class SurfacePresetWindow : Window
     {
+        private SurfacePreset _surfacePreset = new SurfacePreset();
         public SurfacePresetWindow()
         {
             InitializeComponent();
+            this.DataContext = _surfacePreset;
         }
     }
 }

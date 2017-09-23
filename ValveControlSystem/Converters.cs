@@ -443,4 +443,24 @@ namespace ValveControlSystem
             throw new NotImplementedException();
         }
     }
+
+    public class IntToBoolConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            int selectNo = (int)value;
+            return selectNo == int.Parse(parameter.ToString());
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            bool isChecked = (bool)value;
+            if (!isChecked)
+            {
+                return null;
+            }
+            return int.Parse(parameter.ToString());
+        }
+    }
 }

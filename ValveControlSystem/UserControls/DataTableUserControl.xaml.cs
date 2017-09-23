@@ -76,9 +76,9 @@ namespace ValveControlSystem.UserControls
                     tableDataSum.Tool2TestValveDriveCurrent += tableData.Tool2TestValveDriveCurrent;
                     tableDataSum.Tool2CycleValveDriveCurrent += tableData.Tool2CycleValveDriveCurrent;
                 }
-                tableDataAverage.SolenoidValveVoltage = tableDataSum.SolenoidValveVoltage / 8;
-                tableDataAverage.PositivePowerMonitor = tableDataSum.PositivePowerMonitor / 8;
-                tableDataAverage.NegativePowerMonitor = tableDataSum.NegativePowerMonitor / 8;
+                tableDataAverage.SolenoidValveVoltage = save2FractionalPart(tableDataSum.SolenoidValveVoltage / 8);
+                tableDataAverage.PositivePowerMonitor = save2FractionalPart(tableDataSum.PositivePowerMonitor / 8);
+                tableDataAverage.NegativePowerMonitor = save2FractionalPart(tableDataSum.NegativePowerMonitor / 8);
                 tableDataAverage.Tool1TestValveDriveCurrent = tableDataSum.Tool1TestValveDriveCurrent / 8;
                 tableDataAverage.Tool1CycleValveDriveCurrent = tableDataSum.Tool1CycleValveDriveCurrent / 8;
                 tableDataAverage.Tool2TestValveDriveCurrent = tableDataSum.Tool2TestValveDriveCurrent / 8;
@@ -97,18 +97,26 @@ namespace ValveControlSystem.UserControls
         {
             //需要对原始数据进行，数值转换，乘或除对应的系数。
             TableData tableData = new TableData();
-            tableData.SolenoidValveVoltage = monitorDataArray[0] * 2;
-            tableData.NegativePowerMonitor = monitorDataArray[1] * 6;
-            tableData.PositivePowerMonitor = (int)(monitorDataArray[2] * 8.5);
+            tableData.SolenoidValveVoltage = (double)monitorDataArray[0] * 2 / 1000;
+            tableData.NegativePowerMonitor = (double)monitorDataArray[1] * 8.5 / 1000;
+            tableData.PositivePowerMonitor = (double)monitorDataArray[2] * 6 / 1000;
             tableData.Tool1TestValveDriveCurrent = (int)(monitorDataArray[3] / 1.5);
             tableData.Tool1CycleValveDriveCurrent = (int)(monitorDataArray[4] / 1.5);
             tableData.Tool2TestValveDriveCurrent = (int)(monitorDataArray[5] / 1.5);
             tableData.Tool2CycleValveDriveCurrent = (int)(monitorDataArray[6] / 1.5);
 
+            tableData.SolenoidValveVoltage = save2FractionalPart(tableData.SolenoidValveVoltage);
+            tableData.NegativePowerMonitor = save2FractionalPart(tableData.NegativePowerMonitor);
+            tableData.PositivePowerMonitor = save2FractionalPart(tableData.PositivePowerMonitor);
+
             this.TableDatas.Add(tableData);
             ScrollControl();
         }
 
+        private double save2FractionalPart(double input)
+        {
+            return (double)((int)(input * 100)) / 100;
+        }
         private void ScrollControl()
         {
             if (!_stopScroll)
@@ -259,9 +267,9 @@ namespace ValveControlSystem.UserControls
 
     public class TableData
     {
-        public int SolenoidValveVoltage { get; set; }
-        public int PositivePowerMonitor { get; set; }
-        public int NegativePowerMonitor { get; set; }
+        public double SolenoidValveVoltage { get; set; }
+        public double PositivePowerMonitor { get; set; }
+        public double NegativePowerMonitor { get; set; }
         public int Tool1TestValveDriveCurrent { get; set; }
         public int Tool1CycleValveDriveCurrent { get; set; }
         public int Tool2TestValveDriveCurrent { get; set; }
