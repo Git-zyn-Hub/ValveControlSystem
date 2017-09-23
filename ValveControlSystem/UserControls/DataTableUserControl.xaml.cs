@@ -95,14 +95,15 @@ namespace ValveControlSystem.UserControls
 
         public void AddData(int[] monitorDataArray)
         {
+            //需要对原始数据进行，数值转换，乘或除对应的系数。
             TableData tableData = new TableData();
-            tableData.SolenoidValveVoltage = monitorDataArray[0];
-            tableData.NegativePowerMonitor= monitorDataArray[1];
-            tableData.PositivePowerMonitor = monitorDataArray[2];
-            tableData.Tool1TestValveDriveCurrent = monitorDataArray[3];
-            tableData.Tool1CycleValveDriveCurrent = monitorDataArray[4];
-            tableData.Tool2TestValveDriveCurrent = monitorDataArray[5];
-            tableData.Tool2CycleValveDriveCurrent = monitorDataArray[6];
+            tableData.SolenoidValveVoltage = monitorDataArray[0] * 2;
+            tableData.NegativePowerMonitor = monitorDataArray[1] * 6;
+            tableData.PositivePowerMonitor = (int)(monitorDataArray[2] * 8.5);
+            tableData.Tool1TestValveDriveCurrent = (int)(monitorDataArray[3] / 1.5);
+            tableData.Tool1CycleValveDriveCurrent = (int)(monitorDataArray[4] / 1.5);
+            tableData.Tool2TestValveDriveCurrent = (int)(monitorDataArray[5] / 1.5);
+            tableData.Tool2CycleValveDriveCurrent = (int)(monitorDataArray[6] / 1.5);
 
             this.TableDatas.Add(tableData);
             ScrollControl();
