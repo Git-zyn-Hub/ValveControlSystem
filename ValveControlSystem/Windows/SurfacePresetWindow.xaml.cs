@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -19,11 +20,55 @@ namespace ValveControlSystem.Windows
     /// </summary>
     public partial class SurfacePresetWindow : Window
     {
-        private SurfacePreset _surfacePreset = new SurfacePreset();
+        private SurfacePreset _surfacePrs = new SurfacePreset();
+        private SurfacePresetXmlHelper _presetXmlHelper = new SurfacePresetXmlHelper();
+
+        public SurfacePreset SurfacePrs
+        {
+            get
+            {
+                return _surfacePrs;
+            }
+
+            set
+            {
+                _surfacePrs = value;
+            }
+        }
+
+        public Button ButtonOK
+        {
+            get { return this.btnOK; }
+        }
+
         public SurfacePresetWindow()
         {
             InitializeComponent();
-            this.DataContext = _surfacePreset;
+            _presetXmlHelper.SurfacePresetXmlInitial();
+            SurfacePrs = _presetXmlHelper.GetSurfacePreset();
+            this.DataContext = SurfacePrs;
+            ButtonOK.Click += ButtonOK_Click;
+        }
+
+        private void ButtonOK_Click(object sender, RoutedEventArgs e)
+        {
+            _presetXmlHelper.ModifyXmlSurfacePresetElement(SurfacePrs);
+            this.DialogResult = true;
+            this.Close();
+        }
+
+        private void btnDefault_Click(object sender, RoutedEventArgs e)
+        {
+            File.Delete(_presetXmlHelper.XmlPath);
+            _presetXmlHelper.SurfacePresetXmlInitial();
+            SurfacePrs = _presetXmlHelper.GetSurfacePreset();
+            this.DataContext = SurfacePrs;
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
         }
     }
 }

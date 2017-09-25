@@ -824,20 +824,57 @@ namespace ValveControlSystem
                     //return;
                 }
                 SurfacePresetWindow presetWin = new SurfacePresetWindow();
-                presetWin.Show();
-                //byte[] sendData = _sendDataPackage.PackageSendData(CommandTypeCommon.擦除指令, new byte[2] { 0, 0x28 });
+                bool? dialogResult = presetWin.ShowDialog();
+                if (dialogResult.HasValue && dialogResult.Value)
+                {
+                    byte[] bytesAutomaticClosurePressure = convertInt2Bytes(presetWin.SurfacePrs.AutomaticClosurePressure);
+                    byte[] bytesAVS_TriggerPressure = convertInt2Bytes(presetWin.SurfacePrs.AVS_TriggerPressure);
+                    byte[] bytesAVS4UnderPressureLimit = convertInt2Bytes(presetWin.SurfacePrs.AVS4UnderPressureLimit);
+                    byte[] bytesAVS4OverPressureLimit = convertInt2Bytes(presetWin.SurfacePrs.AVS4OverPressureLimit);
+                    byte[] bytesSUD_Setting = convertInt2Bytes(presetWin.SurfacePrs.SUD_Setting);
 
-                //Send(sendData);
-                //this.Dispatcher.Invoke(new Action(() =>
-                //{
-                //    this._originData.AddSendData(sendData);
-                //    this._originData.AddDataInfo("擦除Flash", DataLevel.Default);
-                //}));
+                    byte[] content = new byte[17]
+                    {
+                        (byte)presetWin.SurfacePrs.AutomaticClosureValve,
+                        bytesAutomaticClosurePressure[0],
+                        bytesAutomaticClosurePressure[1],
+                        (byte)presetWin.SurfacePrs.AVS_A_Option,
+                        bytesAVS_TriggerPressure[0],
+                        bytesAVS_TriggerPressure[1],
+                        (byte)presetWin.SurfacePrs.AVS_B_Option,
+                        (byte)presetWin.SurfacePrs.AVS4TimeLimit,
+                        bytesAVS4UnderPressureLimit[0],
+                        bytesAVS4UnderPressureLimit[1],
+                        bytesAVS4OverPressureLimit[0],
+                        bytesAVS4OverPressureLimit[1],
+                        bytesSUD_Setting[0],
+                        bytesSUD_Setting[1],
+                        (byte)presetWin.SurfacePrs.ToolNumber,
+                        0,0
+                    };
+                    byte[] sendData = _sendDataPackage.PackageSendData(CommandTypeCommon.地面预设指令, content);
+                    Send(sendData);
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        this._originData.AddSendData(sendData);
+                        this._originData.AddDataInfo("地面预设指令", DataLevel.Default);
+                    }));
+                }
             }
             catch (Exception ee)
             {
                 MessageBox.Show(ee.Message);
             }
+        }
+
+        private byte[] convertInt2Bytes(int input)
+        {
+            byte[] result = new byte[2];
+
+            result[0] = (byte)((input >> 8) & 255);
+            result[1] = (byte)(input & 255);
+
+            return result;
         }
     }
 }

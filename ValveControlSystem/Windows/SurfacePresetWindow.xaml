@@ -111,10 +111,11 @@
                 <TextBox Text="{Binding SUD_Setting,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
         </StackPanel>
-        <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30,0">默认</Button>
+        <Button x:Name="btnDefault" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30,0"
+                Click="btnDefault_Click">默认</Button>
         <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button>取消</Button>
-            <Button Margin="30,0">确认</Button>
+            <Button x:Name="btnCancel" Click="btnCancel_Click">取消</Button>
+            <Button x:Name="btnOK" Margin="30,0">确认</Button>
         </StackPanel>
     </Grid>
 </Window>
