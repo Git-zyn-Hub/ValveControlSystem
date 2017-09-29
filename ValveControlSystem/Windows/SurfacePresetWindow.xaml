@@ -39,7 +39,7 @@
             <RowDefinition Height="1.5*"/>
             <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
-        <GroupBox Header="自动关闭阀AVC">
+        <GroupBox Header="阀自动关闭AVC">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">none</RadioButton>
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">CV</RadioButton>
@@ -92,23 +92,23 @@
             </StackPanel.Resources>
             <DockPanel Margin="10">
                 <Label>自动关闭压力</Label>
-                <TextBox Text="{Binding AutomaticClosurePressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox x:Name="txtAutomaticClosurePressure" Text="{Binding AutomaticClosurePressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
             <DockPanel Margin="10">
                 <Label>AVS触发压力</Label>
-                <TextBox Text="{Binding AVS_TriggerPressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox x:Name="txtAVS_TriggerPressure" Text="{Binding AVS_TriggerPressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
             <DockPanel Margin="10">
                 <Label>AVS 4压力下门限</Label>
-                <TextBox Text="{Binding AVS4UnderPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox x:Name="txtAVS4UnderPressureLimit" Text="{Binding AVS4UnderPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
             <DockPanel Margin="10">
                 <Label>AVS 4压力上门限</Label>
-                <TextBox Text="{Binding AVS4OverPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox x:Name="txtAVS4OverPressureLimit" Text="{Binding AVS4OverPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
             <DockPanel Margin="10">
                 <Label>SUD设置</Label>
-                <TextBox Text="{Binding SUD_Setting,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox x:Name="txtSUD_Setting" Text="{Binding SUD_Setting,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
         </StackPanel>
         <Button x:Name="btnDefault" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30,0"

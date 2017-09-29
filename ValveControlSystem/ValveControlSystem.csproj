@@ -71,6 +71,7 @@
     <Compile Include="Classes\CurveGeneralSetting.cs" />
     <Compile Include="Classes\CurveSetting.cs" />
     <Compile Include="Classes\CurveSetXmlHelper.cs" />
+    <Compile Include="Classes\FindChild.cs" />
     <Compile Include="Classes\GetBrushes.cs" />
     <Compile Include="Classes\GetTempFromVoltage.cs" />
     <Compile Include="Classes\SurfacePreset.cs" />

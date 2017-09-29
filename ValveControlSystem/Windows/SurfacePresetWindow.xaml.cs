@@ -52,9 +52,17 @@ namespace ValveControlSystem.Windows
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
+            checkErrorState();
             _presetXmlHelper.ModifyXmlSurfacePresetElement(SurfacePrs);
             this.DialogResult = true;
             this.Close();
+        }
+
+        private bool checkErrorState()
+        {
+            FindChild fc = new FindChild();
+            Border border = fc.FindVisualChild<Border>(this.txtAutomaticClosurePressure);
+            return true;
         }
 
         private void btnDefault_Click(object sender, RoutedEventArgs e)
