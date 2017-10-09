@@ -35,6 +35,7 @@ namespace ValveControlSystem
         private CurveUserControl _curve = new CurveUserControl();
         private List<Floatable.FloatableUserControl> _floatUserCtrlList = new List<Floatable.FloatableUserControl>();
         private double _rowDataTableAndOriginDataHeight;
+        private ToolNo _toolNoSetted = ToolNo.Undefined;
 
         public List<Window> ChildrenWindow
         {
@@ -444,16 +445,25 @@ namespace ValveControlSystem
                 if (_connType == ConnectType.Notconnected)
                 {
                     MessageBox.Show("未连接，请先连接！");
-                    //return;
+                    return;
+                }
+                if (_toolNoSetted == ToolNo.Undefined)
+                {
+                    MessageBox.Show("请先进行地面预设！");
+                    return;
                 }
                 MenuItem miCommandSender = sender as MenuItem;
-                int? toolNo = getFirstNumInString(miCommandSender.Tag.ToString());
-                if (!toolNo.HasValue)
+                ToolNo toolNoSend = ToolNo.Undefined;
+                if (first2WordsIsGongJu(miCommandSender.Tag.ToString()))
                 {
-                    toolNo = 0;
+                    toolNoSend = _toolNoSetted;
+                }
+                else
+                {
+                    toolNoSend = ToolNo.None;
                 }
                 CommandType cmdType = (CommandType)Enum.Parse(typeof(CommandType), miCommandSender.Tag.ToString());
-                byte[] sendData = _sendDataPackage.PackageSendData((byte)toolNo.Value, cmdType);
+                byte[] sendData = _sendDataPackage.PackageSendData((byte)toolNoSend, cmdType);
 
                 switch (_connType)
                 {
@@ -542,6 +552,12 @@ namespace ValveControlSystem
                 }
             }
             return null;
+        }
+
+        private bool first2WordsIsGongJu(string input)
+        {
+            string sub = input.Substring(0, 2);
+            return sub == "工具" ? true : false;
         }
 
         private void handleReceivedData(byte[] receivedData)
@@ -827,6 +843,7 @@ namespace ValveControlSystem
                 bool? dialogResult = presetWin.ShowDialog();
                 if (dialogResult.HasValue && dialogResult.Value)
                 {
+                    this._toolNoSetted = presetWin.ToolNoSet;
                     byte[] bytesAutomaticClosurePressure = convertInt2Bytes(presetWin.SurfacePrs.AutomaticClosurePressure);
                     byte[] bytesAVS_TriggerPressure = convertInt2Bytes(presetWin.SurfacePrs.AVS_TriggerPressure);
                     byte[] bytesAVS4UnderPressureLimit = convertInt2Bytes(presetWin.SurfacePrs.AVS4UnderPressureLimit);

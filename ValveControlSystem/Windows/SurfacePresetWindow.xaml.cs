@@ -22,6 +22,7 @@ namespace ValveControlSystem.Windows
     {
         private SurfacePreset _surfacePrs = new SurfacePreset();
         private SurfacePresetXmlHelper _presetXmlHelper = new SurfacePresetXmlHelper();
+        private ToolNo _toolNoSet = ToolNo.Undefined;
 
         public SurfacePreset SurfacePrs
         {
@@ -41,6 +42,19 @@ namespace ValveControlSystem.Windows
             get { return this.btnOK; }
         }
 
+        public ToolNo ToolNoSet
+        {
+            get
+            {
+                return _toolNoSet;
+            }
+
+            set
+            {
+                _toolNoSet = value;
+            }
+        }
+
         public SurfacePresetWindow()
         {
             InitializeComponent();
@@ -53,6 +67,20 @@ namespace ValveControlSystem.Windows
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
             checkErrorState();
+
+            if (SurfacePrs.ToolNumber == 1)
+            {
+                ToolNoSet = ToolNo.Tool_1;
+            }
+            else if (SurfacePrs.ToolNumber == 2)
+            {
+                ToolNoSet = ToolNo.Tool_2;
+            }
+            else
+            {
+                ToolNoSet = ToolNo.Undefined;
+            }
+
             _presetXmlHelper.ModifyXmlSurfacePresetElement(SurfacePrs);
             this.DialogResult = true;
             this.Close();

@@ -57,4 +57,12 @@ namespace ValveControlSystem
         地面预设指令 = 0x04,
         对时指令 = 0x05
     }
+
+    public enum ToolNo
+    {
+        None = 0,
+        Tool_1,
+        Tool_2,
+        Undefined
+    }
 }
