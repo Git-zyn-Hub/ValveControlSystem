@@ -837,7 +837,7 @@ namespace ValveControlSystem
                 if (_connType == ConnectType.Notconnected)
                 {
                     MessageBox.Show("未连接，请先连接！");
-                    //return;
+                    return;
                 }
                 SurfacePresetWindow presetWin = new SurfacePresetWindow();
                 bool? dialogResult = presetWin.ShowDialog();
