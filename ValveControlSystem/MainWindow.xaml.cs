@@ -453,17 +453,17 @@ namespace ValveControlSystem
                     return;
                 }
                 MenuItem miCommandSender = sender as MenuItem;
-                ToolNo toolNoSend = ToolNo.Undefined;
-                if (first2WordsIsGongJu(miCommandSender.Tag.ToString()))
-                {
-                    toolNoSend = _toolNoSetted;
-                }
-                else
-                {
-                    toolNoSend = ToolNo.None;
-                }
+                //ToolNo toolNoSend = ToolNo.Undefined;
+                //if (first2WordsIsGongJu(miCommandSender.Tag.ToString()))
+                //{
+                //    toolNoSend = _toolNoSetted;
+                //}
+                //else
+                //{
+                //    toolNoSend = ToolNo.None;
+                //}
                 CommandType cmdType = (CommandType)Enum.Parse(typeof(CommandType), miCommandSender.Tag.ToString());
-                byte[] sendData = _sendDataPackage.PackageSendData((byte)toolNoSend, cmdType);
+                byte[] sendData = _sendDataPackage.PackageSendData((byte)_toolNoSetted, cmdType);
 
                 switch (_connType)
                 {
@@ -602,6 +602,16 @@ namespace ValveControlSystem
                                     string receiveDataInfo = "指令 擦除Flash ";
                                     receiveDataInfo += CommandState.状态正常.ToString();
                                     this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                }
+                                break;
+                            case (byte)CommandTypeCommon.地面预设指令:
+                                {
+                                    if (receivedData[9] == (byte)CommandState.状态正常)
+                                    {
+                                        string receiveDataInfo = "地面预设指令 ";
+                                        receiveDataInfo += CommandState.状态正常.ToString();
+                                        this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                    }
                                 }
                                 break;
                             default:
