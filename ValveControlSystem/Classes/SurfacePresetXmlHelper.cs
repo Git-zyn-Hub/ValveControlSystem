@@ -41,7 +41,9 @@ namespace ValveControlSystem.Classes
                 AVS4UnderPressureLimit = 500,
                 AVS4OverPressureLimit = 500,
                 SUD_Setting = 100,
-                ToolNumber = 1
+                ToolNumber = 1,
+                CircleValveState=0,
+                TestValveState=1
             };
 
             XDocument doc = new XDocument
@@ -63,7 +65,9 @@ namespace ValveControlSystem.Classes
                         new XAttribute("AVS4UnderPressureLimit", preset.AVS4UnderPressureLimit),
                         new XAttribute("AVS4OverPressureLimit", preset.AVS4OverPressureLimit),
                         new XAttribute("SUD_Setting", preset.SUD_Setting),
-                        new XAttribute("ToolNumber", preset.ToolNumber)
+                        new XAttribute("ToolNumber", preset.ToolNumber),
+                        new XAttribute("CircleValveState", preset.CircleValveState),
+                        new XAttribute("TestValveState", preset.TestValveState)
                     )
                 )
             );
@@ -96,6 +100,8 @@ namespace ValveControlSystem.Classes
                 element.SetAttributeValue("AVS4OverPressureLimit", preset.AVS4OverPressureLimit);
                 element.SetAttributeValue("SUD_Setting", preset.SUD_Setting);
                 element.SetAttributeValue("ToolNumber", preset.ToolNumber);
+                element.SetAttributeValue("CircleValveState", preset.CircleValveState);
+                element.SetAttributeValue("TestValveState", preset.TestValveState);
             }
             xd.Save(XmlPath);
         }
@@ -125,6 +131,8 @@ namespace ValveControlSystem.Classes
             preset.AVS4OverPressureLimit = int.Parse(getXmlAttributeValue("AVS4OverPressureLimit"));
             preset.SUD_Setting = int.Parse(getXmlAttributeValue("SUD_Setting"));
             preset.ToolNumber = int.Parse(getXmlAttributeValue("ToolNumber"));
+            preset.CircleValveState = int.Parse(getXmlAttributeValue("CircleValveState"));
+            preset.TestValveState = int.Parse(getXmlAttributeValue("TestValveState"));
             return preset;
         }
     }

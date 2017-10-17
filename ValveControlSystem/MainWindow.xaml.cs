@@ -877,7 +877,8 @@ namespace ValveControlSystem
                         bytesSUD_Setting[0],
                         bytesSUD_Setting[1],
                         (byte)presetWin.SurfacePrs.ToolNumber,
-                        0,0
+                        (byte)presetWin.SurfacePrs.CircleValveState,
+                        (byte)presetWin.SurfacePrs.TestValveState
                     };
                     byte[] sendData = _sendDataPackage.PackageSendData(CommandTypeCommon.地面预设指令, content);
                     Send(sendData);

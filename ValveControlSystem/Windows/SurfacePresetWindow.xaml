@@ -90,26 +90,40 @@
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                 </Style>
             </StackPanel.Resources>
-            <DockPanel Margin="10">
+            <DockPanel Margin="5">
                 <Label>自动关闭压力</Label>
                 <TextBox x:Name="txtAutomaticClosurePressure" Text="{Binding AutomaticClosurePressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
-            <DockPanel Margin="10">
+            <DockPanel Margin="5">
                 <Label>AVS触发压力</Label>
                 <TextBox x:Name="txtAVS_TriggerPressure" Text="{Binding AVS_TriggerPressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
-            <DockPanel Margin="10">
+            <DockPanel Margin="5">
                 <Label>AVS 4压力下门限</Label>
                 <TextBox x:Name="txtAVS4UnderPressureLimit" Text="{Binding AVS4UnderPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
-            <DockPanel Margin="10">
+            <DockPanel Margin="5">
                 <Label>AVS 4压力上门限</Label>
                 <TextBox x:Name="txtAVS4OverPressureLimit" Text="{Binding AVS4OverPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
-            <DockPanel Margin="10">
+            <DockPanel Margin="5">
                 <Label>SUD设置</Label>
                 <TextBox x:Name="txtSUD_Setting" Text="{Binding SUD_Setting,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="3" Margin="0,30">
+            <GroupBox Header="循环阀状态">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton IsChecked="{Binding CircleValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">开</RadioButton>
+                    <RadioButton IsChecked="{Binding CircleValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">关</RadioButton>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="测试阀状态">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton IsChecked="{Binding TestValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">开</RadioButton>
+                    <RadioButton IsChecked="{Binding TestValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">关</RadioButton>
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
         <Button x:Name="btnDefault" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30,0"
                 Click="btnDefault_Click">默认</Button>

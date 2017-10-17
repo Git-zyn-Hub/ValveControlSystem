@@ -18,6 +18,8 @@ namespace ValveControlSystem.Classes
         private int _AVS4OverPressureLimit;
         private int _SUD_Setting;
         private int _ToolNumber;
+        private int _circleValveState;
+        private int _testValveState;
         public int AutomaticClosureValve
         {
             get
@@ -183,6 +185,40 @@ namespace ValveControlSystem.Classes
                 {
                     _ToolNumber = value;
                     OnPropertyChanged("ToolNumber");
+                }
+            }
+        }
+
+        public int CircleValveState
+        {
+            get
+            {
+                return _circleValveState;
+            }
+
+            set
+            {
+                if (_circleValveState != value)
+                {
+                    _circleValveState = value;
+                    OnPropertyChanged("CircleValveState");
+                }
+            }
+        }
+
+        public int TestValveState
+        {
+            get
+            {
+                return _testValveState;
+            }
+
+            set
+            {
+                if (_testValveState != value)
+                {
+                    _testValveState = value;
+                    OnPropertyChanged("TestValveState");
                 }
             }
         }
