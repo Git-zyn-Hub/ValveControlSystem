@@ -251,6 +251,9 @@ namespace ValveControlSystem
 
                                 this._originData.AddSendData(sendData);
                                 this._originData.AddDataInfo("回放指令", DataLevel.Default);
+
+                                _dataTable.ClearTable();
+                                _curve.ClearCurve();
                                 //}
                             }
                             else
@@ -273,6 +276,9 @@ namespace ValveControlSystem
 
                                 this._originData.AddSendData(buffer);
                                 this._originData.AddDataInfo("回放指令", DataLevel.Default);
+
+                                _dataTable.ClearTable();
+                                _curve.ClearCurve();
                                 //}
                             }
                             else
@@ -590,8 +596,6 @@ namespace ValveControlSystem
                                 break;
                             case (byte)CommandTypeCommon.回放指令:
                                 {
-                                    _dataTable.ClearTable();
-                                    _curve.ClearCurve();
                                     _dataTable.HandleData(receivedData);
                                     _curve.HandleData(receivedData);
                                     this._originData.AddDataInfo("回放数据", DataLevel.Default);
@@ -701,10 +705,22 @@ namespace ValveControlSystem
             }
         }
 
+        //private int hitCount = 0;
         private void miTimeSet_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                //if (hitCount==0)
+                //{
+                //    _curve.HandleData(TestData.SendData0);
+                //    _dataTable.HandleData(TestData.SendData0);
+                //    hitCount++;
+                //}
+                //else if (hitCount == 1)
+                //{
+                //    _curve.HandleData(TestData.SendData1);
+                //    _dataTable.HandleData(TestData.SendData1);
+                //}
                 if (_connType == ConnectType.Notconnected)
                 {
                     MessageBox.Show("未连接，请先连接！");

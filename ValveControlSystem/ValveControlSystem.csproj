@@ -76,6 +76,7 @@
     <Compile Include="Classes\GetTempFromVoltage.cs" />
     <Compile Include="Classes\SurfacePreset.cs" />
     <Compile Include="Classes\SurfacePresetXmlHelper.cs" />
+    <Compile Include="Classes\TestData.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="UserControls\CurveUserControl.xaml.cs">

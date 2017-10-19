@@ -104,6 +104,15 @@ namespace ValveControlSystem.UserControls
             this.axisYPressure.Interval = range / 8;
         }
 
+        private void changeXAxis(int max)
+        {
+            if (int.Parse(this.axisX.AxisMaximum.ToString()) != max)
+            {
+                this.axisX.AxisMaximum = max;
+                this.axisX.Interval = max > 200 ? (max / 200 * 10) : 10;
+            }
+        }
+
         public void ChangeTemperatureAxis(int range)
         {
             this.axisYTemperature.AxisMaximum = range;
@@ -171,29 +180,28 @@ namespace ValveControlSystem.UserControls
             try
             {
                 GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
-                if (dataArray.Length == 265)
+                if (dataArray.Length == 237)
                 {
-                    _dataPointsTemp = new DataPoint[8];
-                    _dataPointsPres = new DataPoint[64];
-                    for (int i = 0; i < 256; i++)
+                    _dataPointsTemp = new DataPoint[4];
+                    _dataPointsPres = new DataPoint[80];
+                    changeXAxis(((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80);
+                    int packageNo = (dataArray[_headerLength + 2] << 8) + dataArray[_headerLength + 3];
+                    for (int i = 0; i < 4; i++)
                     {
-                        if (i % 32 == 0)
-                        {
-                            DataPoint dataPointTemperature;
-                            dataPointTemperature = new DataPoint();
-                            dataPointTemperature.XValue = i;
-                            dataPointTemperature.YValue = getDoubleTemp.GetTemperature((dataArray[_headerLength + i] << 8) + dataArray[_headerLength + i + 1]);
-                            dataPointTemperature.MarkerEnabled = false;
-                            _dataPointsTemp[i / 32] = dataPointTemperature;
-                        }
-                        if (i % 4 == 0)
+                        DataPoint dataPointTemperature;
+                        dataPointTemperature = new DataPoint();
+                        dataPointTemperature.XValue = packageNo * 80 + i * 20;
+                        dataPointTemperature.YValue = getDoubleTemp.GetTemperature((dataArray[_headerLength + i * 56 + 44] << 8) + dataArray[_headerLength + i * 56 + 45]);
+                        dataPointTemperature.MarkerEnabled = false;
+                        _dataPointsTemp[i] = dataPointTemperature;
+                        for (int j = 0; j < 40; j++, j++)
                         {
                             DataPoint dataPointPressure;
                             dataPointPressure = new DataPoint();
-                            dataPointPressure.XValue = i;
-                            dataPointPressure.YValue = (dataArray[_headerLength + i + 2] << 8) + dataArray[_headerLength + i + 3];
+                            dataPointPressure.XValue = packageNo * 80 + i * 20 + j / 2;
+                            dataPointPressure.YValue = (dataArray[_headerLength + i * 56 + j + 4] << 8) + dataArray[_headerLength + i * 56 + j + 5];
                             dataPointPressure.MarkerEnabled = false;
-                            _dataPointsPres[i / 4] = dataPointPressure;
+                            _dataPointsPres[i * 20 + j / 2] = dataPointPressure;
                         }
                     }
                     addData(_dataPointsTemp, _dataPointsPres);
@@ -207,14 +215,14 @@ namespace ValveControlSystem.UserControls
 
         private void addData(DataPoint[] dataPointsTemp, DataPoint[] dataPointsPres)
         {
-            if (dataPointsTemp != null && dataPointsTemp.Length == 8)
+            if (dataPointsTemp != null && dataPointsTemp.Length == 4)
             {
                 foreach (var tempPoint in dataPointsTemp)
                 {
                     _dataSeries2.DataPoints.Add(tempPoint);
                 }
             }
-            if (dataPointsPres != null && dataPointsPres.Length == 64)
+            if (dataPointsPres != null && dataPointsPres.Length == 80)
             {
                 foreach (var presPoint in dataPointsPres)
                 {

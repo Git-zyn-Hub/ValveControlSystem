@@ -49,43 +49,46 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                for (int i = 0; i < 8; i++)
+                if (dataArray.Length == 237)
                 {
-                    int[] monitorDataArray = new int[7];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        int[] monitorDataArray = new int[7];
 
-                    monitorDataArray[0] = (dataArray[11 + i * 32] << 8) + dataArray[12 + i * 32];
-                    monitorDataArray[1] = (dataArray[15 + i * 32] << 8) + dataArray[16 + i * 32];
-                    monitorDataArray[2] = (dataArray[19 + i * 32] << 8) + dataArray[20 + i * 32];
-                    monitorDataArray[3] = (dataArray[23 + i * 32] << 8) + dataArray[24 + i * 32];
-                    monitorDataArray[4] = (dataArray[27 + i * 32] << 8) + dataArray[28 + i * 32];
-                    monitorDataArray[5] = (dataArray[31 + i * 32] << 8) + dataArray[32 + i * 32];
-                    monitorDataArray[6] = (dataArray[35 + i * 32] << 8) + dataArray[36 + i * 32];
+                        monitorDataArray[0] = (dataArray[53 + i * 56] << 8) + dataArray[54 + i * 56];
+                        monitorDataArray[1] = (dataArray[55 + i * 56] << 8) + dataArray[56 + i * 56];
+                        monitorDataArray[2] = (dataArray[57 + i * 56] << 8) + dataArray[58 + i * 56];
+                        monitorDataArray[3] = (dataArray[59 + i * 56] << 8) + dataArray[60 + i * 56];
+                        monitorDataArray[4] = (dataArray[61 + i * 56] << 8) + dataArray[62 + i * 56];
+                        monitorDataArray[5] = (dataArray[63 + i * 56] << 8) + dataArray[64 + i * 56];
+                        monitorDataArray[6] = (dataArray[65 + i * 56] << 8) + dataArray[66 + i * 56];
 
-                    AddData(monitorDataArray);
+                        AddData(monitorDataArray);
+                    }
+
+                    //TableData tableDataAverage = new TableData();
+                    //TableData tableDataSum = new TableData();
+                    //foreach (var tableData in this.TableDatas)
+                    //{
+                    //    tableDataSum.SolenoidValveVoltage += tableData.SolenoidValveVoltage;
+                    //    tableDataSum.PositivePowerMonitor += tableData.PositivePowerMonitor;
+                    //    tableDataSum.NegativePowerMonitor += tableData.NegativePowerMonitor;
+                    //    tableDataSum.Tool1TestValveDriveCurrent += tableData.Tool1TestValveDriveCurrent;
+                    //    tableDataSum.Tool1CycleValveDriveCurrent += tableData.Tool1CycleValveDriveCurrent;
+                    //    tableDataSum.Tool2TestValveDriveCurrent += tableData.Tool2TestValveDriveCurrent;
+                    //    tableDataSum.Tool2CycleValveDriveCurrent += tableData.Tool2CycleValveDriveCurrent;
+                    //}
+                    //tableDataAverage.SolenoidValveVoltage = save2FractionalPart(tableDataSum.SolenoidValveVoltage / 8);
+                    //tableDataAverage.PositivePowerMonitor = save2FractionalPart(tableDataSum.PositivePowerMonitor / 8);
+                    //tableDataAverage.NegativePowerMonitor = save2FractionalPart(tableDataSum.NegativePowerMonitor / 8);
+                    //tableDataAverage.Tool1TestValveDriveCurrent = tableDataSum.Tool1TestValveDriveCurrent / 8;
+                    //tableDataAverage.Tool1CycleValveDriveCurrent = tableDataSum.Tool1CycleValveDriveCurrent / 8;
+                    //tableDataAverage.Tool2TestValveDriveCurrent = tableDataSum.Tool2TestValveDriveCurrent / 8;
+                    //tableDataAverage.Tool2CycleValveDriveCurrent = tableDataSum.Tool2CycleValveDriveCurrent / 8;
+
+                    //this.TableDatas.Add(tableDataAverage);
+                    // ScrollControl();
                 }
-
-                TableData tableDataAverage = new TableData();
-                TableData tableDataSum = new TableData();
-                foreach (var tableData in this.TableDatas)
-                {
-                    tableDataSum.SolenoidValveVoltage += tableData.SolenoidValveVoltage;
-                    tableDataSum.PositivePowerMonitor += tableData.PositivePowerMonitor;
-                    tableDataSum.NegativePowerMonitor += tableData.NegativePowerMonitor;
-                    tableDataSum.Tool1TestValveDriveCurrent += tableData.Tool1TestValveDriveCurrent;
-                    tableDataSum.Tool1CycleValveDriveCurrent += tableData.Tool1CycleValveDriveCurrent;
-                    tableDataSum.Tool2TestValveDriveCurrent += tableData.Tool2TestValveDriveCurrent;
-                    tableDataSum.Tool2CycleValveDriveCurrent += tableData.Tool2CycleValveDriveCurrent;
-                }
-                tableDataAverage.SolenoidValveVoltage = save2FractionalPart(tableDataSum.SolenoidValveVoltage / 8);
-                tableDataAverage.PositivePowerMonitor = save2FractionalPart(tableDataSum.PositivePowerMonitor / 8);
-                tableDataAverage.NegativePowerMonitor = save2FractionalPart(tableDataSum.NegativePowerMonitor / 8);
-                tableDataAverage.Tool1TestValveDriveCurrent = tableDataSum.Tool1TestValveDriveCurrent / 8;
-                tableDataAverage.Tool1CycleValveDriveCurrent = tableDataSum.Tool1CycleValveDriveCurrent / 8;
-                tableDataAverage.Tool2TestValveDriveCurrent = tableDataSum.Tool2TestValveDriveCurrent / 8;
-                tableDataAverage.Tool2CycleValveDriveCurrent = tableDataSum.Tool2CycleValveDriveCurrent / 8;
-
-                this.TableDatas.Add(tableDataAverage);
-                ScrollControl();
             }
             catch (Exception ee)
             {
@@ -175,11 +178,11 @@ namespace ValveControlSystem.UserControls
             e.Row.Header = e.Row.GetIndex() + 1;
 
             DataGridRow dgr = e.Row;
-            if (e.Row.GetIndex() == 8)
-            {
-                e.Row.Header = "平均";
-                dgr.Background = new SolidColorBrush(Colors.LightYellow);
-            }
+            //if (e.Row.GetIndex() == 8)
+            //{
+            //    e.Row.Header = "平均";
+            //    dgr.Background = new SolidColorBrush(Colors.LightYellow);
+            //}
 
             ContextMenu cm = new ContextMenu();
 
