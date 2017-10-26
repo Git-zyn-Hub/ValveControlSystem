@@ -13,6 +13,7 @@ namespace ValveControlSystem
         private const byte _frameHeader3 = 0xAA;
         private const byte _frameHeader4 = 0x55;
         private const byte _orientation = 0xFF;
+        private byte[] _delayBytes = new byte[16];
         private int _checksum = 0;
         public SendDataPackage()
         {
@@ -82,7 +83,8 @@ namespace ValveControlSystem
             }
             result[lengthTotal - 2] = (byte)((_checksum & 0xff00) >> 8);
             result[lengthTotal - 1] = (byte)(_checksum & 0xff);
-            return result;
+
+            return combineBytes(_delayBytes, result);
         }
 
         /// <summary>
@@ -119,6 +121,15 @@ namespace ValveControlSystem
             }
             result[lengthTotal - 2] = (byte)((_checksum & 0xff00) >> 8);
             result[lengthTotal - 1] = (byte)(_checksum & 0xff);
+
+            return combineBytes(_delayBytes, result);
+        }
+
+        private byte[] combineBytes(byte[] firstBytes, byte[] secondBytes)
+        {
+            byte[] result = new byte[firstBytes.Length + secondBytes.Length];
+            Buffer.BlockCopy(firstBytes, 0, result, 0, firstBytes.Length);
+            Buffer.BlockCopy(secondBytes, 0, result, firstBytes.Length, secondBytes.Length);
             return result;
         }
     }
