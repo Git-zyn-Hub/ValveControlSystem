@@ -39,6 +39,7 @@ namespace ValveControlSystem.Windows
 
         private DateTime _startTime = new DateTime();
         private DateTime _endTime = new DateTime();
+        private DateTimeXmlHelper _timeXmlHelper = new DateTimeXmlHelper();
         //private User _userLogin;
         //private DbConn _dbConnect = new DbConn();
         //private GetTimeMode _windowMode = GetTimeMode.其他模式;
@@ -87,11 +88,21 @@ namespace ValveControlSystem.Windows
             InitializeComponent();
             try
             {
-
+                _timeXmlHelper.LogDateTimeXmlInitial();
+                if (_timeXmlHelper.GetStartDateAndTime().HasValue)
+                {
+                    this.dpStartDate.SelectedDate = _timeXmlHelper.GetStartDateAndTime().Value;
+                    this.tpStartTime.Value = _timeXmlHelper.GetStartDateAndTime().Value;
+                }
+                if (_timeXmlHelper.GetEndDateAndTime().HasValue)
+                {
+                    this.dpEndDate.SelectedDate = _timeXmlHelper.GetEndDateAndTime().Value;
+                    this.tpEndTime.Value = _timeXmlHelper.GetEndDateAndTime().Value;
+                }
             }
             catch (Exception ee)
             {
-                MessageBox.Show("选择时间窗口初始化异常："+ee.Message);
+                MessageBox.Show("选择时间窗口初始化异常：" + ee.Message);
             }
         }
         private void btnEnter_Click(object sender, RoutedEventArgs e)
@@ -106,8 +117,7 @@ namespace ValveControlSystem.Windows
                 }
                 else
                 {
-                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Application.Current.TryFindResource("warningMustSelectOneValue").ToString(),
-                                    string.Format(CultureInfo.CurrentCulture, Application.Current.TryFindResource("startTime").ToString())));
+                    MessageBox.Show("'开始日期'必须选择一个值！");
                     return;
                 }
                 if (this.tpStartTime.Value.HasValue)
@@ -137,8 +147,7 @@ namespace ValveControlSystem.Windows
                 }
                 else
                 {
-                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Application.Current.TryFindResource("warningMustSelectOneValue").ToString(),
-                                    string.Format(CultureInfo.CurrentCulture, Application.Current.TryFindResource("endTime").ToString())));
+                    MessageBox.Show("'结束日期'必须选择一个值！");
                     return;
                 }
                 if (this.tpEndTime.Value.HasValue)
@@ -151,7 +160,7 @@ namespace ValveControlSystem.Windows
                 int compareResult = this.StartTime.CompareTo(this.EndTime);
                 if (compareResult > 0)
                 {
-                    MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Application.Current.TryFindResource("msgStartTimeCanNotLaterThanEndTime").ToString()));
+                    MessageBox.Show("‘开始时间’不能晚于‘结束时间’");
                     return;
                 }
 
@@ -168,12 +177,17 @@ namespace ValveControlSystem.Windows
                 //else
                 //{
                 //    setNullValue();
-                //    _dbConnect.UpdateLogReadTime(_userLogin.UserID,
-                //        this.dpStartDate.SelectedDate.Value,
-                //        this.tpStartTime.Value.Value,
-                //        this.dpEndDate.SelectedDate.Value,
-                //        this.tpEndTime.Value.Value);
+                //_dbConnect.UpdateLogReadTime(_userLogin.UserID,
+                //    this.dpStartDate.SelectedDate.Value,
+                //    this.tpStartTime.Value.Value,
+                //    this.dpEndDate.SelectedDate.Value,
+                //    this.tpEndTime.Value.Value);
                 //}
+                setNullValue();
+                _timeXmlHelper.ModifyLogDateTimeXml(this.dpStartDate.SelectedDate.Value,
+                                                    this.tpStartTime.Value.Value,
+                                                    this.dpEndDate.SelectedDate.Value,
+                                                    this.tpEndTime.Value.Value);
                 this.DialogResult = true;
                 this.Close();
             }
