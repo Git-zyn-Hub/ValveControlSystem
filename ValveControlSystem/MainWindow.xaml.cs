@@ -742,6 +742,27 @@ namespace ValveControlSystem
                 MessageBox.Show(ee.Message);
             }
         }
+        private void miReadLog_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                GetDateAndTimeWindow newGetTimeWin = new GetDateAndTimeWindow();
+                newGetTimeWin.Owner = this;
+                newGetTimeWin.ShowDialog();
+                if (newGetTimeWin.DialogResult.Value)
+                {
+                    ShowLogWindow showLogWin = ShowLogWindow.GetInstance();
+                    showLogWin.Owner = this;
+                    showLogWin.StartTime = newGetTimeWin.StartTime;
+                    showLogWin.EndTime = newGetTimeWin.EndTime;
+                    showLogWin.Show();
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
+        }
 
         private void FucCurve_Closed()
         {
