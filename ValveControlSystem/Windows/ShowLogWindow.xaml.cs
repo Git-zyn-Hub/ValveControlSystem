@@ -237,7 +237,11 @@ namespace ValveControlSystem.Windows
 
         private void miExportExcel_Click(object sender, RoutedEventArgs e)
         {
-
+            Logs2Excel logs2Excel = Logs2Excel.GetInstance(Logs);
+            logs2Excel.StartTime = this.StartTime;
+            logs2Excel.EndTime = this.EndTime;
+            logs2Excel.SaveExcel();
+            logs2Excel.SaveLogs2Excel();
         }
     }
 

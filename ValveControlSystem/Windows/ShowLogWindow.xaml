@@ -88,7 +88,7 @@
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="压力（20个）" MinWidth="300" Binding="{Binding Pressure20}" 
-                                    ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
+                                    ElementStyle="{StaticResource dgCell}"
                                     IsReadOnly="True" Width="Auto"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>

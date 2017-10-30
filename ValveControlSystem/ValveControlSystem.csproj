@@ -39,6 +39,14 @@
     <ApplicationIcon>valve.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.86.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="FloatableUserControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\bin\Debug\FloatableUserControl.dll</HintPath>
@@ -79,6 +87,7 @@
     <Compile Include="Classes\FindChild.cs" />
     <Compile Include="Classes\GetBrushes.cs" />
     <Compile Include="Classes\GetTempFromVoltage.cs" />
+    <Compile Include="Classes\Logs2Excel.cs" />
     <Compile Include="Classes\SaveData2Xml.cs" />
     <Compile Include="Classes\SurfacePreset.cs" />
     <Compile Include="Classes\SurfacePresetXmlHelper.cs" />
