@@ -36,6 +36,7 @@ namespace ValveControlSystem
         private List<Floatable.FloatableUserControl> _floatUserCtrlList = new List<Floatable.FloatableUserControl>();
         private double _rowDataTableAndOriginDataHeight;
         private ToolNo _toolNoSetted = ToolNo.Undefined;
+        private SaveData2Xml _saveData2Xml;
 
         public List<Window> ChildrenWindow
         {
@@ -63,6 +64,7 @@ namespace ValveControlSystem
         public MainWindow()
         {
             InitializeComponent();
+            _saveData2Xml = SaveData2Xml.GetInstance();
         }
 
         private void socketListening()
@@ -254,6 +256,7 @@ namespace ValveControlSystem
 
                                 _dataTable.ClearTable();
                                 _curve.ClearCurve();
+                                _saveData2Xml.CreatNewFile();
                                 //}
                             }
                             else
@@ -279,6 +282,7 @@ namespace ValveControlSystem
 
                                 _dataTable.ClearTable();
                                 _curve.ClearCurve();
+                                _saveData2Xml.CreatNewFile();
                                 //}
                             }
                             else
@@ -598,6 +602,10 @@ namespace ValveControlSystem
                                 {
                                     _dataTable.HandleData(receivedData);
                                     _curve.HandleData(receivedData);
+                                    if (_saveData2Xml.DirectoryName!=string.Empty)
+                                    {
+                                        _saveData2Xml.SaveData(receivedData, receivedData.Length);
+                                    }
                                     this._originData.AddDataInfo("回放数据", DataLevel.Default);
                                 }
                                 break;

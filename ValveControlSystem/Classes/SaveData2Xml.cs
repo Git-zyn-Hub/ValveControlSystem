@@ -11,8 +11,21 @@ namespace ValveControlSystem.Classes
     public class SaveData2Xml
     {
         private string _fileName;
-        private string _directoryName;
+        private string _directoryName=string.Empty;
         private static SaveData2Xml _uniqueInstance;
+
+        public string DirectoryName
+        {
+            get
+            {
+                return _directoryName;
+            }
+
+            set
+            {
+                _directoryName = value;
+            }
+        }
 
         private SaveData2Xml()
         {
@@ -57,10 +70,10 @@ namespace ValveControlSystem.Classes
                     Directory.CreateDirectory(System.Environment.CurrentDirectory + @"\Log");
                 }
                 DateTime logTime = System.DateTime.Now;
-                _directoryName = System.Environment.CurrentDirectory + @"\Log\" + logTime.ToString("yyyy") + "\\" + logTime.ToString("yyyy-MM") + "\\" + logTime.ToString("yyyy-MM-dd");
-                if (!Directory.Exists(_directoryName))
+                DirectoryName = System.Environment.CurrentDirectory + @"\Log\" + logTime.ToString("yyyy") + "\\" + logTime.ToString("yyyy-MM") + "\\" + logTime.ToString("yyyy-MM-dd");
+                if (!Directory.Exists(DirectoryName))
                 {
-                    Directory.CreateDirectory(_directoryName);
+                    Directory.CreateDirectory(DirectoryName);
                 }
             }
             catch (NotSupportedException ee)
@@ -80,7 +93,7 @@ namespace ValveControlSystem.Classes
             try
             {
                 XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(_directoryName + @"\" + _fileName);
+                xmlDoc.Load(DirectoryName + @"\" + _fileName);
                 XmlNode nodeDatas = xmlDoc.SelectSingleNode("/Log/Datas");
                 if (nodeDatas != null)
                 {
@@ -90,7 +103,7 @@ namespace ValveControlSystem.Classes
                     xe1.SetAttribute("Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));//设置该节点Time属性
                     xe1.InnerText = BitConverter.ToString(data, 0, length);
                 }
-                xmlDoc.Save(_directoryName + @"\" + _fileName);
+                xmlDoc.Save(DirectoryName + @"\" + _fileName);
             }
             catch (Exception ee)
             {
@@ -102,7 +115,7 @@ namespace ValveControlSystem.Classes
         {
             checkDirectory();
             _fileName = DateTime.Now.ToString("yyyy-MM-dd HHmmss") + ".xml";
-            creatFile(_directoryName, _fileName);
+            creatFile(DirectoryName, _fileName);
         }
     }
 }

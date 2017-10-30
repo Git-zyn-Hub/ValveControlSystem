@@ -43,13 +43,20 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding Logs,ElementName=showLogWin}" ScrollViewer.HorizontalScrollBarVisibility="Auto" Width="Auto" HorizontalAlignment="Stretch"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="181*"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="导出Excel" x:Name="miExportExcel" Click="miExportExcel_Click"></MenuItem>
+        </Menu>
+        <DataGrid ItemsSource="{Binding Logs,ElementName=showLogWin}" ScrollViewer.HorizontalScrollBarVisibility="Visible" HorizontalAlignment="Stretch"
                   AutoGenerateColumns="False" IsReadOnly="True" CanUserSortColumns="False" LoadingRow="dataGrid_LoadingRow"
-                  CanUserAddRows="False" CanUserDeleteRows="False" x:Name="dgDataTable" AlternationCount="2">
+                  CanUserAddRows="False" CanUserDeleteRows="False" x:Name="dgDataTable" AlternationCount="2" Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="时间" MinWidth="130" Binding="{Binding Time,Converter={StaticResource dateTimeConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
-                                    IsReadOnly="True" Width="1.6*"></DataGridTextColumn>
+                                    IsReadOnly="True" Width="Auto"></DataGridTextColumn>
                 <DataGridTextColumn Header="总包数" MinWidth="60" Binding="{Binding TotalPackageCount}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
@@ -80,7 +87,7 @@
                 <DataGridTextColumn Header="循环阀打开驱动电流" MinWidth="60" Binding="{Binding CycleValveOpenDriveCurrent}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="压力（20个）" MinWidth="60" Binding="{Binding Pressure20}" 
+                <DataGridTextColumn Header="压力（20个）" MinWidth="300" Binding="{Binding Pressure20}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="Auto"></DataGridTextColumn>
             </DataGrid.Columns>

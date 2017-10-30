@@ -191,7 +191,7 @@ namespace ValveControlSystem.Windows
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < 40; i++, i++)
             {
-                sb.Append((bytesData[11 + i] << 8) + bytesData[12 + i]);
+                sb.Append((bytesData[11 + i + offset * 56] << 8) + bytesData[12 + i + offset * 56]);
                 if (i != 38)
                 {
                     sb.Append(",");
@@ -233,6 +233,11 @@ namespace ValveControlSystem.Windows
         private void dataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = e.Row.GetIndex() + 1;
+        }
+
+        private void miExportExcel_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 
