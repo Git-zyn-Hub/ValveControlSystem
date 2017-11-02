@@ -88,23 +88,30 @@ namespace ValveControlSystem.Classes
 
         public void SaveLogs2Excel()
         {
-            LineCount = _logs.Count;
-            for (int i = 0; i < LineCount; i++)
+            try
             {
-                _workSheet.Cell(i + 2, 1).Value = _logs[i].Time;
-                _workSheet.Cell(i + 2, 2).Value = _logs[i].TotalPackageCount;
-                _workSheet.Cell(i + 2, 3).Value = _logs[i].CurrentPackageNo;
-                _workSheet.Cell(i + 2, 4).Value = _logs[i].Temperature;
-                _workSheet.Cell(i + 2, 5).Value = _logs[i].SolenoidValveVoltage;
-                _workSheet.Cell(i + 2, 6).Value = _logs[i].NegativePowerMonitor;
-                _workSheet.Cell(i + 2, 7).Value = _logs[i].PositivePowerMonitor;
-                _workSheet.Cell(i + 2, 8).Value = _logs[i].TestValveCloseDriveCurrent;
-                _workSheet.Cell(i + 2, 9).Value = _logs[i].TestValveOpenDriveCurrent;
-                _workSheet.Cell(i + 2, 10).Value = _logs[i].CycleValveCloseDriveCurrent;
-                _workSheet.Cell(i + 2, 11).Value = _logs[i].CycleValveOpenDriveCurrent;
-                _workSheet.Cell(i + 2, 12).Value = _logs[i].Pressure20;
+                LineCount = _logs.Count;
+                for (int i = 0; i < LineCount; i++)
+                {
+                    _workSheet.Cell(i + 2, 1).Value = _logs[i].Time;
+                    _workSheet.Cell(i + 2, 2).Value = _logs[i].TotalPackageCount;
+                    _workSheet.Cell(i + 2, 3).Value = _logs[i].CurrentPackageNo;
+                    _workSheet.Cell(i + 2, 4).Value = _logs[i].Temperature;
+                    _workSheet.Cell(i + 2, 5).Value = _logs[i].SolenoidValveVoltage;
+                    _workSheet.Cell(i + 2, 6).Value = _logs[i].NegativePowerMonitor;
+                    _workSheet.Cell(i + 2, 7).Value = _logs[i].PositivePowerMonitor;
+                    _workSheet.Cell(i + 2, 8).Value = _logs[i].TestValveCloseDriveCurrent;
+                    _workSheet.Cell(i + 2, 9).Value = _logs[i].TestValveOpenDriveCurrent;
+                    _workSheet.Cell(i + 2, 10).Value = _logs[i].CycleValveCloseDriveCurrent;
+                    _workSheet.Cell(i + 2, 11).Value = _logs[i].CycleValveOpenDriveCurrent;
+                    _workSheet.Cell(i + 2, 12).Value = _logs[i].Pressure20;
+                }
+                this.SaveEnd();
             }
-            this.SaveEnd();
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
         }
 
         //public void AddReplayData(int meterNo, int frameNo, List<int> pressuresData, byte temperature)
@@ -166,56 +173,63 @@ namespace ValveControlSystem.Classes
 
         public void SaveExcel()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Excel File|*.xlsx|All File|*.*";
-            saveFileDialog.FilterIndex = 1;
-            saveFileDialog.RestoreDirectory = true;
-            _fName = string.Empty;
-            string defaultFileName = ("日志" + StartTime.ToString("yyyyMMddHHmmss") + "-" + EndTime.ToString("yyyyMMddHHmmss"));
-            saveFileDialog.FileName = defaultFileName;
-
-            if (saveFileDialog.ShowDialog().Value)
+            try
             {
-                _fName = saveFileDialog.FileName;
-                if (!io.File.Exists(_fName))
-                {
-                    io.File.Create(_fName).Close();
-                }
-                if (!string.IsNullOrEmpty(_fName))
-                {
-                    //给Excel文件添加"Everyone,Users"用户组的完全控制权限  
-                    io.FileInfo fi = new io.FileInfo(_fName);
-                    FileSecurity fileSecurity = fi.GetAccessControl();
-                    fileSecurity.AddAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
-                    fileSecurity.AddAccessRule(new FileSystemAccessRule("Users", FileSystemRights.FullControl, AccessControlType.Allow));
-                    fi.SetAccessControl(fileSecurity);
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Excel File|*.xlsx|All File|*.*";
+                saveFileDialog.FilterIndex = 1;
+                saveFileDialog.RestoreDirectory = true;
+                _fName = string.Empty;
+                string defaultFileName = ("日志" + StartTime.ToString("yyyyMMddHHmmss") + "-" + EndTime.ToString("yyyyMMddHHmmss"));
+                saveFileDialog.FileName = defaultFileName;
 
-                    //给Excel文件所在目录添加"Everyone,Users"用户组的完全控制权限  
-                    io.DirectoryInfo di = new io.DirectoryInfo(io.Path.GetDirectoryName(_fName));
-                    DirectorySecurity dirSecurity = di.GetAccessControl();
-                    dirSecurity.AddAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
-                    dirSecurity.AddAccessRule(new FileSystemAccessRule("Users", FileSystemRights.FullControl, AccessControlType.Allow));
-                    di.SetAccessControl(dirSecurity);
+                if (saveFileDialog.ShowDialog().Value)
+                {
+                    _fName = saveFileDialog.FileName;
+                    if (!io.File.Exists(_fName))
+                    {
+                        io.File.Create(_fName).Close();
+                    }
+                    if (!string.IsNullOrEmpty(_fName))
+                    {
+                        //给Excel文件添加"Everyone,Users"用户组的完全控制权限  
+                        io.FileInfo fi = new io.FileInfo(_fName);
+                        FileSecurity fileSecurity = fi.GetAccessControl();
+                        fileSecurity.AddAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
+                        fileSecurity.AddAccessRule(new FileSystemAccessRule("Users", FileSystemRights.FullControl, AccessControlType.Allow));
+                        fi.SetAccessControl(fileSecurity);
 
-                    try
-                    {
-                        _workBook.SaveAs(_fName);
-                        //LineCount = 0;
-                        //CloseInstance();
+                        //给Excel文件所在目录添加"Everyone,Users"用户组的完全控制权限  
+                        io.DirectoryInfo di = new io.DirectoryInfo(io.Path.GetDirectoryName(_fName));
+                        DirectorySecurity dirSecurity = di.GetAccessControl();
+                        dirSecurity.AddAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, AccessControlType.Allow));
+                        dirSecurity.AddAccessRule(new FileSystemAccessRule("Users", FileSystemRights.FullControl, AccessControlType.Allow));
+                        di.SetAccessControl(dirSecurity);
+
+                        try
+                        {
+                            _workBook.SaveAs(_fName);
+                            //LineCount = 0;
+                            //CloseInstance();
+                        }
+                        catch (io.IOException)
+                        {
+                            throw;
+                        }
                     }
-                    catch (io.IOException)
-                    {
-                        throw;
-                    }
+                    SaveDialogResult = true;
                 }
-                SaveDialogResult = true;
+                else
+                {
+                    _workSheet.Clear();
+                    SaveDialogResult = false;
+                    //LineCount = 0;
+                    //CloseInstance();
+                }
             }
-            else
+            catch (Exception ee)
             {
-                _workSheet.Clear();
-                SaveDialogResult = false;
-                //LineCount = 0;
-                //CloseInstance();
+                MessageBox.Show(ee.Message);
             }
         }
 

@@ -13,7 +13,7 @@ namespace ValveControlSystem
         private const byte _frameHeader3 = 0xAA;
         private const byte _frameHeader4 = 0x55;
         private const byte _orientation = 0xFF;
-        private byte[] _delayBytes = new byte[16];
+        private byte[] _delayBytes = new byte[8];
         private int _checksum = 0;
         public SendDataPackage()
         {

@@ -241,7 +241,10 @@ namespace ValveControlSystem.Windows
             logs2Excel.StartTime = this.StartTime;
             logs2Excel.EndTime = this.EndTime;
             logs2Excel.SaveExcel();
-            logs2Excel.SaveLogs2Excel();
+            if (logs2Excel.SaveDialogResult)
+            {
+                logs2Excel.SaveLogs2Excel();
+            }
         }
     }
 
