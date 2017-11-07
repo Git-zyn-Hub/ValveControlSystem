@@ -24,28 +24,35 @@ namespace ValveControlSystem.UserControls
 
         public CurveUserControl()
         {
-            InitializeComponent();
-            _curveSetXmlHelper.XmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
-            _curveSetXmlHelper.CurveSettingXmlInitial();
-            if (chartCurve.Series.Count == 0)
+            try
             {
-                _dataSeries1 = new DataSeries();
-                chartCurve.Series.Add(_dataSeries1);
-                _dataSeries1.RenderAs = RenderAs.Line;
-                _dataSeries1.XValueType = ChartValueTypes.Numeric;
-                _dataSeries1.AxisYType = AxisTypes.Primary;
-                _dataSeries1.MarkerEnabled = false;
-                _dataSeries1.LegendText = "压力";
+                InitializeComponent();
+                _curveSetXmlHelper.XmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
+                _curveSetXmlHelper.CurveSettingXmlInitial();
+                if (chartCurve.Series.Count == 0)
+                {
+                    _dataSeries1 = new DataSeries();
+                    chartCurve.Series.Add(_dataSeries1);
+                    _dataSeries1.RenderAs = RenderAs.Line;
+                    _dataSeries1.XValueType = ChartValueTypes.Numeric;
+                    _dataSeries1.AxisYType = AxisTypes.Primary;
+                    _dataSeries1.MarkerEnabled = false;
+                    _dataSeries1.LegendText = "压力";
+                }
+                if (chartCurve.Series.Count == 1)
+                {
+                    _dataSeries2 = new DataSeries();
+                    chartCurve.Series.Add(_dataSeries2);
+                    _dataSeries2.RenderAs = RenderAs.Line;
+                    _dataSeries2.XValueType = ChartValueTypes.Numeric;
+                    _dataSeries2.AxisYType = AxisTypes.Secondary;
+                    _dataSeries2.MarkerEnabled = false;
+                    _dataSeries2.LegendText = "温度";
+                }
             }
-            if (chartCurve.Series.Count == 1)
+            catch (Exception ee)
             {
-                _dataSeries2 = new DataSeries();
-                chartCurve.Series.Add(_dataSeries2);
-                _dataSeries2.RenderAs = RenderAs.Line;
-                _dataSeries2.XValueType = ChartValueTypes.Numeric;
-                _dataSeries2.AxisYType = AxisTypes.Secondary;
-                _dataSeries2.MarkerEnabled = false;
-                _dataSeries2.LegendText = "温度";
+                MessageBox.Show("曲线用户控件初始化异常：" + ee.Message);
             }
         }
         private void lineChart_Rendered(object sender, EventArgs e)
@@ -73,106 +80,191 @@ namespace ValveControlSystem.UserControls
 
         public void ChangeFontSize(double fontSize)
         {
-            this.axisYPressure.TitleFontSize = fontSize;
-            this.axisYPressure.AxisLabels.FontSize = fontSize;
-            this.axisYTemperature.TitleFontSize = fontSize;
-            this.axisYTemperature.AxisLabels.FontSize = fontSize;
-            //this._axisXTime.TitleFontSize = fontSize;
-            this.axisX.AxisLabels.FontSize = fontSize;
-            foreach (var item in this.chartCurve.Legends)
+            try
             {
-                item.FontSize = fontSize;
+
+                this.axisYPressure.TitleFontSize = fontSize;
+                this.axisYPressure.AxisLabels.FontSize = fontSize;
+                this.axisYTemperature.TitleFontSize = fontSize;
+                this.axisYTemperature.AxisLabels.FontSize = fontSize;
+                //this._axisXTime.TitleFontSize = fontSize;
+                this.axisX.AxisLabels.FontSize = fontSize;
+                foreach (var item in this.chartCurve.Legends)
+                {
+                    item.FontSize = fontSize;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("改变字体大小异常：" + ee.Message);
             }
         }
         public void ChangeFontFamily(FontFamily fontFamily)
         {
-            this.axisYPressure.TitleFontFamily = fontFamily;
-            this.axisYPressure.AxisLabels.FontFamily = fontFamily;
-            this.axisYTemperature.TitleFontFamily = fontFamily;
-            this.axisYTemperature.AxisLabels.FontFamily = fontFamily;
-            //this._axisXTime.TitleFontSize = fontSize;
-            this.axisX.AxisLabels.FontFamily = fontFamily;
-            foreach (var item in this.chartCurve.Legends)
+            try
             {
-                item.FontFamily = fontFamily;
+                this.axisYPressure.TitleFontFamily = fontFamily;
+                this.axisYPressure.AxisLabels.FontFamily = fontFamily;
+                this.axisYTemperature.TitleFontFamily = fontFamily;
+                this.axisYTemperature.AxisLabels.FontFamily = fontFamily;
+                //this._axisXTime.TitleFontSize = fontSize;
+                this.axisX.AxisLabels.FontFamily = fontFamily;
+                foreach (var item in this.chartCurve.Legends)
+                {
+                    item.FontFamily = fontFamily;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("修改字体异常：" + ee.Message);
             }
         }
 
         public void ChangePressureAxis(int range)
         {
-            this.axisYPressure.AxisMaximum = range;
-            this.axisYPressure.Interval = range / 8;
+            try
+            {
+                this.axisYPressure.AxisMaximum = range;
+                this.axisYPressure.Interval = range / 8;
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("修改压力纵坐标范围异常：" + ee.Message);
+            }
         }
 
         private void changeXAxis(int max)
         {
-            if (int.Parse(this.axisX.AxisMaximum.ToString()) != max)
+            try
             {
-                this.axisX.AxisMaximum = max;
-                this.axisX.Interval = max > 200 ? (max / 200 * 10) : 10;
+                if (int.Parse(this.axisX.AxisMaximum.ToString()) != max)
+                {
+                    this.axisX.AxisMaximum = max;
+                    this.axisX.Interval = max > 200 ? (max / 200 * 10) : 10;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("修改横轴范围异常：" + ee.Message);
             }
         }
 
         public void ChangeTemperatureAxis(int range)
         {
-            this.axisYTemperature.AxisMaximum = range;
+            try
+            {
+                this.axisYTemperature.AxisMaximum = range;
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("修改温度纵坐标范围异常：" + ee.Message);
+            }
         }
 
         public void ChangeTrendLine(int value)
         {
-            if (value == 0)
+            try
             {
-                this.chartCurve.TrendLines.Clear();
+                if (value == 0)
+                {
+                    this.chartCurve.TrendLines.Clear();
+                }
+                else
+                {
+                    TrendLine newTrendLine = new TrendLine();
+                    newTrendLine.Value = value;
+                    this.chartCurve.TrendLines.Clear();
+                    this.chartCurve.TrendLines.Add(newTrendLine);
+                }
             }
-            else
+            catch (Exception ee)
             {
-                TrendLine newTrendLine = new TrendLine();
-                newTrendLine.Value = value;
-                this.chartCurve.TrendLines.Clear();
-                this.chartCurve.TrendLines.Add(newTrendLine);
+                MessageBox.Show("修改趋势线异常：" + ee.Message);
             }
         }
 
         public void ChangeChartGrid(bool show)
         {
-            this.chartGrid.Enabled = show;
-            _showChartGrid = show;
+            try
+            {
+                this.chartGrid.Enabled = show;
+                _showChartGrid = show;
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("修改网格线异常：" + ee.Message);
+            }
         }
 
         public void ChangeBackground(Color color)
         {
-            this.chartCurve.Background = new SolidColorBrush(color);
+            try
+            {
+                this.chartCurve.Background = new SolidColorBrush(color);
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("修改背景异常：" + ee.Message);
+            }
         }
 
         private void setCurveColorAndLineThickness(DataSeries dataSeries, CurveSetting curveSet)
         {
-            dataSeries.Color = new SolidColorBrush(curveSet.LineColor);
-            dataSeries.LineThickness = curveSet.LineThickness;
-            dataSeries.Enabled = curveSet.Show;
+            try
+            {
+                dataSeries.Color = new SolidColorBrush(curveSet.LineColor);
+                dataSeries.LineThickness = curveSet.LineThickness;
+                dataSeries.Enabled = curveSet.Show;
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("设置颜色和线宽异常：" + ee.Message);
+            }
         }
 
         public void SetCurveColorAndLineThickness()
         {
-            setCurveColorAndLineThickness(_dataSeries1, _curveSetXmlHelper.GetCurveSetting("PressureCurve"));
-            setCurveColorAndLineThickness(_dataSeries2, _curveSetXmlHelper.GetCurveSetting("TemperatureCurve"));
+            try
+            {
+                setCurveColorAndLineThickness(_dataSeries1, _curveSetXmlHelper.GetCurveSetting("PressureCurve"));
+                setCurveColorAndLineThickness(_dataSeries2, _curveSetXmlHelper.GetCurveSetting("TemperatureCurve"));
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("设置颜色和线宽异常：" + ee.Message);
+            }
         }
 
         public void CurveGeneralSet()
         {
-            CurveGeneralSetting cgs = _curveSetXmlHelper.GetCurveGeneralSetting();
-            ChangeFontSize(cgs.FontSize);
-            ChangeFontFamily(new FontFamily(cgs.FontFamily));
-            ChangePressureAxis(cgs.PressureRange);
-            ChangeTemperatureAxis(cgs.TemperatureRange);
-            ChangeTrendLine(cgs.PressureThreshold);
-            ChangeChartGrid(cgs.DisplayGrid);
-            ChangeBackground(cgs.BackgroundColor);
+            try
+            {
+                CurveGeneralSetting cgs = _curveSetXmlHelper.GetCurveGeneralSetting();
+                ChangeFontSize(cgs.FontSize);
+                ChangeFontFamily(new FontFamily(cgs.FontFamily));
+                ChangePressureAxis(cgs.PressureRange);
+                ChangeTemperatureAxis(cgs.TemperatureRange);
+                ChangeTrendLine(cgs.PressureThreshold);
+                ChangeChartGrid(cgs.DisplayGrid);
+                ChangeBackground(cgs.BackgroundColor);
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("曲线通用设置异常：" + ee.Message);
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            SetCurveColorAndLineThickness();
-            CurveGeneralSet();
+            try
+            {
+                SetCurveColorAndLineThickness();
+                CurveGeneralSet();
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("控件加载异常：" + ee.Message);
+            }
         }
 
         public void HandleData(byte[] dataArray)
@@ -215,19 +307,26 @@ namespace ValveControlSystem.UserControls
 
         private void addData(DataPoint[] dataPointsTemp, DataPoint[] dataPointsPres)
         {
-            if (dataPointsTemp != null && dataPointsTemp.Length == 4)
+            try
             {
-                foreach (var tempPoint in dataPointsTemp)
+                if (dataPointsTemp != null && dataPointsTemp.Length == 4)
                 {
-                    _dataSeries2.DataPoints.Add(tempPoint);
+                    foreach (var tempPoint in dataPointsTemp)
+                    {
+                        _dataSeries2.DataPoints.Add(tempPoint);
+                    }
+                }
+                if (dataPointsPres != null && dataPointsPres.Length == 80)
+                {
+                    foreach (var presPoint in dataPointsPres)
+                    {
+                        _dataSeries1.DataPoints.Add(presPoint);
+                    }
                 }
             }
-            if (dataPointsPres != null && dataPointsPres.Length == 80)
+            catch (Exception ee)
             {
-                foreach (var presPoint in dataPointsPres)
-                {
-                    _dataSeries1.DataPoints.Add(presPoint);
-                }
+                MessageBox.Show("添加数据异常：" + ee.Message);
             }
         }
 

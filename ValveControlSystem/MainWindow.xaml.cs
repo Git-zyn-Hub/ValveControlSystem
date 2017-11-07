@@ -572,77 +572,84 @@ namespace ValveControlSystem
 
         private void handleReceivedData(byte[] receivedData)
         {
-            if (receivedData[0] == 0xff && receivedData[1] == 0 && receivedData[2] == 0xaa && receivedData[3] == 0x55)
+            try
             {
-                if (receivedData[4] == 0x00)
+                if (receivedData[0] == 0xff && receivedData[1] == 0 && receivedData[2] == 0xaa && receivedData[3] == 0x55)
                 {
-                    //指令类型不能为3，因为已经被“状态异常”占用。
-                    if (receivedData[5] == 3 && receivedData[6] == (byte)CommandState.状态异常)
+                    if (receivedData[4] == 0x00)
                     {
-                        string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(_cmdTypeLastSend) + " ";
-                        receiveDataInfo += CommandState.状态异常.ToString();
-                        this._originData.AddDataInfo(receiveDataInfo, DataLevel.Error);
+                        //指令类型不能为3，因为已经被“状态异常”占用。
+                        if (receivedData[5] == 3 && receivedData[6] == (byte)CommandState.状态异常)
+                        {
+                            string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(_cmdTypeLastSend) + " ";
+                            receiveDataInfo += CommandState.状态异常.ToString();
+                            this._originData.AddDataInfo(receiveDataInfo, DataLevel.Error);
+                        }
+                        else
+                        {
+                            switch (receivedData[5])
+                            {
+                                case (byte)CommandTypeCommon.普通指令:
+                                    {
+                                        if (receivedData[6] == 5 && receivedData[9] == (byte)CommandState.状态正常)
+                                        {
+                                            CommandType cmdType = (CommandType)receivedData[8];
+                                            string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType) + " ";
+                                            receiveDataInfo += CommandState.状态正常.ToString();
+                                            this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                        }
+                                    }
+                                    break;
+                                case (byte)CommandTypeCommon.回放指令:
+                                    {
+                                        _dataTable.HandleData(receivedData);
+                                        _curve.HandleData(receivedData);
+                                        if (_saveData2Xml.DirectoryName != string.Empty)
+                                        {
+                                            _saveData2Xml.SaveData(receivedData, receivedData.Length);
+                                        }
+                                        this._originData.AddDataInfo("回放数据", DataLevel.Default);
+                                    }
+                                    break;
+                                case (byte)CommandTypeCommon.擦除指令:
+                                    {
+                                        string receiveDataInfo = "指令 擦除Flash ";
+                                        receiveDataInfo += CommandState.状态正常.ToString();
+                                        this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                    }
+                                    break;
+                                case (byte)CommandTypeCommon.地面预设指令:
+                                    {
+                                        if (receivedData[9] == (byte)CommandState.状态正常)
+                                        {
+                                            string receiveDataInfo = "地面预设指令 ";
+                                            receiveDataInfo += CommandState.状态正常.ToString();
+                                            this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        //else
+                        //{
+                        //    this.originalData.AddDataInfo("回送的状态位错误或长度错误", DataLevel.Error);
+                        //}
                     }
                     else
                     {
-                        switch (receivedData[5])
-                        {
-                            case (byte)CommandTypeCommon.普通指令:
-                                {
-                                    if (receivedData[6] == 5 && receivedData[9] == (byte)CommandState.状态正常)
-                                    {
-                                        CommandType cmdType = (CommandType)receivedData[8];
-                                        string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType) + " ";
-                                        receiveDataInfo += CommandState.状态正常.ToString();
-                                        this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
-                                    }
-                                }
-                                break;
-                            case (byte)CommandTypeCommon.回放指令:
-                                {
-                                    _dataTable.HandleData(receivedData);
-                                    _curve.HandleData(receivedData);
-                                    if (_saveData2Xml.DirectoryName!=string.Empty)
-                                    {
-                                        _saveData2Xml.SaveData(receivedData, receivedData.Length);
-                                    }
-                                    this._originData.AddDataInfo("回放数据", DataLevel.Default);
-                                }
-                                break;
-                            case (byte)CommandTypeCommon.擦除指令:
-                                {
-                                    string receiveDataInfo = "指令 擦除Flash ";
-                                    receiveDataInfo += CommandState.状态正常.ToString();
-                                    this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
-                                }
-                                break;
-                            case (byte)CommandTypeCommon.地面预设指令:
-                                {
-                                    if (receivedData[9] == (byte)CommandState.状态正常)
-                                    {
-                                        string receiveDataInfo = "地面预设指令 ";
-                                        receiveDataInfo += CommandState.状态正常.ToString();
-                                        this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
-                                    }
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                        MessageBox.Show("接收数据方向错误！");
                     }
-                    //else
-                    //{
-                    //    this.originalData.AddDataInfo("回送的状态位错误或长度错误", DataLevel.Error);
-                    //}
                 }
                 else
                 {
-                    MessageBox.Show("接收数据方向错误！");
+                    MessageBox.Show("接收数据帧头错误！");
                 }
             }
-            else
+            catch (Exception ee)
             {
-                MessageBox.Show("接收数据帧头错误！");
+                MessageBox.Show("处理接收数据异常：" + ee.Message);
             }
         }
 
