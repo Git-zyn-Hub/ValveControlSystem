@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -21,6 +22,8 @@ namespace ValveControlSystem.UserControls
         private const int _headerLength = 7;
         private DataPoint[] _dataPointsTemp;
         private DataPoint[] _dataPointsPres;
+        private int _xAxisMax = 0;
+        private int _hitCount = 0;
 
         public CurveUserControl()
         {
@@ -274,9 +277,19 @@ namespace ValveControlSystem.UserControls
                 GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
                 if (dataArray.Length == 237)
                 {
+                    _hitCount++;
+                    if (_hitCount==27)
+                    {
+
+                    }
                     _dataPointsTemp = new DataPoint[4];
                     _dataPointsPres = new DataPoint[80];
-                    changeXAxis(((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80);
+                    if (_xAxisMax != ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80)
+                    {
+                        Debug.WriteLine("修改X轴最大范围！");
+                        _xAxisMax = ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80;
+                        changeXAxis(_xAxisMax);
+                    }
                     int packageNo = (dataArray[_headerLength + 2] << 8) + dataArray[_headerLength + 3];
                     for (int i = 0; i < 4; i++)
                     {
