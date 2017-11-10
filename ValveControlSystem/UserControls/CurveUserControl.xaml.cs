@@ -23,7 +23,7 @@ namespace ValveControlSystem.UserControls
         private DataPoint[] _dataPointsTemp;
         private DataPoint[] _dataPointsPres;
         private int _xAxisMax = 0;
-        private int _hitCount = 0;
+        //private int _hitCount = 0;
 
         public CurveUserControl()
         {
@@ -277,11 +277,11 @@ namespace ValveControlSystem.UserControls
                 GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
                 if (dataArray.Length == 237)
                 {
-                    _hitCount++;
-                    if (_hitCount==27)
-                    {
+                    //_hitCount++;
+                    //if (_hitCount == 27)
+                    //{
 
-                    }
+                    //}
                     _dataPointsTemp = new DataPoint[4];
                     _dataPointsPres = new DataPoint[80];
                     if (_xAxisMax != ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80)
@@ -295,7 +295,7 @@ namespace ValveControlSystem.UserControls
                     {
                         DataPoint dataPointTemperature;
                         dataPointTemperature = new DataPoint();
-                        dataPointTemperature.XValue = packageNo * 80 + i * 20;
+                        dataPointTemperature.XValue = packageNo * 80 + i * 20 + 19;
                         dataPointTemperature.YValue = getDoubleTemp.GetTemperature((dataArray[_headerLength + i * 56 + 44] << 8) + dataArray[_headerLength + i * 56 + 45]);
                         dataPointTemperature.MarkerEnabled = false;
                         _dataPointsTemp[i] = dataPointTemperature;
@@ -322,18 +322,18 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                if (dataPointsTemp != null && dataPointsTemp.Length == 4)
-                {
-                    foreach (var tempPoint in dataPointsTemp)
-                    {
-                        _dataSeries2.DataPoints.Add(tempPoint);
-                    }
-                }
                 if (dataPointsPres != null && dataPointsPres.Length == 80)
                 {
                     foreach (var presPoint in dataPointsPres)
                     {
                         _dataSeries1.DataPoints.Add(presPoint);
+                    }
+                }
+                if (dataPointsTemp != null && dataPointsTemp.Length == 4)
+                {
+                    foreach (var tempPoint in dataPointsTemp)
+                    {
+                        _dataSeries2.DataPoints.Add(tempPoint);
                     }
                 }
             }
