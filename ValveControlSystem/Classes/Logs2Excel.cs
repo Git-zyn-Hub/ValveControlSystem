@@ -51,10 +51,10 @@ namespace ValveControlSystem.Classes
                 _excelHeader[4] = "电磁阀监视电压";
                 _excelHeader[5] = "负电源监视";
                 _excelHeader[6] = "正电源监视";
-                _excelHeader[7] = "测试阀关闭驱动电流";
-                _excelHeader[8] = "测试阀打开驱动电流";
-                _excelHeader[9] = "循环阀关闭驱动电流";
-                _excelHeader[10] = "循环阀打开驱动电流";
+                _excelHeader[7] = "循环阀打开驱动电流";
+                _excelHeader[8] = "循环阀关闭驱动电流";
+                _excelHeader[9] = "测试阀打开驱动电流";
+                _excelHeader[10] = "测试阀关闭驱动电流";
                 _excelHeader[11] = "压力（20个）";
 
                 _workBook = new excel.XLWorkbook();
@@ -100,10 +100,10 @@ namespace ValveControlSystem.Classes
                     _workSheet.Cell(i + 2, 5).Value = _logs[i].SolenoidValveVoltage;
                     _workSheet.Cell(i + 2, 6).Value = _logs[i].NegativePowerMonitor;
                     _workSheet.Cell(i + 2, 7).Value = _logs[i].PositivePowerMonitor;
-                    _workSheet.Cell(i + 2, 8).Value = _logs[i].TestValveCloseDriveCurrent;
-                    _workSheet.Cell(i + 2, 9).Value = _logs[i].TestValveOpenDriveCurrent;
-                    _workSheet.Cell(i + 2, 10).Value = _logs[i].CycleValveCloseDriveCurrent;
-                    _workSheet.Cell(i + 2, 11).Value = _logs[i].CycleValveOpenDriveCurrent;
+                    _workSheet.Cell(i + 2, 8).Value = _logs[i].CycleValveOpenDriveCurrent;
+                    _workSheet.Cell(i + 2, 9).Value = _logs[i].CycleValveCloseDriveCurrent;
+                    _workSheet.Cell(i + 2, 10).Value = _logs[i].TestValveOpenDriveCurrent;
+                    _workSheet.Cell(i + 2, 11).Value = _logs[i].TestValveCloseDriveCurrent;
                     _workSheet.Cell(i + 2, 12).Value = _logs[i].Pressure20;
                 }
                 this.SaveEnd();

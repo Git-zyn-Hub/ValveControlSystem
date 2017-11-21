@@ -75,16 +75,16 @@
                 <DataGridTextColumn Header="正电源监视" MinWidth="60" Binding="{Binding PositivePowerMonitor}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="测试阀关闭驱动电流" MinWidth="60" Binding="{Binding TestValveCloseDriveCurrent}" 
-                                    ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
-                                    IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="测试阀打开驱动电流" MinWidth="60" Binding="{Binding TestValveOpenDriveCurrent}" 
+                <DataGridTextColumn Header="循环阀打开驱动电流" MinWidth="60" Binding="{Binding CycleValveOpenDriveCurrent}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="循环阀关闭驱动电流" MinWidth="60" Binding="{Binding CycleValveCloseDriveCurrent}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="循环阀打开驱动电流" MinWidth="60" Binding="{Binding CycleValveOpenDriveCurrent}" 
+                <DataGridTextColumn Header="测试阀打开驱动电流" MinWidth="60" Binding="{Binding TestValveOpenDriveCurrent}" 
+                                    ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
+                                    IsReadOnly="True" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="测试阀关闭驱动电流" MinWidth="60" Binding="{Binding TestValveCloseDriveCurrent}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="压力（20个）" MinWidth="300" Binding="{Binding Pressure20}" 
