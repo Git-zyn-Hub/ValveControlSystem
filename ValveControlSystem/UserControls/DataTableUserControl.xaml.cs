@@ -103,10 +103,10 @@ namespace ValveControlSystem.UserControls
             tableData.SolenoidValveVoltage = (double)monitorDataArray[0] * 2 / 1000;
             tableData.NegativePowerMonitor = (double)monitorDataArray[1] * 8.5 / 1000;
             tableData.PositivePowerMonitor = (double)monitorDataArray[2] * 6 / 1000;
-            tableData.Tool1TestValveDriveCurrent = (int)(monitorDataArray[3] / 1.5);
-            tableData.Tool1CycleValveDriveCurrent = (int)(monitorDataArray[4] / 1.5);
-            tableData.Tool2TestValveDriveCurrent = (int)(monitorDataArray[5] / 1.5);
-            tableData.Tool2CycleValveDriveCurrent = (int)(monitorDataArray[6] / 1.5);
+            tableData.Tool2CycleValveDriveCurrent = (int)(monitorDataArray[3] / 1.5);
+            tableData.Tool2TestValveDriveCurrent = (int)(monitorDataArray[4] / 1.5);
+            tableData.Tool1CycleValveDriveCurrent = (int)(monitorDataArray[5] / 1.5);
+            tableData.Tool1TestValveDriveCurrent = (int)(monitorDataArray[6] / 1.5);
 
             tableData.SolenoidValveVoltage = save2FractionalPart(tableData.SolenoidValveVoltage);
             tableData.NegativePowerMonitor = save2FractionalPart(tableData.NegativePowerMonitor);

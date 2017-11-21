@@ -202,10 +202,10 @@ namespace ValveControlSystem.Windows
             oneLog.SolenoidValveVoltage = (double)monitorDataArray[1] * 2 / 1000;
             oneLog.NegativePowerMonitor = (double)monitorDataArray[2] * 8.5 / 1000;
             oneLog.PositivePowerMonitor = (double)monitorDataArray[3] * 6 / 1000;
-            oneLog.TestValveCloseDriveCurrent = (int)(monitorDataArray[4] / 1.5);
-            oneLog.TestValveOpenDriveCurrent = (int)(monitorDataArray[5] / 1.5);
-            oneLog.CycleValveCloseDriveCurrent = (int)(monitorDataArray[6] / 1.5);
-            oneLog.CycleValveOpenDriveCurrent = (int)(monitorDataArray[7] / 1.5);
+            oneLog.CycleValveOpenDriveCurrent = (int)(monitorDataArray[4] / 1.5);
+            oneLog.CycleValveCloseDriveCurrent = (int)(monitorDataArray[5] / 1.5);
+            oneLog.TestValveOpenDriveCurrent = (int)(monitorDataArray[6] / 1.5);
+            oneLog.TestValveCloseDriveCurrent = (int)(monitorDataArray[7] / 1.5);
 
             oneLog.SolenoidValveVoltage = save2FractionalPart(oneLog.SolenoidValveVoltage);
             oneLog.NegativePowerMonitor = save2FractionalPart(oneLog.NegativePowerMonitor);
