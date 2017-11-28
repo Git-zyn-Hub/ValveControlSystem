@@ -173,7 +173,7 @@ namespace ValveControlSystem.Windows
         private void AnalyzeLog(ref Log oneLog, byte[] bytesData, int offset)
         {
             int[] monitorDataArray = new int[8];
-            GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
+            //GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
 
 
             monitorDataArray[0] = (bytesData[51 + offset * 56] << 8) + bytesData[52 + offset * 56];
@@ -198,7 +198,7 @@ namespace ValveControlSystem.Windows
                 }
             }
             oneLog.Pressure20 = sb.ToString();
-            oneLog.Temperature = getDoubleTemp.GetTemperature(monitorDataArray[0]);
+            oneLog.Temperature = GetTempFromVoltage.GetTemperatureNew(monitorDataArray[0]);
             oneLog.SolenoidValveVoltage = (double)monitorDataArray[1] * 2 / 1000;
             oneLog.NegativePowerMonitor = (double)monitorDataArray[2] * 8.5 / 1000;
             oneLog.PositivePowerMonitor = (double)monitorDataArray[3] * 6 / 1000;

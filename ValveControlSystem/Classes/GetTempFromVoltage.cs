@@ -13,6 +13,11 @@ namespace ValveControlSystem.Classes
         private readonly int[] _yTemp = new int[25] { 28, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 147, 150 };
         private readonly int[] _xVoltage = new int[25] { 2799, 2840, 2862, 2883, 2904, 2928, 2950, 2969, 2988, 3006, 3024, 3041, 3060, 3075, 3091, 3101, 3114, 3129, 3144, 3163, 3175, 3191, 3199, 3218, 3229 };
 
+        public static double GetTemperatureNew(int voltage)
+        {
+            return ((double)voltage) / 10 - 273;
+        }
+
         /// <summary>
         /// 根据y1=a*x1+b;y2=a*x2+b得出a=(y2-y1)/(x2-x1);b=(y1x2-y2x1)/(x2-x1);
         /// </summary>

@@ -274,7 +274,7 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
+                //GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
                 if (dataArray.Length == 237)
                 {
                     //_hitCount++;
@@ -296,7 +296,7 @@ namespace ValveControlSystem.UserControls
                         DataPoint dataPointTemperature;
                         dataPointTemperature = new DataPoint();
                         dataPointTemperature.XValue = packageNo * 80 + i * 20 + 19;
-                        dataPointTemperature.YValue = getDoubleTemp.GetTemperature((dataArray[_headerLength + i * 56 + 44] << 8) + dataArray[_headerLength + i * 56 + 45]);
+                        dataPointTemperature.YValue = GetTempFromVoltage.GetTemperatureNew((dataArray[_headerLength + i * 56 + 44] << 8) + dataArray[_headerLength + i * 56 + 45]);
                         dataPointTemperature.MarkerEnabled = false;
                         _dataPointsTemp[i] = dataPointTemperature;
                         for (int j = 0; j < 40; j++, j++)
