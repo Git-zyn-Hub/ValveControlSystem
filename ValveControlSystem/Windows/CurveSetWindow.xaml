@@ -9,7 +9,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         x:Name="curveSetWin"
-        Title="曲线设置窗口" Height="300" Width="400"
+        Title="曲线设置窗口" Height="300" Width="500"
         Loaded="Window_Loaded"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="AliceBlue">
     <Window.Resources>
@@ -92,6 +92,8 @@
         </ObjectDataProvider>
         <root:Color2RectangleConverter x:Key="color2RectangleConverter"/>
         <root:Color2BrushConverter x:Key="color2BrushConverter"/>
+        <root:UnitConverter x:Key="unitConverter"/>
+        <root:Unit2UnitListConverter x:Key="unit2UnitListConverter"/>
         <!--显示模板-->
         <DataTemplate x:Key="DateTemplate" >
             <StackPanel>
@@ -147,6 +149,23 @@
                                         CellTemplate="{StaticResource DateTemplate}"
                                         CellEditingTemplate="{StaticResource EditingDateTemplate}">
                 </DataGridTemplateColumn>
+                <DataGridComboBoxColumn Header="单位" MinWidth="60"
+                                        SelectedItemBinding="{Binding Unit,Converter={StaticResource unitConverter},Mode=TwoWay,UpdateSourceTrigger=Explicit}"
+                                        HeaderStyle="{StaticResource dgHeader}" Width="*">
+                    <DataGridComboBoxColumn.ElementStyle>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="ItemsSource" Value="{Binding Path=Unit,Converter={StaticResource unit2UnitListConverter}}" />
+                        </Style>
+                    </DataGridComboBoxColumn.ElementStyle>
+                    <DataGridComboBoxColumn.EditingElementStyle>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="ItemsSource" Value="{Binding Path=Unit,Converter={StaticResource unit2UnitListConverter}}" />
+                            <EventSetter Event="SelectionChanged" Handler="Unit_SelectionChanged"/>
+                        </Style>
+                    </DataGridComboBoxColumn.EditingElementStyle>
+                </DataGridComboBoxColumn>
                 <DataGridCheckBoxColumn  Width="*" Header="显示"
                                          HeaderStyle="{StaticResource dgHeader}"
                                          ElementStyle="{StaticResource dgCheckBoxCell}"
@@ -166,11 +185,16 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="38"/>
+                </Grid.ColumnDefinitions>
                 <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Label Content="压力范围"></Label>
                     <TextBox x:Name="txtPressureRange" Text="{Binding CurveGeneralSet.PressureRange,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                          KeyDown="TextBox_KeyDown" TextChanged="TextBox_TextChanged" VerticalContentAlignment="Center"></TextBox>
                 </DockPanel>
+                <Label x:Name="lblPressureUnit" Width="38" Grid.Column="1"></Label>
             </Grid>
             <DockPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <Label Content="字体"></Label>
@@ -182,11 +206,16 @@
                           IsChecked="{Binding CurveGeneralSet.DisplayGrid ,ElementName=curveSetWin}"></CheckBox>
             </DockPanel>
             <Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="38"/>
+                </Grid.ColumnDefinitions>
                 <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Label Content="温度范围"></Label>
                     <TextBox x:Name="txtTemperatureRange" Text="{Binding CurveGeneralSet.TemperatureRange,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                          KeyDown="TextBox_KeyDown" TextChanged="TextBox_TextChanged" VerticalContentAlignment="Center"></TextBox>
                 </DockPanel>
+                <Label x:Name="lblTemperatureUnit" Width="38" Grid.Column="1"></Label>
             </Grid>
             <DockPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <Label Content="字号"></Label>
@@ -194,6 +223,10 @@
                           ItemsSource="{Binding ElementName=curveSetWin,Path=CurveFontSizeList}" SelectionChanged="cbFontSize_SelectionChanged"></ComboBox>
             </DockPanel>
             <Grid Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="38"/>
+                </Grid.ColumnDefinitions>
                 <DockPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Label Content="压力门限"></Label>
                     <TextBox x:Name="txtPressureThreshold" Text="{Binding CurveGeneralSet.PressureThreshold,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
@@ -203,6 +236,7 @@
                         </TextBox.ToolTip>
                     </TextBox>
                 </DockPanel>
+                <Label x:Name="lblPressureThresholdUnit" Width="38" Grid.Column="1"></Label>
             </Grid>
             <DockPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <Label Content="底色"></Label>

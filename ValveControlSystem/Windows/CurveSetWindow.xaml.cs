@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 using System.Xml.Linq;
+using FastLinkSystem.Classes;
 
 namespace ValveControlSystem.Windows
 {
@@ -418,6 +419,63 @@ namespace ValveControlSystem.Windows
         private void cbBackgroundColor_GotFocus(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Unit_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //ComboBox combobox = sender as ComboBox;//触发Change事件的ComboBox
+            if (e.RemovedItems == null || e.AddedItems == null || e.RemovedItems.Count == 0 || e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            string unit = e.AddedItems[0] as string;//下来框改变值后，新值对应的unit
+
+            //获取当前选中项的索引号
+            int num = this.dgCurveSetting.SelectedIndex;
+
+            if (num == -1)
+                return;
+
+            //Unit那一列是第4列
+            if (num == 0)
+            {
+                this.lblPressureUnit.Content = unit.ToString();
+                this.lblPressureThresholdUnit.Content = unit.ToString();
+                double pressureRange;
+                if (double.TryParse(this.txtPressureRange.Text, out pressureRange))
+                {
+                    this.txtPressureRange.Text = (Math.Round(DataUnitConvert.PressureUnitConvertEachOther(pressureRange, (PressureUnit)Enum.Parse(typeof(PressureUnit), unit.ToString())), 2)).ToString();
+                }
+                double pressureThreshold;
+                if (double.TryParse(this.txtPressureThreshold.Text, out pressureThreshold))
+                {
+                    this.txtPressureThreshold.Text = (Math.Round(DataUnitConvert.PressureUnitConvertEachOther(pressureThreshold, (PressureUnit)Enum.Parse(typeof(PressureUnit), unit.ToString())))).ToString();
+                }
+            }
+            if (num >= 3 && num <= 5)
+            {
+                for (int i = 3; i < 6; i++)
+                {
+                    //获取索引为i的行
+                    DataGridRow row = this.dgCurveSetting.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
+                    if (row != null)
+                    {
+                        ComboBox cb = this.dgCurveSetting.Columns[3].GetCellContent(row) as ComboBox;
+                        cb.SelectedItem = unit;
+                        BindingExpression be = cb.GetBindingExpression(ComboBox.SelectedItemProperty);
+                        be.UpdateSource();
+                    }
+                }
+
+                this.lblTemperatureUnit.Content = unit;
+                UnitConverter unitConverter = new UnitConverter();
+                string tempUnit = unitConverter.ConvertBack(unit, null, null, null).ToString();
+                int temperatureRange;
+                if (int.TryParse(this.txtTemperatureRange.Text, out temperatureRange))
+                {
+                    this.txtTemperatureRange.Text = (Math.Round(DataUnitConvert.TemperatureUnitConvertEachOther(temperatureRange, (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), tempUnit.ToString())))).ToString();
+                }
+            }
         }
 
         #region INotifyPropertyChanged Members

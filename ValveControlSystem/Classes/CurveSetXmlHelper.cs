@@ -41,6 +41,7 @@ namespace ValveControlSystem.Classes
                 CurveName = "压力",
                 LineThickness = 2,
                 LineColor = Colors.Red,
+                Unit = PressureUnit.Psia.ToString(),
                 Show = true
             };
             CurveSetting temperatureCurve = new CurveSetting()
@@ -48,6 +49,7 @@ namespace ValveControlSystem.Classes
                 CurveName = "温度",
                 LineThickness = 2,
                 LineColor = Colors.Green,
+                Unit = TemperatureUnit.摄氏度.ToString(),
                 Show = true
             };
             CurveGeneralSetting curveGeneralSet = new CurveGeneralSetting()
@@ -76,6 +78,7 @@ namespace ValveControlSystem.Classes
                             new XAttribute("CurveName", pressureCurve.CurveName),
                             new XAttribute("LineThickness", pressureCurve.LineThickness),
                             new XAttribute("LineColor", pressureCurve.LineColor),
+                            new XAttribute("Unit", pressureCurve.Unit),
                             new XAttribute("Show", pressureCurve.Show)
                         ),
                         new XElement
@@ -84,6 +87,7 @@ namespace ValveControlSystem.Classes
                             new XAttribute("CurveName", temperatureCurve.CurveName),
                             new XAttribute("LineThickness", temperatureCurve.LineThickness),
                             new XAttribute("LineColor", temperatureCurve.LineColor),
+                            new XAttribute("Unit", temperatureCurve.Unit),
                             new XAttribute("Show", temperatureCurve.Show)
                         ),
                         new XElement
@@ -123,6 +127,7 @@ namespace ValveControlSystem.Classes
                 element.SetAttributeValue("CurveName", curveSet.CurveName);
                 element.SetAttributeValue("LineThickness", curveSet.LineThickness);
                 element.SetAttributeValue("LineColor", curveSet.LineColor);
+                element.SetAttributeValue("Unit", curveSet.Unit);
                 element.SetAttributeValue("Show", curveSet.Show);
             }
             xd.Save(XmlPath);
@@ -166,6 +171,7 @@ namespace ValveControlSystem.Classes
             curveSetPressure.CurveName = getXmlAttributeValue(curveNameNode, "CurveName");
             curveSetPressure.LineThickness = int.Parse(getXmlAttributeValue(curveNameNode, "LineThickness"));
             curveSetPressure.LineColor = (Color)ColorConverter.ConvertFromString(getXmlAttributeValue(curveNameNode, "LineColor"));
+            curveSetPressure.Unit = getXmlAttributeValue(curveNameNode, "Unit");
             curveSetPressure.Show = bool.Parse(getXmlAttributeValue(curveNameNode, "Show"));
             return curveSetPressure;
         }

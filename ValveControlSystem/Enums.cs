@@ -65,4 +65,15 @@ namespace ValveControlSystem
         Tool_2,
         Undefined
     }
+    
+    public enum PressureUnit
+    {
+        MPa,
+        Psia
+    }
+    public enum TemperatureUnit
+    {
+        摄氏度,
+        华氏度
+    }
 }
