@@ -69,7 +69,7 @@ namespace ValveControlSystem
     public enum PressureUnit
     {
         MPa,
-        Psia
+        PSI
     }
     public enum TemperatureUnit
     {

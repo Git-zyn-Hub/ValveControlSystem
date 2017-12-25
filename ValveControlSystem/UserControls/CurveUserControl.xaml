@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ValveControlSystem.UserControls"
+             xmlns:root="clr-namespace:ValveControlSystem"
              xmlns:chart="clr-namespace:Visifire.Charts;assembly=WPFVisifire.Charts"
              mc:Ignorable="d" 
+             x:Name="chartUserCtrl"
              Loaded="UserControl_Loaded"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <root:UnitConverter x:Key="unitConverter"/>
+    </UserControl.Resources>
     <Grid>
         <chart:Chart ScrollingEnabled="False" View3D="False"
                          IndicatorEnabled="True" ZoomingEnabled="True" ShowAllText="全部" ZoomOutText="恢复"
@@ -16,9 +21,9 @@
                          Rendered="lineChart_Rendered">
             <chart:Chart.AxesY>
                 <chart:Axis x:Name="axisYPressure" AxisMinimum="0" AxisMaximum="66000"  Interval="8250" Title="压力曲线" 
-                            Suffix="PSI"></chart:Axis>
+                            Suffix="{Binding PressureUnit4Binding,ElementName=chartUserCtrl,Converter={StaticResource unitConverter}}"></chart:Axis>
                 <chart:Axis x:Name="axisYTemperature" AxisMinimum="0" AxisMaximum="100" Title="温度曲线" AxisType="Secondary" 
-                            Suffix="°C"></chart:Axis>
+                            Suffix="{Binding TemperatureUnit4Binding,ElementName=chartUserCtrl,Converter={StaticResource unitConverter}}"></chart:Axis>
             </chart:Chart.AxesY>
             <chart:Chart.AxesX>
                 <chart:Axis x:Name="axisX" Interval="20" IntervalType="Number" AxisMinimum="0" AxisMaximum="255">

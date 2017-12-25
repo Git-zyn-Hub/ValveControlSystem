@@ -16,7 +16,7 @@ namespace FastLinkSystem.Classes
                 case PressureUnit.MPa:
                     return inputData / 145.03;
                 //return inputData * 145.03;
-                case PressureUnit.Psia:
+                case PressureUnit.PSI:
                     return inputData;
                 //return inputData / 145.03;
                 default:
@@ -46,7 +46,7 @@ namespace FastLinkSystem.Classes
             {
                 case PressureUnit.MPa:
                     return inputData / 145.03;
-                case PressureUnit.Psia:
+                case PressureUnit.PSI:
                     return inputData * 145.03;
                 default:
                     MessageBox.Show("目标数据单位未设置！");

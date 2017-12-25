@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +12,7 @@ namespace ValveControlSystem.UserControls
     /// <summary>
     /// Interaction logic for CurveUserControl.xaml
     /// </summary>
-    public partial class CurveUserControl : UserControl
+    public partial class CurveUserControl : UserControl, INotifyPropertyChanged
     {
         //压力曲线
         private DataSeries _dataSeries1;
@@ -23,7 +24,44 @@ namespace ValveControlSystem.UserControls
         private DataPoint[] _dataPointsTemp;
         private DataPoint[] _dataPointsPres;
         private int _xAxisMax = 0;
+        private string _pressureUnit;
+        private string _temperatureUnit;
         //private int _hitCount = 0;
+
+
+        public string PressureUnit4Binding
+        {
+            get
+            {
+                return _pressureUnit;
+            }
+
+            set
+            {
+                if (_pressureUnit != value)
+                {
+                    _pressureUnit = value;
+                    OnPropertyChanged("PressureUnit4Binding");
+                }
+            }
+        }
+        public string TemperatureUnit4Binding
+        {
+            get
+            {
+                return _temperatureUnit;
+            }
+
+            set
+            {
+                if (_temperatureUnit != value)
+                {
+                    _temperatureUnit = value;
+                    OnPropertyChanged("TemperatureUnit4Binding");
+                }
+            }
+        }
+
 
         public CurveUserControl()
         {
@@ -123,12 +161,12 @@ namespace ValveControlSystem.UserControls
             }
         }
 
-        public void ChangePressureAxis(int range)
+        public void ChangePressureAxis(double range)
         {
             try
             {
                 this.axisYPressure.AxisMaximum = range;
-                this.axisYPressure.Interval = range / 8;
+                this.axisYPressure.Interval = (int)(range / 8);
             }
             catch (Exception ee)
             {
@@ -164,7 +202,7 @@ namespace ValveControlSystem.UserControls
             }
         }
 
-        public void ChangeTrendLine(int value)
+        public void ChangeTrendLine(double value)
         {
             try
             {
@@ -229,8 +267,13 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                setCurveColorAndLineThickness(_dataSeries1, _curveSetXmlHelper.GetCurveSetting("PressureCurve"));
-                setCurveColorAndLineThickness(_dataSeries2, _curveSetXmlHelper.GetCurveSetting("TemperatureCurve"));
+                CurveSetting preCurveSetting = _curveSetXmlHelper.GetCurveSetting("PressureCurve");
+                CurveSetting tempCurveSetting = _curveSetXmlHelper.GetCurveSetting("TemperatureCurve");
+                setCurveColorAndLineThickness(_dataSeries1, preCurveSetting);
+                setCurveColorAndLineThickness(_dataSeries2, tempCurveSetting);
+
+                PressureUnit4Binding = preCurveSetting.Unit;
+                TemperatureUnit4Binding = tempCurveSetting.Unit;
             }
             catch (Exception ee)
             {
@@ -358,5 +401,17 @@ namespace ValveControlSystem.UserControls
                 MessageBox.Show("清空曲线异常：" + ee.Message);
             }
         }
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        #endregion
     }
 }

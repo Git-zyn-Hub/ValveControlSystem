@@ -41,7 +41,7 @@ namespace ValveControlSystem.Classes
                 CurveName = "压力",
                 LineThickness = 2,
                 LineColor = Colors.Red,
-                Unit = PressureUnit.Psia.ToString(),
+                Unit = PressureUnit.PSI.ToString(),
                 Show = true
             };
             CurveSetting temperatureCurve = new CurveSetting()
@@ -179,9 +179,9 @@ namespace ValveControlSystem.Classes
         public CurveGeneralSetting GetCurveGeneralSetting()
         {
             CurveGeneralSetting newCGS = new CurveGeneralSetting();
-            newCGS.PressureRange = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "PressureRange"));
+            newCGS.PressureRange = double.Parse(getXmlAttributeValue("CurveGeneralSetting", "PressureRange"));
             newCGS.TemperatureRange = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "TemperatureRange"));
-            newCGS.PressureThreshold = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "PressureThreshold"));
+            newCGS.PressureThreshold = double.Parse(getXmlAttributeValue("CurveGeneralSetting", "PressureThreshold"));
             newCGS.FontFamily = getXmlAttributeValue("CurveGeneralSetting", "FontFamily");
             newCGS.FontSize = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "FontSize"));
             newCGS.BackgroundColor = (Color)ColorConverter.ConvertFromString(getXmlAttributeValue("CurveGeneralSetting", "BackgroundColor"));

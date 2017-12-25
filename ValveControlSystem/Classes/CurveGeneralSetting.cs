@@ -11,7 +11,7 @@ namespace ValveControlSystem.Classes
         public int CurveGeneralSettingID { get; set; }
         public int UserID { get; set; }
         public string Culture { get; set; }
-        public int PressureRange
+        public double PressureRange
         {
             get;
             set;
@@ -21,7 +21,7 @@ namespace ValveControlSystem.Classes
             get;
             set;
         }
-        public int PressureThreshold
+        public double PressureThreshold
         {
             get;
             set;

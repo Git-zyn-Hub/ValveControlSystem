@@ -133,6 +133,8 @@ namespace ValveControlSystem.Windows
                 CurveSetting curveSetTemperature = _curveSetXmlHelper.GetCurveSetting("TemperatureCurve");
                 this.CurveSettingList.Add(curveSetTemperature);
 
+                setUnit(curveSetPressure.Unit, curveSetTemperature.Unit);
+
                 CurveGeneralSetting newCGS = _curveSetXmlHelper.GetCurveGeneralSetting();
                 this.CurveGeneralSet = newCGS;
 
@@ -345,14 +347,14 @@ namespace ValveControlSystem.Windows
         {
             if (!string.IsNullOrEmpty(this.txtPressureRange.Text.Trim()))
             {
-                int range;
-                if (int.TryParse(this.txtPressureRange.Text.Trim(), out range))
+                double range;
+                if (double.TryParse(this.txtPressureRange.Text.Trim(), out range))
                 {
                     this._chart.ChangePressureAxis(range);
                 }
                 else
                 {
-                    MessageBox.Show("请在‘压力范围’填写正确的整数！");
+                    MessageBox.Show("请在‘压力范围’填写正确的小数！");
                 }
             }
             else
@@ -385,8 +387,8 @@ namespace ValveControlSystem.Windows
         {
             if (!string.IsNullOrEmpty(this.txtPressureThreshold.Text.Trim()))
             {
-                int integer;
-                if (int.TryParse(this.txtPressureThreshold.Text.Trim(), out integer))
+                double integer;
+                if (double.TryParse(this.txtPressureThreshold.Text.Trim(), out integer))
                 {
                     this._chart.ChangeTrendLine(integer);
                 }
@@ -452,21 +454,8 @@ namespace ValveControlSystem.Windows
                     this.txtPressureThreshold.Text = (Math.Round(DataUnitConvert.PressureUnitConvertEachOther(pressureThreshold, (PressureUnit)Enum.Parse(typeof(PressureUnit), unit.ToString())))).ToString();
                 }
             }
-            if (num >= 3 && num <= 5)
+            if (num == 1)
             {
-                for (int i = 3; i < 6; i++)
-                {
-                    //获取索引为i的行
-                    DataGridRow row = this.dgCurveSetting.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
-                    if (row != null)
-                    {
-                        ComboBox cb = this.dgCurveSetting.Columns[3].GetCellContent(row) as ComboBox;
-                        cb.SelectedItem = unit;
-                        BindingExpression be = cb.GetBindingExpression(ComboBox.SelectedItemProperty);
-                        be.UpdateSource();
-                    }
-                }
-
                 this.lblTemperatureUnit.Content = unit;
                 UnitConverter unitConverter = new UnitConverter();
                 string tempUnit = unitConverter.ConvertBack(unit, null, null, null).ToString();
@@ -475,6 +464,28 @@ namespace ValveControlSystem.Windows
                 {
                     this.txtTemperatureRange.Text = (Math.Round(DataUnitConvert.TemperatureUnitConvertEachOther(temperatureRange, (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), tempUnit.ToString())))).ToString();
                 }
+            }
+        }
+        private void setUnit(string preUnit,string tempUnit)
+        {
+            try
+            {
+                if (preUnit != null)
+                {
+                    this.lblPressureUnit.Content = preUnit.ToString();
+                    this.lblPressureThresholdUnit.Content = preUnit.ToString();
+                }
+                
+                if (tempUnit != null)
+                {
+                    UnitConverter unitConverter = new UnitConverter();
+                    string strTempUnit = unitConverter.Convert(tempUnit, null, null, null).ToString();
+                    this.lblTemperatureUnit.Content = strTempUnit;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
             }
         }
 
