@@ -26,11 +26,13 @@
                 <MenuItem x:Name="miOriginData" Header="原始数据" Click="miOriginData_Click"></MenuItem>
             </MenuItem>
             <MenuItem x:Name="miLog" Header="日志" Click="miReadLog_Click"></MenuItem>
-            <MenuItem x:Name="miSurfacePreset" Header="地面预设" Click="miSurfacePreset_Click"></MenuItem>
-            <MenuItem x:Name="miReadData" Header="读取" Click="miReadData_Click"></MenuItem>
             <MenuItem x:Name="miCommand" Header="指令" Click="miCommand_Click"></MenuItem>
-            <MenuItem x:Name="miTimeSet" Header="对时" Click="miTimeSet_Click"></MenuItem>
-            <MenuItem x:Name="miEraseFlash" Header="擦除Flash" Click="miEraseFlash_Click"></MenuItem>
+            <MenuItem Header="操作">
+                <MenuItem x:Name="miReadData" Header="读取" Click="miReadData_Click"></MenuItem>
+                <MenuItem x:Name="miTimeSet" Header="对时" Click="miTimeSet_Click"></MenuItem>
+                <MenuItem x:Name="miSurfacePreset" Header="地面预设" Click="miSurfacePreset_Click"></MenuItem>
+                <MenuItem x:Name="miEraseFlash" Header="擦除Flash" Click="miEraseFlash_Click"></MenuItem>
+            </MenuItem>
             <MenuItem x:Name="miCurveSet" Header="曲线设置" Click="miCurveSet_Click"></MenuItem>
         </Menu>
         <Grid x:Name="gridCurveAndOriginData" Grid.Row="1">
