@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              x:Name="chartUserCtrl"
              Loaded="UserControl_Loaded"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="800">
     <UserControl.Resources>
         <root:UnitConverter x:Key="unitConverter"/>
     </UserControl.Resources>
@@ -22,16 +22,44 @@
             <chart:Chart.AxesY>
                 <chart:Axis x:Name="axisYPressure" AxisMinimum="0" AxisMaximum="66000"  Interval="8250" Title="压力曲线" 
                             Suffix="{Binding PressureUnit4Binding,ElementName=chartUserCtrl,Converter={StaticResource unitConverter}}"></chart:Axis>
-                <chart:Axis x:Name="axisYTemperature" AxisMinimum="0" AxisMaximum="100" Title="温度曲线" AxisType="Secondary" 
-                            Suffix="{Binding TemperatureUnit4Binding,ElementName=chartUserCtrl,Converter={StaticResource unitConverter}}"></chart:Axis>
-            </chart:Chart.AxesY>
+             </chart:Chart.AxesY>
             <chart:Chart.AxesX>
-                <chart:Axis x:Name="axisX" Interval="5" IntervalType="Minutes"  ValueFormatString="HH:mm:ss">
+                <chart:Axis x:Name="axisX" Interval="60" IntervalType="Minutes"  ValueFormatString="HH:mm:ss" AxisMinimum="000:00:00" AxisMaximum="09:59:59">
                     <chart:Axis.Grids>
                         <chart:ChartGrid x:Name="chartGrid" Enabled="True" LineStyle="Solid"/>
                     </chart:Axis.Grids>
                 </chart:Axis>
             </chart:Chart.AxesX>
+            <chart:Chart.Series>
+                <chart:DataSeries RenderAs="Line" XValueFormatString="HH:mm:ss">
+
+                    <chart:DataSeries.DataPoints>
+
+                        <chart:DataPoint XValue="08:00:00" YValue="20999"/>
+
+                        <chart:DataPoint XValue="08:05:00" YValue="14000"/>
+
+                        <chart:DataPoint XValue="08:10:00" YValue="10000"/>
+
+                        <chart:DataPoint XValue="08:15:00" YValue="12000"/>
+
+                        <chart:DataPoint XValue="08:20:00" YValue="18000"/>
+
+                        <chart:DataPoint XValue="08:25:00" YValue="9000"/>
+
+                        <chart:DataPoint XValue="08:30:00" YValue="11000"/>
+
+                        <chart:DataPoint XValue="08:35:00" YValue="19000"/>
+
+                        <chart:DataPoint XValue="08:40:00" YValue="22000"/>
+
+                        <chart:DataPoint XValue="08:45:00" YValue="18000"/>
+
+                    </chart:DataSeries.DataPoints>
+
+                </chart:DataSeries>
+
+            </chart:Chart.Series>
         </chart:Chart>
     </Grid>
 </UserControl>

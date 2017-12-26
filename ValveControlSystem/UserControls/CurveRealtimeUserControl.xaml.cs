@@ -16,16 +16,12 @@ namespace ValveControlSystem.UserControls
     {
         //压力曲线
         private DataSeries _dataSeries1;
-        //温度曲线
-        private DataSeries _dataSeries2;
         private bool _showChartGrid;
         private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
         private const int _headerLength = 7;
-        private DataPoint[] _dataPointsTemp;
-        private DataPoint[] _dataPointsPres;
+        private DataPoint _dataPointsPres;
         private int _xAxisMax = 0;
         private string _pressureUnit;
-        private string _temperatureUnit;
         //private int _hitCount = 0;
 
 
@@ -42,22 +38,6 @@ namespace ValveControlSystem.UserControls
                 {
                     _pressureUnit = value;
                     OnPropertyChanged("PressureUnit4Binding");
-                }
-            }
-        }
-        public string TemperatureUnit4Binding
-        {
-            get
-            {
-                return _temperatureUnit;
-            }
-
-            set
-            {
-                if (_temperatureUnit != value)
-                {
-                    _temperatureUnit = value;
-                    OnPropertyChanged("TemperatureUnit4Binding");
                 }
             }
         }
@@ -80,16 +60,7 @@ namespace ValveControlSystem.UserControls
                     _dataSeries1.MarkerEnabled = false;
                     _dataSeries1.LegendText = "压力";
                 }
-                if (chartCurve.Series.Count == 1)
-                {
-                    _dataSeries2 = new DataSeries();
-                    chartCurve.Series.Add(_dataSeries2);
-                    _dataSeries2.RenderAs = RenderAs.Line;
-                    _dataSeries2.XValueType = ChartValueTypes.Numeric;
-                    _dataSeries2.AxisYType = AxisTypes.Secondary;
-                    _dataSeries2.MarkerEnabled = false;
-                    _dataSeries2.LegendText = "温度";
-                }
+                setXAxisMinMaxValue();
             }
             catch (Exception ee)
             {
@@ -104,7 +75,7 @@ namespace ValveControlSystem.UserControls
                 var legend = c.Legends[0];
                 var root = legend.Parent as Grid;
                 //移除水印
-                if (root != null)
+                if (root != null && root.Children.Count > 14)
                 {
                     root.Children.RemoveAt(14);
                 }
@@ -126,8 +97,6 @@ namespace ValveControlSystem.UserControls
 
                 this.axisYPressure.TitleFontSize = fontSize;
                 this.axisYPressure.AxisLabels.FontSize = fontSize;
-                this.axisYTemperature.TitleFontSize = fontSize;
-                this.axisYTemperature.AxisLabels.FontSize = fontSize;
                 //this._axisXTime.TitleFontSize = fontSize;
                 this.axisX.AxisLabels.FontSize = fontSize;
                 foreach (var item in this.chartCurve.Legends)
@@ -146,8 +115,6 @@ namespace ValveControlSystem.UserControls
             {
                 this.axisYPressure.TitleFontFamily = fontFamily;
                 this.axisYPressure.AxisLabels.FontFamily = fontFamily;
-                this.axisYTemperature.TitleFontFamily = fontFamily;
-                this.axisYTemperature.AxisLabels.FontFamily = fontFamily;
                 //this._axisXTime.TitleFontSize = fontSize;
                 this.axisX.AxisLabels.FontFamily = fontFamily;
                 foreach (var item in this.chartCurve.Legends)
@@ -194,7 +161,6 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                this.axisYTemperature.AxisMaximum = range;
             }
             catch (Exception ee)
             {
@@ -268,12 +234,9 @@ namespace ValveControlSystem.UserControls
             try
             {
                 CurveSetting preCurveSetting = _curveSetXmlHelper.GetCurveSetting("PressureCurve");
-                CurveSetting tempCurveSetting = _curveSetXmlHelper.GetCurveSetting("TemperatureCurve");
                 setCurveColorAndLineThickness(_dataSeries1, preCurveSetting);
-                setCurveColorAndLineThickness(_dataSeries2, tempCurveSetting);
 
                 PressureUnit4Binding = preCurveSetting.Unit;
-                TemperatureUnit4Binding = tempCurveSetting.Unit;
             }
             catch (Exception ee)
             {
@@ -317,42 +280,14 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                //GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
-                if (dataArray.Length == 237)
+                if (dataArray.Length == 11)
                 {
-                    //_hitCount++;
-                    //if (_hitCount == 27)
-                    //{
-
-                    //}
-                    _dataPointsTemp = new DataPoint[4];
-                    _dataPointsPres = new DataPoint[80];
-                    if (_xAxisMax != ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80)
-                    {
-                        Debug.WriteLine("修改X轴最大范围！");
-                        _xAxisMax = ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80;
-                        changeXAxis(_xAxisMax);
-                    }
-                    int packageNo = (dataArray[_headerLength + 2] << 8) + dataArray[_headerLength + 3];
-                    for (int i = 0; i < 4; i++)
-                    {
-                        DataPoint dataPointTemperature;
-                        dataPointTemperature = new DataPoint();
-                        dataPointTemperature.XValue = packageNo * 80 + i * 20 + 19;
-                        dataPointTemperature.YValue = GetTempFromVoltage.GetTemperatureNew((dataArray[_headerLength + i * 56 + 44] << 8) + dataArray[_headerLength + i * 56 + 45]);
-                        dataPointTemperature.MarkerEnabled = false;
-                        _dataPointsTemp[i] = dataPointTemperature;
-                        for (int j = 0; j < 40; j++, j++)
-                        {
-                            DataPoint dataPointPressure;
-                            dataPointPressure = new DataPoint();
-                            dataPointPressure.XValue = packageNo * 80 + i * 20 + j / 2;
-                            dataPointPressure.YValue = (dataArray[_headerLength + i * 56 + j + 4] << 8) + dataArray[_headerLength + i * 56 + j + 5];
-                            dataPointPressure.MarkerEnabled = false;
-                            _dataPointsPres[i * 20 + j / 2] = dataPointPressure;
-                        }
-                    }
-                    addData(_dataPointsTemp, _dataPointsPres);
+                    DataPoint dataPointPressure;
+                    dataPointPressure = new DataPoint();
+                    dataPointPressure.XValue = DateTime.Now;
+                    dataPointPressure.YValue = (dataArray[7] << 8) + dataArray[8];
+                    dataPointPressure.MarkerEnabled = false;
+                    _dataSeries1.DataPoints.Add(dataPointPressure);
                 }
             }
             catch (Exception ee)
@@ -361,28 +296,12 @@ namespace ValveControlSystem.UserControls
             }
         }
 
-        private void addData(DataPoint[] dataPointsTemp, DataPoint[] dataPointsPres)
+        private void setXAxisMinMaxValue()
         {
-            try
+            if (_dataSeries1.DataPoints.Count == 0)
             {
-                if (dataPointsPres != null && dataPointsPres.Length == 80)
-                {
-                    foreach (var presPoint in dataPointsPres)
-                    {
-                        _dataSeries1.DataPoints.Add(presPoint);
-                    }
-                }
-                if (dataPointsTemp != null && dataPointsTemp.Length == 4)
-                {
-                    foreach (var tempPoint in dataPointsTemp)
-                    {
-                        _dataSeries2.DataPoints.Add(tempPoint);
-                    }
-                }
-            }
-            catch (Exception ee)
-            {
-                MessageBox.Show("添加数据异常：" + ee.Message);
+                this.axisX.AxisMinimum = DateTime.Now;
+                this.axisX.AxisMaximum = DateTime.Now.AddMinutes(30);
             }
         }
 
@@ -390,10 +309,9 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                if (_dataSeries1 != null && _dataSeries2 != null)
+                if (_dataSeries1 != null)
                 {
                     _dataSeries1.DataPoints.Clear();
-                    _dataSeries2.DataPoints.Clear();
                 }
             }
             catch (Exception ee)
