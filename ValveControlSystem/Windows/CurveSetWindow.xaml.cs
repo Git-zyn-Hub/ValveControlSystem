@@ -28,7 +28,7 @@ namespace ValveControlSystem.Windows
     /// </summary>
     public partial class CurveSetWindow : Window, INotifyPropertyChanged
     {
-        private CurveUserControl _chart;
+        private CurveRealtimeUserControl _chart;
         private DataSet _myDataSet = new DataSet();
         private ObservableCollection<CurveSetting> _curveSettingList = new ObservableCollection<CurveSetting>();
         private ObservableCollection<int> _curveFontSizeList = new ObservableCollection<int>();
@@ -102,7 +102,7 @@ namespace ValveControlSystem.Windows
             }
         }
 
-        public CurveSetWindow(CurveUserControl chart)
+        public CurveSetWindow(CurveRealtimeUserControl chart)
         {
             InitializeComponent();
             this._chart = chart;

@@ -32,7 +32,8 @@ namespace ValveControlSystem
         private List<Window> _childrenWindow = new List<Window>();
         private OriginalDataUserControl _originData = new OriginalDataUserControl();
         private DataTableUserControl _dataTable = new DataTableUserControl();
-        private CurveUserControl _curve = new CurveUserControl();
+        private CurveUserControl _curveLookBack = new CurveUserControl();
+        private CurveRealtimeUserControl _curveRealtime = new CurveRealtimeUserControl();
         private List<Floatable.FloatableUserControl> _floatUserCtrlList = new List<Floatable.FloatableUserControl>();
         private double _rowDataTableAndOriginDataHeight;
         private ToolNo _toolNoSetted = ToolNo.Undefined;
@@ -102,10 +103,16 @@ namespace ValveControlSystem
                             checkSum += bytesActualRecv[i];
                         }
                     }
-                    if (bytesActualRecv.Length - 2 < 0)
+                    if (bytesActualRecv.Length == 0)
                     {
-                        MessageBox.Show("接收数据长度小于2");
-                        continue;
+                        _socketConnect.Shutdown(SocketShutdown.Both);
+                        _socketConnect.Close();
+                        this.Dispatcher.Invoke(new Action(() =>
+                        {
+                            DisableEthernetConnect();
+                            MessageBox.Show("接收数据长度为0，连接可能已断开！");
+                        }));
+                        break;
                     }
                     if (!checkCheckSum(checkSum, bytesActualRecv))
                     {
@@ -255,7 +262,7 @@ namespace ValveControlSystem
                                 this._originData.AddDataInfo("回放指令", DataLevel.Default);
 
                                 _dataTable.ClearTable();
-                                _curve.ClearCurve();
+                                _curveLookBack.ClearCurve();
                                 _saveData2Xml.CreatNewFile();
                                 //}
                             }
@@ -281,7 +288,7 @@ namespace ValveControlSystem
                                 this._originData.AddDataInfo("回放指令", DataLevel.Default);
 
                                 _dataTable.ClearTable();
-                                _curve.ClearCurve();
+                                _curveLookBack.ClearCurve();
                                 _saveData2Xml.CreatNewFile();
                                 //}
                             }
@@ -305,8 +312,11 @@ namespace ValveControlSystem
         {
             try
             {
-                string strIP = "192.168.1.10";
-                IPEndPoint groundBoxIP = new IPEndPoint(IPAddress.Parse(strIP), 1032);
+                //string strIP = "192.168.1.10";
+                string strIP = "103.44.145.248";
+                //int port = 1032;
+                int port = 24473;
+                IPEndPoint groundBoxIP = new IPEndPoint(IPAddress.Parse(strIP), port);
                 _socketConnect = new Socket(groundBoxIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _socketConnect.Connect(groundBoxIP);
 
@@ -419,17 +429,20 @@ namespace ValveControlSystem
                 string version = "  v" + GetCurrentApplicationVersion();
                 this.Title += version;
                 //绑定可悬浮窗口关闭事件。
-                fucCurve.Closed += FucCurve_Closed;
+                fucCurveLookBack.Closed += FucCurve_Closed;
+                fucCurveRealtime.Closed += FucCurveRealtime_Closed;
                 fucOriginData.Closed += FucOriginData_Closed;
                 fucDataTable.Closed += FucDataTable_Closed;
 
                 this.fucOriginData.GridContainer.Children.Add(_originData);
                 this.fucDataTable.GridContainer.Children.Add(_dataTable);
-                this.fucCurve.GridContainer.Children.Add(_curve);
+                this.fucCurveLookBack.GridContainer.Children.Add(_curveLookBack);
+                this.fucCurveRealtime.GridContainer.Children.Add(_curveRealtime);
 
                 //添加_dataTable的左键单击事件。
                 _dataTable.MouseLeftButtonDown += DataTable_MouseLeftButtonDown;
-                _curve.MouseLeftButtonDown += Curve_MouseLeftButtonDown;
+                _curveLookBack.MouseLeftButtonDown += Curve_MouseLeftButtonDown;
+                _curveRealtime.MouseLeftButtonDown += CurveRealtime_MouseLeftButtonDown;
                 //加载27条指令菜单。
                 foreach (int cmdNo in Enum.GetValues(typeof(CommandType)))
                 {
@@ -603,12 +616,22 @@ namespace ValveControlSystem
                                 case (byte)CommandTypeCommon.回放指令:
                                     {
                                         _dataTable.HandleData(receivedData);
-                                        _curve.HandleData(receivedData);
+                                        _curveLookBack.HandleData(receivedData);
                                         if (_saveData2Xml.DirectoryName != string.Empty)
                                         {
                                             _saveData2Xml.SaveData(receivedData, receivedData.Length);
                                         }
                                         this._originData.AddDataInfo("回放数据", DataLevel.Default);
+                                    }
+                                    break;
+                                case (byte)CommandTypeCommon.实时数据:
+                                    {
+                                        _curveRealtime.HandleData(receivedData);
+                                        if (_saveData2Xml.DirectoryName != string.Empty)
+                                        {
+                                            _saveData2Xml.SaveData(receivedData, receivedData.Length);
+                                        }
+                                        this._originData.AddDataInfo("实时数据", DataLevel.Default);
                                     }
                                     break;
                                 case (byte)CommandTypeCommon.擦除指令:
@@ -653,11 +676,11 @@ namespace ValveControlSystem
             }
         }
 
-        private void miCurve_Click(object sender, RoutedEventArgs e)
+        private void miCurveLookBack_Click(object sender, RoutedEventArgs e)
         {
             foreach (var item in _floatUserCtrlList)
             {
-                if (item.Name == "fucCurve")
+                if (item.Name == "fucCurveLookBack")
                 {
                     item.AddControlAndSetGrid();
                     item.State = Floatable.UserControlState.Dock;
@@ -665,7 +688,36 @@ namespace ValveControlSystem
                     break;
                 }
             }
-            this.fucCurve.FocusTitleRect();
+            bringCurveLookBackFront();
+            this.fucCurveLookBack.FocusTitleRect();
+        }
+
+        private void miCurveRealtime_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in _floatUserCtrlList)
+            {
+                if (item.Name == "fucCurveRealtime")
+                {
+                    item.AddControlAndSetGrid();
+                    item.State = Floatable.UserControlState.Dock;
+                    _floatUserCtrlList.Remove(item);
+                    break;
+                }
+            }
+            bringCurveRealtimeFront();
+            this.fucCurveRealtime.FocusTitleRect();
+        }
+
+        private void bringCurveRealtimeFront()
+        {
+            this.fucCurveRealtime.SetValue(Panel.ZIndexProperty, 100);
+            this.fucCurveLookBack.SetValue(Panel.ZIndexProperty, 0);
+        }
+
+        private void bringCurveLookBackFront()
+        {
+            this.fucCurveRealtime.SetValue(Panel.ZIndexProperty, 0);
+            this.fucCurveLookBack.SetValue(Panel.ZIndexProperty, 100);
         }
 
         private void miOriginData_Click(object sender, RoutedEventArgs e)
@@ -709,9 +761,9 @@ namespace ValveControlSystem
         {
             try
             {
-                CurveSetWindow newCurveSetWin = new CurveSetWindow(this._curve);
+                CurveSetWindow newCurveSetWin = new CurveSetWindow(this._curveRealtime);
                 newCurveSetWin.Owner = this;
-                newCurveSetWin.SetCurve += _curve.SetCurveColorAndLineThickness;
+                newCurveSetWin.SetCurve += _curveLookBack.SetCurveColorAndLineThickness;
                 newCurveSetWin.ShowDialog();
             }
             catch (Exception ee)
@@ -781,9 +833,17 @@ namespace ValveControlSystem
 
         private void FucCurve_Closed()
         {
-            if (!_floatUserCtrlList.Contains(fucCurve))
+            if (!_floatUserCtrlList.Contains(fucCurveLookBack))
             {
-                _floatUserCtrlList.Add(fucCurve);
+                _floatUserCtrlList.Add(fucCurveLookBack);
+            }
+        }
+
+        private void FucCurveRealtime_Closed()
+        {
+            if (!_floatUserCtrlList.Contains(fucCurveRealtime))
+            {
+                _floatUserCtrlList.Add(fucCurveRealtime);
             }
         }
 
@@ -819,7 +879,12 @@ namespace ValveControlSystem
 
         private void Curve_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.fucCurve.FocusTitleRect();
+            this.fucCurveLookBack.FocusTitleRect();
+        }
+
+        private void CurveRealtime_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.fucCurveRealtime.FocusTitleRect();
         }
 
         private void Send(byte[] sendData)

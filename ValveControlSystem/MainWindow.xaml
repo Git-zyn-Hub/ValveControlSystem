@@ -21,7 +21,10 @@
             <MenuItem x:Name="miEthernetConnect" Header="以太网连接" Click="miEthernetConnect_Click"></MenuItem>
             <MenuItem x:Name="miPortConnect" Header="串口连接" Click="miPortConnect_Click"></MenuItem>
             <MenuItem x:Name="miView" Header="视图">
-                <MenuItem x:Name="miCurve" Header="曲线" Click="miCurve_Click"></MenuItem>
+                <MenuItem x:Name="miCurve" Header="曲线">
+                    <MenuItem x:Name="miCurveLookBack" Header="回放曲线" Click="miCurveLookBack_Click"></MenuItem>
+                    <MenuItem x:Name="miCurveRealtime" Header="实时曲线" Click="miCurveRealtime_Click"></MenuItem>
+                </MenuItem>
                 <MenuItem x:Name="miDataTable" Header="数据表" Click="miDataTable_Click"></MenuItem>
                 <MenuItem x:Name="miOriginData" Header="原始数据" Click="miOriginData_Click"></MenuItem>
             </MenuItem>
@@ -42,8 +45,9 @@
                 <RowDefinition x:Name="rowDataTableAndOriginData" Height="240*"/>
             </Grid.RowDefinitions>
             <GridSplitter Grid.Row="1" Background="AntiqueWhite" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="3"></GridSplitter>
-            <floatable:FloatableUserControl x:Name="fucCurve" StrTitle="曲线">
+            <floatable:FloatableUserControl x:Name="fucCurveLookBack" StrTitle="回放曲线">
             </floatable:FloatableUserControl>
+            <floatable:FloatableUserControl x:Name="fucCurveRealtime" StrTitle="实时曲线" Panel.ZIndex="100"/>
             <Grid Grid.Row="2" x:Name="gridDataTableAndOriginData">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="400*"/>

@@ -55,7 +55,8 @@ namespace ValveControlSystem
         回放指令 = 0x01,
         擦除指令 = 0x02,
         地面预设指令 = 0x04,
-        对时指令 = 0x05
+        对时指令 = 0x05,
+        实时数据 = 0x06
     }
 
     public enum ToolNo
@@ -65,7 +66,7 @@ namespace ValveControlSystem
         Tool_2,
         Undefined
     }
-    
+
     public enum PressureUnit
     {
         MPa,

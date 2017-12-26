@@ -97,6 +97,9 @@
     <Compile Include="Classes\TestData.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="UserControls\CurveRealtimeUserControl.xaml.cs">
+      <DependentUpon>CurveRealtimeUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CurveUserControl.xaml.cs">
       <DependentUpon>CurveUserControl.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,9 @@
     </Compile>
     <Compile Include="UserControls\PortSettingUserControl.xaml.cs">
       <DependentUpon>PortSettingUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\CurveContainWindow.xaml.cs">
+      <DependentUpon>CurveContainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\CurveSetWindow.xaml.cs">
       <DependentUpon>CurveSetWindow.xaml</DependentUpon>
@@ -137,6 +143,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\CurveRealtimeUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\CurveUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -152,6 +162,10 @@
     <Page Include="UserControls\PortSettingUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\CurveContainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\CurveSetWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
