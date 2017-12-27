@@ -69,6 +69,7 @@ namespace ValveControlSystem.Classes
                 FontSize = 10,
                 BackgroundColor = Colors.White,
                 DisplayGrid = true,
+                MoveLeftRealtime = true
             };
 
             XDocument doc = new XDocument
@@ -116,7 +117,8 @@ namespace ValveControlSystem.Classes
                             new XAttribute("FontFamily", curveGeneralSet.FontFamily),
                             new XAttribute("FontSize", curveGeneralSet.FontSize),
                             new XAttribute("BackgroundColor", curveGeneralSet.BackgroundColor),
-                            new XAttribute("DisplayGrid", curveGeneralSet.DisplayGrid)
+                            new XAttribute("DisplayGrid", curveGeneralSet.DisplayGrid),
+                            new XAttribute("MoveLeftRealtime", curveGeneralSet.MoveLeftRealtime)
                         )
                     )
                 )
@@ -166,6 +168,7 @@ namespace ValveControlSystem.Classes
                 element.SetAttributeValue("FontSize", curveGeneralSet.FontSize);
                 element.SetAttributeValue("BackgroundColor", curveGeneralSet.BackgroundColor);
                 element.SetAttributeValue("DisplayGrid", curveGeneralSet.DisplayGrid);
+                element.SetAttributeValue("MoveLeftRealtime", curveGeneralSet.MoveLeftRealtime);
             }
             xd.Save(XmlPath);
         }
@@ -203,6 +206,7 @@ namespace ValveControlSystem.Classes
             newCGS.FontSize = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "FontSize"));
             newCGS.BackgroundColor = (Color)ColorConverter.ConvertFromString(getXmlAttributeValue("CurveGeneralSetting", "BackgroundColor"));
             newCGS.DisplayGrid = bool.Parse(getXmlAttributeValue("CurveGeneralSetting", "DisplayGrid"));
+            newCGS.MoveLeftRealtime = bool.Parse(getXmlAttributeValue("CurveGeneralSetting", "MoveLeftRealtime"));
             return newCGS;
         }
     }

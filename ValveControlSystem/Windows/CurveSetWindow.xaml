@@ -94,6 +94,7 @@
         <root:Color2BrushConverter x:Key="color2BrushConverter"/>
         <root:UnitConverter x:Key="unitConverter"/>
         <root:Unit2UnitListConverter x:Key="unit2UnitListConverter"/>
+        <root:IsChecked2VisibilityConverter x:Key="isChecked2VisibilityConverter"/>
         <!--显示模板-->
         <DataTemplate x:Key="DateTemplate" >
             <StackPanel>
@@ -248,6 +249,19 @@
                           ItemsSource="{Binding Source={StaticResource colorBrushes4Background}}" SelectionChanged="cbBackgroundColor_SelectionChanged"
                           SelectedValuePath="Fill" GotFocus="cbBackgroundColor_GotFocus" ></ComboBox>
             </DockPanel>
+            <Grid x:Name="gridRetainMinutes" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                       Visibility="{Binding ElementName=ckbMoveLeft,Path=IsChecked,Converter={StaticResource isChecked2VisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Label Content="保留"></Label>
+                    <TextBox x:Name="txtRetainMinutes" Text="{Binding CurveGeneralSet.RetainMinutes,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" 
+                         KeyDown="TextBox_KeyDown" TextChanged="TextBox_TextChanged" VerticalContentAlignment="Center" LostFocus="txtRetainMinutes_LostFocus"></TextBox>
+                </DockPanel>
+                <Label Content="分钟" HorizontalAlignment="Left" Grid.Column="1"></Label>
+            </Grid>
         </Grid>
         <DockPanel Grid.Row="2" HorizontalAlignment="Center">
             <Button x:Name="btnDefault" Width="70" Height="26" Content="默认" Click="btnDefault_Click"></Button>

@@ -415,6 +415,26 @@ namespace ValveControlSystem.Windows
             }
         }
 
+        private void txtRetainMinutes_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.txtRetainMinutes.Text.Trim()))
+            {
+                int integer;
+                if (int.TryParse(this.txtRetainMinutes.Text.Trim(), out integer))
+                {
+                    this._curveRealtime.ChangeRetainMinutes(integer);
+                }
+                else
+                {
+                    MessageBox.Show("请在‘保留’填写正确的整数！");
+                }
+            }
+            else
+            {
+                MessageBox.Show("‘保留’不能为空！");
+            }
+        }
+
         private void ckbDisplayGrid_Checked(object sender, RoutedEventArgs e)
         {
             this._curveRealtime.ChangeChartGrid(true);
@@ -514,6 +534,18 @@ namespace ValveControlSystem.Windows
             {
                 MessageBox.Show(ee.Message);
             }
+        }
+
+        private void ckbMoveLeft_Checked(object sender, RoutedEventArgs e)
+        {
+            this._curveRealtime.ChangeMoveLeft(true);
+            this.gridRetainMinutes.Visibility = Visibility.Visible;
+        }
+
+        private void ckbMoveLeft_Unchecked(object sender, RoutedEventArgs e)
+        {
+            this._curveRealtime.ChangeMoveLeft(false);
+            this.gridRetainMinutes.Visibility = Visibility.Collapsed;
         }
 
         #region INotifyPropertyChanged Members

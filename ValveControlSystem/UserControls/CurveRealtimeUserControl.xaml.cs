@@ -20,6 +20,8 @@ namespace ValveControlSystem.UserControls
         private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
         private const int _headerLength = 7;
         private string _pressureUnit;
+        private bool _moveLeft;
+        private int _retainMinutes;
         //private int _hitCount = 0;
 
 
@@ -187,6 +189,10 @@ namespace ValveControlSystem.UserControls
                 MessageBox.Show("修改趋势线异常：" + ee.Message);
             }
         }
+        public void ChangeMoveLeft(bool moveLeft)
+        {
+            this._moveLeft = moveLeft;
+        }
 
         public void ChangeChartGrid(bool show)
         {
@@ -211,6 +217,10 @@ namespace ValveControlSystem.UserControls
             {
                 MessageBox.Show("修改背景异常：" + ee.Message);
             }
+        }
+        public void ChangeRetainMinutes(int minutes)
+        {
+            _retainMinutes = minutes;
         }
 
         private void setCurveColorAndLineThickness(DataSeries dataSeries, CurveSetting curveSet)
