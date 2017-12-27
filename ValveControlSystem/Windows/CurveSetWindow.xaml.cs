@@ -28,7 +28,8 @@ namespace ValveControlSystem.Windows
     /// </summary>
     public partial class CurveSetWindow : Window, INotifyPropertyChanged
     {
-        private CurveRealtimeUserControl _chart;
+        private CurveRealtimeUserControl _curveRealtime;
+        private CurveUserControl _curveLookBack;
         private DataSet _myDataSet = new DataSet();
         private ObservableCollection<CurveSetting> _curveSettingList = new ObservableCollection<CurveSetting>();
         private ObservableCollection<int> _curveFontSizeList = new ObservableCollection<int>();
@@ -102,10 +103,11 @@ namespace ValveControlSystem.Windows
             }
         }
 
-        public CurveSetWindow(CurveRealtimeUserControl chart)
+        public CurveSetWindow(CurveRealtimeUserControl chart,CurveUserControl curveLookBack)
         {
             InitializeComponent();
-            this._chart = chart;
+            this._curveRealtime = chart;
+            this._curveLookBack = curveLookBack;
             _xmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
             _curveSetXmlHelper.XmlPath = _xmlPath;
             try
@@ -126,6 +128,8 @@ namespace ValveControlSystem.Windows
             try
             {
                 this.CurveSettingList.Clear();
+                CurveSetting curveSetPressureRealtime = _curveSetXmlHelper.GetCurveSetting("PressureCurveRealtime");
+                this.CurveSettingList.Add(curveSetPressureRealtime);
 
                 CurveSetting curveSetPressure = _curveSetXmlHelper.GetCurveSetting("PressureCurve");
                 this.CurveSettingList.Add(curveSetPressure);
@@ -175,15 +179,17 @@ namespace ValveControlSystem.Windows
         {
             try
             {
-                if (CurveSettingList.Count != 2)
+                if (CurveSettingList.Count != 3)
                 {
-                    MessageBox.Show("曲线个数不为2，无法设置。");
+                    MessageBox.Show("曲线个数不为3，无法设置。");
                     return;
                 }
                 File.Delete(_xmlPath);
                 _curveSetXmlHelper.CurveSettingXmlInitial();
-                this._chart.SetCurveColorAndLineThickness();
-                this._chart.CurveGeneralSet();
+                this._curveRealtime.SetCurveColorAndLineThickness();
+                this._curveRealtime.CurveGeneralSet();
+                this._curveLookBack.SetCurveColorAndLineThickness();
+                this._curveLookBack.CurveGeneralSet();
                 Window_Loaded(sender, e);
                 CurveGeneralSetting cgs = _curveSetXmlHelper.GetCurveGeneralSetting();
                 this.cbFontSize.SelectedValue = cgs.FontSize;
@@ -294,10 +300,11 @@ namespace ValveControlSystem.Windows
         {
             try
             {
-                if (CurveSettingList.Count == 2)
+                if (CurveSettingList.Count == 3)
                 {
-                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("PressureCurve", CurveSettingList[0]);
-                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("TemperatureCurve", CurveSettingList[1]);
+                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("PressureCurveRealtime", CurveSettingList[0]);
+                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("PressureCurve", CurveSettingList[1]);
+                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("TemperatureCurve", CurveSettingList[2]);
                     _curveSetXmlHelper.ModifyXmlCurveGeneralSettingElement(CurveGeneralSet);
                 }
                 else
@@ -330,7 +337,8 @@ namespace ValveControlSystem.Windows
             if (this.cbFontSize.SelectedValue != null)
             {
                 int fontSize = (int)this.cbFontSize.SelectedValue;
-                _chart.ChangeFontSize(fontSize);
+                _curveRealtime.ChangeFontSize(fontSize);
+                _curveLookBack.ChangeFontSize(fontSize);
             }
         }
 
@@ -339,7 +347,8 @@ namespace ValveControlSystem.Windows
             if (this.cbFontFamily.SelectedItem != null)
             {
                 FontFamily fontFamily = new FontFamily(this.cbFontFamily.SelectedItem.ToString());
-                _chart.ChangeFontFamily(fontFamily);
+                _curveRealtime.ChangeFontFamily(fontFamily);
+                _curveLookBack.ChangeFontFamily(fontFamily);
             }
         }
 
@@ -350,7 +359,8 @@ namespace ValveControlSystem.Windows
                 double range;
                 if (double.TryParse(this.txtPressureRange.Text.Trim(), out range))
                 {
-                    this._chart.ChangePressureAxis(range);
+                    this._curveRealtime.ChangePressureAxis(range);
+                    this._curveLookBack.ChangePressureAxis(range);
                 }
                 else
                 {
@@ -370,7 +380,8 @@ namespace ValveControlSystem.Windows
                 int range;
                 if (int.TryParse(this.txtTemperatureRange.Text.Trim(), out range))
                 {
-                    this._chart.ChangeTemperatureAxis(range);
+                    this._curveRealtime.ChangeTemperatureAxis(range);
+                    this._curveLookBack.ChangeTemperatureAxis(range);
                 }
                 else
                 {
@@ -390,7 +401,8 @@ namespace ValveControlSystem.Windows
                 double integer;
                 if (double.TryParse(this.txtPressureThreshold.Text.Trim(), out integer))
                 {
-                    this._chart.ChangeTrendLine(integer);
+                    this._curveRealtime.ChangeTrendLine(integer);
+                    this._curveLookBack.ChangeTrendLine(integer);
                 }
                 else
                 {
@@ -405,17 +417,20 @@ namespace ValveControlSystem.Windows
 
         private void ckbDisplayGrid_Checked(object sender, RoutedEventArgs e)
         {
-            this._chart.ChangeChartGrid(true);
+            this._curveRealtime.ChangeChartGrid(true);
+            this._curveLookBack.ChangeChartGrid(true);
         }
 
         private void ckbDisplayGrid_Unchecked(object sender, RoutedEventArgs e)
         {
-            this._chart.ChangeChartGrid(false);
+            this._curveRealtime.ChangeChartGrid(false);
+            this._curveLookBack.ChangeChartGrid(false);
         }
 
         private void cbBackgroundColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this._chart.ChangeBackground((Color)ColorConverter.ConvertFromString(this.cbBackgroundColor.SelectedValue.ToString()));
+            this._curveRealtime.ChangeBackground((Color)ColorConverter.ConvertFromString(this.cbBackgroundColor.SelectedValue.ToString()));
+            this._curveLookBack.ChangeBackground((Color)ColorConverter.ConvertFromString(this.cbBackgroundColor.SelectedValue.ToString()));
         }
 
         private void cbBackgroundColor_GotFocus(object sender, RoutedEventArgs e)
@@ -439,8 +454,20 @@ namespace ValveControlSystem.Windows
                 return;
 
             //Unit那一列是第4列
-            if (num == 0)
+            if (num == 0 || num == 1)
             {
+                for (int i = 0; i < 2; i++)
+                {
+                    //获取索引为i的行
+                    DataGridRow row = this.dgCurveSetting.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
+                    if (row != null)
+                    {
+                        ComboBox cb = this.dgCurveSetting.Columns[3].GetCellContent(row) as ComboBox;
+                        cb.SelectedItem = unit;
+                        BindingExpression be = cb.GetBindingExpression(ComboBox.SelectedItemProperty);
+                        be.UpdateSource();
+                    }
+                }
                 this.lblPressureUnit.Content = unit.ToString();
                 this.lblPressureThresholdUnit.Content = unit.ToString();
                 double pressureRange;
@@ -454,7 +481,7 @@ namespace ValveControlSystem.Windows
                     this.txtPressureThreshold.Text = (Math.Round(DataUnitConvert.PressureUnitConvertEachOther(pressureThreshold, (PressureUnit)Enum.Parse(typeof(PressureUnit), unit.ToString())))).ToString();
                 }
             }
-            if (num == 1)
+            if (num == 2)
             {
                 this.lblTemperatureUnit.Content = unit;
                 UnitConverter unitConverter = new UnitConverter();
@@ -466,7 +493,7 @@ namespace ValveControlSystem.Windows
                 }
             }
         }
-        private void setUnit(string preUnit,string tempUnit)
+        private void setUnit(string preUnit, string tempUnit)
         {
             try
             {
@@ -475,7 +502,7 @@ namespace ValveControlSystem.Windows
                     this.lblPressureUnit.Content = preUnit.ToString();
                     this.lblPressureThresholdUnit.Content = preUnit.ToString();
                 }
-                
+
                 if (tempUnit != null)
                 {
                     UnitConverter unitConverter = new UnitConverter();

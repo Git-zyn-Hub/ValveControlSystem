@@ -454,6 +454,7 @@ namespace ValveControlSystem
                     oneMenuItem.Tag = cmdType;
                     this.miCommand.Items.Add(oneMenuItem);
                 }
+                this.rbRealtime.IsChecked = true;
             }
             catch (Exception ee)
             {
@@ -761,9 +762,10 @@ namespace ValveControlSystem
         {
             try
             {
-                CurveSetWindow newCurveSetWin = new CurveSetWindow(this._curveRealtime);
+                CurveSetWindow newCurveSetWin = new CurveSetWindow(this._curveRealtime, this._curveLookBack);
                 newCurveSetWin.Owner = this;
                 newCurveSetWin.SetCurve += _curveLookBack.SetCurveColorAndLineThickness;
+                newCurveSetWin.SetCurve += _curveRealtime.SetCurveColorAndLineThickness;
                 newCurveSetWin.ShowDialog();
             }
             catch (Exception ee)
@@ -1020,6 +1022,18 @@ namespace ValveControlSystem
             result[1] = (byte)(input & 255);
 
             return result;
+        }
+
+        private void rbLookBack_Checked(object sender, RoutedEventArgs e)
+        {
+            bringCurveLookBackFront();
+            this.fucCurveLookBack.FocusTitleRect();
+        }
+
+        private void rbRealtime_Checked(object sender, RoutedEventArgs e)
+        {
+            bringCurveRealtimeFront();
+            this.fucCurveRealtime.FocusTitleRect();
         }
     }
 }

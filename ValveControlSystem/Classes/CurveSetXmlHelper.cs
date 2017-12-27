@@ -36,9 +36,17 @@ namespace ValveControlSystem.Classes
             {
                 return;
             }
+            CurveSetting pressureCurveRealtime = new CurveSetting()
+            {
+                CurveName = "实时压力",
+                LineThickness = 2,
+                LineColor = Colors.Red,
+                Unit = PressureUnit.PSI.ToString(),
+                Show = true
+            };
             CurveSetting pressureCurve = new CurveSetting()
             {
-                CurveName = "压力",
+                CurveName = "回放压力",
                 LineThickness = 2,
                 LineColor = Colors.Red,
                 Unit = PressureUnit.PSI.ToString(),
@@ -46,7 +54,7 @@ namespace ValveControlSystem.Classes
             };
             CurveSetting temperatureCurve = new CurveSetting()
             {
-                CurveName = "温度",
+                CurveName = "回放温度",
                 LineThickness = 2,
                 LineColor = Colors.Green,
                 Unit = TemperatureUnit.摄氏度.ToString(),
@@ -72,6 +80,15 @@ namespace ValveControlSystem.Classes
                     new XElement
                     (
                         "CurveSet",
+                         new XElement
+                        (
+                            "PressureCurveRealtime",
+                            new XAttribute("CurveName", pressureCurveRealtime.CurveName),
+                            new XAttribute("LineThickness", pressureCurveRealtime.LineThickness),
+                            new XAttribute("LineColor", pressureCurveRealtime.LineColor),
+                            new XAttribute("Unit", pressureCurveRealtime.Unit),
+                            new XAttribute("Show", pressureCurveRealtime.Show)
+                        ),
                         new XElement
                         (
                             "PressureCurve",

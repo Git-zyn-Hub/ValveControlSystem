@@ -38,6 +38,10 @@
             </MenuItem>
             <MenuItem x:Name="miCurveSet" Header="曲线设置" Click="miCurveSet_Click"></MenuItem>
         </Menu>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="3">
+            <RadioButton x:Name="rbRealtime" Checked="rbRealtime_Checked">实时</RadioButton>
+            <RadioButton x:Name="rbLookBack" Checked="rbLookBack_Checked">回放</RadioButton>
+        </StackPanel>
         <Grid x:Name="gridCurveAndOriginData" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="360*"/>

@@ -19,8 +19,6 @@ namespace ValveControlSystem.UserControls
         private bool _showChartGrid;
         private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
         private const int _headerLength = 7;
-        private DataPoint _dataPointsPres;
-        private int _xAxisMax = 0;
         private string _pressureUnit;
         //private int _hitCount = 0;
 
@@ -55,12 +53,12 @@ namespace ValveControlSystem.UserControls
                     _dataSeries1 = new DataSeries();
                     chartCurve.Series.Add(_dataSeries1);
                     _dataSeries1.RenderAs = RenderAs.Line;
-                    _dataSeries1.XValueType = ChartValueTypes.Numeric;
+                    _dataSeries1.XValueType = ChartValueTypes.DateTime;
                     _dataSeries1.AxisYType = AxisTypes.Primary;
-                    _dataSeries1.MarkerEnabled = false;
+                    _dataSeries1.MarkerEnabled = true;
                     _dataSeries1.LegendText = "压力";
                 }
-                setXAxisMinMaxValue();
+                //setXAxisMinMaxValue();
             }
             catch (Exception ee)
             {
@@ -233,7 +231,7 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                CurveSetting preCurveSetting = _curveSetXmlHelper.GetCurveSetting("PressureCurve");
+                CurveSetting preCurveSetting = _curveSetXmlHelper.GetCurveSetting("PressureCurveRealtime");
                 setCurveColorAndLineThickness(_dataSeries1, preCurveSetting);
 
                 PressureUnit4Binding = preCurveSetting.Unit;
@@ -286,7 +284,7 @@ namespace ValveControlSystem.UserControls
                     dataPointPressure = new DataPoint();
                     dataPointPressure.XValue = DateTime.Now;
                     dataPointPressure.YValue = (dataArray[7] << 8) + dataArray[8];
-                    dataPointPressure.MarkerEnabled = false;
+                    dataPointPressure.MarkerEnabled = true;
                     _dataSeries1.DataPoints.Add(dataPointPressure);
                 }
             }

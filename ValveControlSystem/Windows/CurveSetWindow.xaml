@@ -9,7 +9,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         x:Name="curveSetWin"
-        Title="曲线设置窗口" Height="300" Width="500"
+        Title="曲线设置窗口" Height="350" Width="500"
         Loaded="Window_Loaded"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="AliceBlue">
     <Window.Resources>
@@ -112,7 +112,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30*"/>
+            <RowDefinition Height="40*"/>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
@@ -221,6 +221,10 @@
                 <Label Content="字号"></Label>
                 <ComboBox x:Name="cbFontSize" SelectedItem="{Binding CurveGeneralSet.FontSize,ElementName=curveSetWin}" 
                           ItemsSource="{Binding ElementName=curveSetWin,Path=CurveFontSizeList}" SelectionChanged="cbFontSize_SelectionChanged"></ComboBox>
+            </DockPanel>
+            <DockPanel x:Name="dcpMoveLeft" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <CheckBox x:Name="ckbMoveLeft" Content="实时曲线实时左移" IsChecked="{Binding CurveGeneralSet.MoveLeftRealtime ,ElementName=curveSetWin}"
+                          Checked="ckbMoveLeft_Checked" Unchecked="ckbMoveLeft_Unchecked"></CheckBox>
             </DockPanel>
             <Grid Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
