@@ -21,7 +21,7 @@ namespace ValveControlSystem.UserControls
         private const int _headerLength = 7;
         private string _pressureUnit;
         private bool _moveLeft;
-        private int _retainMinutes;
+        private int _retainMinutes = 2000;
         //private int _hitCount = 0;
 
 
@@ -194,6 +194,17 @@ namespace ValveControlSystem.UserControls
             this._moveLeft = moveLeft;
         }
 
+        private void moveLeftControl()
+        {
+            if (_moveLeft)
+            {
+                while (_dataSeries1.DataPoints.Count > _retainMinutes)
+                {
+                    _dataSeries1.DataPoints.RemoveAt(0);
+                }
+            }
+        }
+
         public void ChangeChartGrid(bool show)
         {
             try
@@ -296,6 +307,7 @@ namespace ValveControlSystem.UserControls
                     dataPointPressure.YValue = (dataArray[7] << 8) + dataArray[8];
                     dataPointPressure.MarkerEnabled = true;
                     _dataSeries1.DataPoints.Add(dataPointPressure);
+                    moveLeftControl();
                 }
             }
             catch (Exception ee)

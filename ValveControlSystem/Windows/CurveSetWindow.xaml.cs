@@ -103,7 +103,7 @@ namespace ValveControlSystem.Windows
             }
         }
 
-        public CurveSetWindow(CurveRealtimeUserControl chart,CurveUserControl curveLookBack)
+        public CurveSetWindow(CurveRealtimeUserControl chart, CurveUserControl curveLookBack)
         {
             InitializeComponent();
             this._curveRealtime = chart;
@@ -248,6 +248,49 @@ namespace ValveControlSystem.Windows
                 MessageBox.Show(ee.Message);
             }
         }
+
+
+        private void TextBoxRetainMinutes_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //屏蔽中文输入和非法字符粘贴输入
+            try
+            {
+                TextBox textBox = sender as TextBox;
+                TextChange[] change = new TextChange[e.Changes.Count];
+                e.Changes.CopyTo(change, 0);
+
+                int offset = change[0].Offset;
+                if (change[0].AddedLength > 0)
+                {
+                    //这里只做Double类型转换的检测，如果是Int或者其他类型需要改变num的类型，和TryParse前面类型。
+                    int num = 0;
+                    if (!int.TryParse(textBox.Text, out num))
+                    {
+                        textBox.Text = textBox.Text.Remove(offset, change[0].AddedLength);
+                        textBox.Select(offset, 0);
+                    }
+                }
+
+                if (lblRetainMinutes != null)
+                {
+                    int count = 0;
+                    if (int.TryParse(textBox.Text, out count))
+                    {
+                        int minutes = count / 20;
+                        lblRetainMinutes.Content = "约" + minutes + "分钟";
+                    }
+                    else
+                    {
+                        lblRetainMinutes.Content = string.Empty;
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
+        }
+
         private void TextBoxDouble_KeyDown(object sender, KeyEventArgs e)
         {
             /*e.Key != Key.Back && e.Key != Key.Decimal && e.Key != Key.OemPeriod && e.Key != Key.Return

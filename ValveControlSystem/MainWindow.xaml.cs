@@ -623,6 +623,7 @@ namespace ValveControlSystem
                                             _saveData2Xml.SaveData(receivedData, receivedData.Length);
                                         }
                                         this._originData.AddDataInfo("回放数据", DataLevel.Default);
+                                        this.rbLookBack.IsChecked = true;
                                     }
                                     break;
                                 case (byte)CommandTypeCommon.实时数据:
