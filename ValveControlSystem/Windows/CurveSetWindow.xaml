@@ -259,7 +259,7 @@
                 <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Label Content="保留" Padding="0 5"></Label>
                     <TextBox x:Name="txtRetainMinutes" Text="{Binding CurveGeneralSet.RetainMinutes,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" 
-                         KeyDown="TextBox_KeyDown" TextChanged="TextBoxRetainMinutes_TextChanged" VerticalContentAlignment="Center" LostFocus="txtRetainMinutes_LostFocus"></TextBox>
+                         KeyDown="TextBox_KeyDown" TextChanged="TextBoxRetainMinutes_TextChanged" VerticalContentAlignment="Center"></TextBox>
                 </DockPanel>
                 <Label Content="个点" Margin="0" Padding="0 5" HorizontalAlignment="Left" Grid.Column="1"></Label>
                 <Label x:Name="lblRetainMinutes" Content="约100分钟" HorizontalAlignment="Left" Grid.Column="2"></Label>

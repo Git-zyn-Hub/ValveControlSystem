@@ -358,14 +358,18 @@ namespace ValveControlSystem.Windows
                     MessageBox.Show("保存到配置文件失败！");
                 }
 
-                txtPressureRange_LostFocus(sender, e);
-                txtTemperatureRange_LostFocus(sender, e);
-                txtPressureThreshold_LostFocus(sender, e);
-                if (SetCurve != null)
+                bool bool1 = txtPressureRange_LostFocus(sender, e);
+                bool bool2 = txtTemperatureRange_LostFocus(sender, e);
+                bool bool3 = txtPressureThreshold_LostFocus(sender, e);
+                bool bool4 = txtRetainMinutes_LostFocus(sender, e);
+                if (bool1 && bool2 && bool3 && bool4)
                 {
-                    SetCurve();
+                    if (SetCurve != null)
+                    {
+                        SetCurve();
+                    }
+                    this.DialogResult = true;
                 }
-                this.DialogResult = true;
             }
             catch (Exception ee)
             {
@@ -405,7 +409,7 @@ namespace ValveControlSystem.Windows
             }
         }
 
-        private void txtPressureRange_LostFocus(object sender, RoutedEventArgs e)
+        private bool txtPressureRange_LostFocus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.txtPressureRange.Text.Trim()))
             {
@@ -414,19 +418,22 @@ namespace ValveControlSystem.Windows
                 {
                     this._curveRealtime.ChangePressureAxis(range);
                     this._curveLookBack.ChangePressureAxis(range);
+                    return true;
                 }
                 else
                 {
                     MessageBox.Show("请在‘压力范围’填写正确的小数！");
+                    return false;
                 }
             }
             else
             {
                 MessageBox.Show("‘压力范围’不能为空！");
+                return false;
             }
         }
 
-        private void txtTemperatureRange_LostFocus(object sender, RoutedEventArgs e)
+        private bool txtTemperatureRange_LostFocus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.txtTemperatureRange.Text.Trim()))
             {
@@ -435,19 +442,22 @@ namespace ValveControlSystem.Windows
                 {
                     this._curveRealtime.ChangeTemperatureAxis(range);
                     this._curveLookBack.ChangeTemperatureAxis(range);
+                    return true;
                 }
                 else
                 {
                     MessageBox.Show("请在‘温度范围’填写正确的整数！");
+                    return false;
                 }
             }
             else
             {
                 MessageBox.Show("‘温度范围’不能为空！");
+                return false;
             }
         }
 
-        private void txtPressureThreshold_LostFocus(object sender, RoutedEventArgs e)
+        private bool txtPressureThreshold_LostFocus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.txtPressureThreshold.Text.Trim()))
             {
@@ -456,19 +466,22 @@ namespace ValveControlSystem.Windows
                 {
                     this._curveRealtime.ChangeTrendLine(integer);
                     this._curveLookBack.ChangeTrendLine(integer);
+                    return true;
                 }
                 else
                 {
                     MessageBox.Show("请在‘压力门限’填写正确的整数！");
+                    return false;
                 }
             }
             else
             {
                 MessageBox.Show("‘压力门限’不能为空！");
+                return false;
             }
         }
 
-        private void txtRetainMinutes_LostFocus(object sender, RoutedEventArgs e)
+        private bool txtRetainMinutes_LostFocus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.txtRetainMinutes.Text.Trim()))
             {
@@ -476,15 +489,18 @@ namespace ValveControlSystem.Windows
                 if (int.TryParse(this.txtRetainMinutes.Text.Trim(), out integer))
                 {
                     this._curveRealtime.ChangeRetainMinutes(integer);
+                    return true;
                 }
                 else
                 {
                     MessageBox.Show("请在‘保留’填写正确的整数！");
+                    return false;
                 }
             }
             else
             {
                 MessageBox.Show("‘保留’不能为空！");
+                return false;
             }
         }
 
@@ -551,7 +567,7 @@ namespace ValveControlSystem.Windows
                 double pressureThreshold;
                 if (double.TryParse(this.txtPressureThreshold.Text, out pressureThreshold))
                 {
-                    this.txtPressureThreshold.Text = (Math.Round(DataUnitConvert.PressureUnitConvertEachOther(pressureThreshold, (PressureUnit)Enum.Parse(typeof(PressureUnit), unit.ToString())))).ToString();
+                    this.txtPressureThreshold.Text = (Math.Round(DataUnitConvert.PressureUnitConvertEachOther(pressureThreshold, (PressureUnit)Enum.Parse(typeof(PressureUnit), unit.ToString())), 2)).ToString();
                 }
             }
             if (num == 2)
