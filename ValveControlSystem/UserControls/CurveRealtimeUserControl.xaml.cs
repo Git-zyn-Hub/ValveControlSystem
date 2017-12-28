@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using ValveControlSystem.Classes;
 using Visifire.Charts;
+using FastLinkSystem.Classes;
+using System.Reflection;
 
 namespace ValveControlSystem.UserControls
 {
@@ -38,6 +40,7 @@ namespace ValveControlSystem.UserControls
                 {
                     _pressureUnit = value;
                     OnPropertyChanged("PressureUnit4Binding");
+                    changeDataAfterUnitChanged();
                 }
             }
         }
@@ -304,7 +307,8 @@ namespace ValveControlSystem.UserControls
                     DataPoint dataPointPressure;
                     dataPointPressure = new DataPoint();
                     dataPointPressure.XValue = DateTime.Now;
-                    dataPointPressure.YValue = (dataArray[7] << 8) + dataArray[8];
+                    dataPointPressure.YValue = DataUnitConverter.PressureUnitConvert(GetPressureFromVoltage.GetPressure(
+                        (dataArray[7] << 8) + dataArray[8]), (PressureUnit)Enum.Parse(typeof(PressureUnit), PressureUnit4Binding));
                     dataPointPressure.MarkerEnabled = true;
                     _dataSeries1.DataPoints.Add(dataPointPressure);
                     moveLeftControl();
@@ -337,6 +341,17 @@ namespace ValveControlSystem.UserControls
             catch (Exception ee)
             {
                 MessageBox.Show("清空曲线异常：" + ee.Message);
+            }
+        }
+
+        private void changeDataAfterUnitChanged()
+        {
+            if (_dataSeries1 != null)
+            {
+                foreach (var item in _dataSeries1.DataPoints)
+                {
+                    item.YValue = DataUnitConvert.PressureUnitConvertEachOther(item.YValue, (PressureUnit)Enum.Parse(typeof(PressureUnit), _pressureUnit));
+                }
             }
         }
 

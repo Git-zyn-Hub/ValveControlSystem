@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Xml.Linq;
 using FastLinkSystem.Classes;
+using System.Reflection;
 
 namespace ValveControlSystem.Windows
 {
@@ -343,6 +344,8 @@ namespace ValveControlSystem.Windows
         {
             try
             {
+                updataSource(txtPressureRange);
+                updataSource(txtPressureThreshold);
                 if (CurveSettingList.Count == 3)
                 {
                     _curveSetXmlHelper.ModifyXmlCurveSettingElement("PressureCurveRealtime", CurveSettingList[0]);
@@ -354,6 +357,7 @@ namespace ValveControlSystem.Windows
                 {
                     MessageBox.Show("保存到配置文件失败！");
                 }
+
                 txtPressureRange_LostFocus(sender, e);
                 txtTemperatureRange_LostFocus(sender, e);
                 txtPressureThreshold_LostFocus(sender, e);
@@ -367,6 +371,12 @@ namespace ValveControlSystem.Windows
             {
                 MessageBox.Show(ee.Message);
             }
+        }
+
+        private void updataSource(TextBox txtBox)
+        {
+            BindingExpression be = txtBox.GetBindingExpression(TextBox.TextProperty);
+            be.UpdateSource();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -589,6 +599,29 @@ namespace ValveControlSystem.Windows
         {
             this._curveRealtime.ChangeMoveLeft(false);
             this.gridRetainMinutes.Visibility = Visibility.Collapsed;
+        }
+
+
+        private void callObjectEvent(Object obj, string EventName, EventArgs e = null)
+        {
+            //建立一个类型      
+            //Type t = typeof(obj.GetType);  
+            Type t = Type.GetType(obj.GetType().AssemblyQualifiedName);
+            //产生方法      
+            MethodInfo m = t.GetMethod(EventName, BindingFlags.NonPublic | BindingFlags.Instance);
+            //参数赋值。传入函数      
+            //获得参数资料  
+            ParameterInfo[] para = m.GetParameters();
+            //根据参数的名字，拿参数的空值。  
+            //参数对象      
+            object[] p = new object[1];
+            if (e == null)
+                p[0] = Type.GetType(para[0].ParameterType.BaseType.FullName).GetProperty("Empty");
+            else
+                p[0] = e;
+            //调用  
+            m.Invoke(obj, p);
+            return;
         }
 
         #region INotifyPropertyChanged Members

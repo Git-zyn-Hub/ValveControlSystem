@@ -192,7 +192,7 @@
                 </Grid.ColumnDefinitions>
                 <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Label Content="压力范围"></Label>
-                    <TextBox x:Name="txtPressureRange" Text="{Binding CurveGeneralSet.PressureRange,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                    <TextBox x:Name="txtPressureRange" Text="{Binding CurveGeneralSet.PressureRange,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=Explicit}" 
                          KeyDown="TextBoxDouble_KeyDown" TextChanged="TextBoxDouble_TextChanged" VerticalContentAlignment="Center"></TextBox>
                 </DockPanel>
                 <Label x:Name="lblPressureUnit" Width="38" Grid.Column="1"></Label>
@@ -234,8 +234,8 @@
                 </Grid.ColumnDefinitions>
                 <DockPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Label Content="压力门限"></Label>
-                    <TextBox x:Name="txtPressureThreshold" Text="{Binding CurveGeneralSet.PressureThreshold,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                         KeyDown="TextBox_KeyDown" TextChanged="TextBox_TextChanged" VerticalContentAlignment="Center">
+                    <TextBox x:Name="txtPressureThreshold" Text="{Binding CurveGeneralSet.PressureThreshold,ElementName=curveSetWin,Mode=TwoWay,UpdateSourceTrigger=Explicit}" 
+                         KeyDown="TextBoxDouble_KeyDown" TextChanged="TextBoxDouble_TextChanged" VerticalContentAlignment="Center">
                         <TextBox.ToolTip>
                             <sys:String>设置成0以禁用压力门限</sys:String>
                         </TextBox.ToolTip>

@@ -87,9 +87,11 @@
     <Compile Include="Classes\CurveSetting.cs" />
     <Compile Include="Classes\CurveSetXmlHelper.cs" />
     <Compile Include="Classes\DataUnitConvert.cs" />
+    <Compile Include="Classes\DataUnitConverter.cs" />
     <Compile Include="Classes\DateTimeXmlHelper.cs" />
     <Compile Include="Classes\FindChild.cs" />
     <Compile Include="Classes\GetBrushes.cs" />
+    <Compile Include="Classes\GetPressureFromVoltage.cs" />
     <Compile Include="Classes\GetTempFromVoltage.cs" />
     <Compile Include="Classes\Logs2Excel.cs" />
     <Compile Include="Classes\SaveData2Xml.cs" />
