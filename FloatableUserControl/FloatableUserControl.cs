@@ -40,12 +40,14 @@ namespace FloatableUserControl
         private int _rowOfThis;
         private int _columnOfThis;
         private Point _pointInRectangle;
+        //标题栏右侧操作面板
         private StackPanel _stpOperation;
         private Border _borderOfThis;
         public delegate void ClosedEventHandler();
         public event ClosedEventHandler Closed;
         public static readonly DependencyProperty StrTitleProperty =
             DependencyProperty.Register("StrTitle", typeof(string), typeof(FloatableUserControl));
+        private bool _zeroGrid = false;
 
         public Grid GridContainer
         {
@@ -82,6 +84,45 @@ namespace FloatableUserControl
             set
             {
                 _state = value;
+            }
+        }
+
+        public int RowOfThis
+        {
+            get
+            {
+                return _rowOfThis;
+            }
+
+            set
+            {
+                _rowOfThis = value;
+            }
+        }
+
+        public int ColumnOfThis
+        {
+            get
+            {
+                return _columnOfThis;
+            }
+
+            set
+            {
+                _columnOfThis = value;
+            }
+        }
+
+        public bool ZeroGrid
+        {
+            get
+            {
+                return _zeroGrid;
+            }
+
+            set
+            {
+                _zeroGrid = value;
             }
         }
 
@@ -272,7 +313,7 @@ namespace FloatableUserControl
             //_originalWidth = this.ActualWidth;
             //_originalHeight = this.ActualHeight;
             getOriginalHeightAndWidth();
-            GridContainer.Margin = new Thickness(2,0,2,2);//将标题下边的控件边框距离改成2
+            GridContainer.Margin = new Thickness(2, 0, 2, 2);//将标题下边的控件边框距离改成2
 
             HwndSource mainWinHwnd = (HwndSource.FromDependencyObject(this) as HwndSource);
             //MainWindow mainWin = mainWinHwnd.RootVisual as MainWindow;
@@ -378,17 +419,17 @@ namespace FloatableUserControl
                 {
                     return;
                 }
-                if (_gridParent.RowDefinitions.Count > _rowOfThis)
+                if (_gridParent.RowDefinitions.Count > RowOfThis)
                 {
-                    _gridParent.RowDefinitions[_rowOfThis].Height = new GridLength(_originalHeight, _originalHeightType);
+                    _gridParent.RowDefinitions[RowOfThis].Height = new GridLength(_originalHeight, _originalHeightType);
                 }
-                if (_gridParent.ColumnDefinitions.Count > _columnOfThis)
+                if (_gridParent.ColumnDefinitions.Count > ColumnOfThis)
                 {
-                    _gridParent.ColumnDefinitions[_columnOfThis].Width = new GridLength(_originalWidth, _originalWidthType);
+                    _gridParent.ColumnDefinitions[ColumnOfThis].Width = new GridLength(_originalWidth, _originalWidthType);
                 }
                 _gridParent.Children.Add(this);
-                this.SetValue(Grid.RowProperty, _rowOfThis);
-                this.SetValue(Grid.ColumnProperty, _columnOfThis);
+                this.SetValue(Grid.RowProperty, RowOfThis);
+                this.SetValue(Grid.ColumnProperty, ColumnOfThis);
             }
             catch (Exception ee)
             {
@@ -399,16 +440,40 @@ namespace FloatableUserControl
         private void removeControlAndZeroGrid()
         {
             _gridParent = this.Parent as Grid;
-            _rowOfThis = (int)this.GetValue(Grid.RowProperty);
-            _columnOfThis = (int)this.GetValue(Grid.ColumnProperty);
+            RowOfThis = (int)this.GetValue(Grid.RowProperty);
+            ColumnOfThis = (int)this.GetValue(Grid.ColumnProperty);
             _gridParent.Children.Remove(this);
-            if (_gridParent.RowDefinitions.Count > _rowOfThis)
+
+            //因为有同位置可悬浮用户控件，添加如下代码；
+            bool findSameLocation = false;
+            foreach (var item in _gridParent.Children)
             {
-                _gridParent.RowDefinitions[_rowOfThis].Height = new GridLength(0);
+                if (item is FloatableUserControl)
+                {
+                    FloatableUserControl iFloatable = item as FloatableUserControl;
+                    int rowOfThat = (int)iFloatable.GetValue(Grid.RowProperty);
+                    int columnOfThat = (int)iFloatable.GetValue(Grid.ColumnProperty);
+
+                    if (RowOfThis == rowOfThat && ColumnOfThis == columnOfThat)
+                    {
+                        findSameLocation = true;
+                        break;
+                    }
+                }
             }
-            if (_gridParent.ColumnDefinitions.Count > _columnOfThis)
+            if (findSameLocation)
             {
-                _gridParent.ColumnDefinitions[_columnOfThis].Width = new GridLength(0);
+                ZeroGrid = false;
+                return;
+            }
+            ZeroGrid = true;
+            if (_gridParent.RowDefinitions.Count > RowOfThis)
+            {
+                _gridParent.RowDefinitions[RowOfThis].Height = new GridLength(0);
+            }
+            if (_gridParent.ColumnDefinitions.Count > ColumnOfThis)
+            {
+                _gridParent.ColumnDefinitions[ColumnOfThis].Width = new GridLength(0);
             }
         }
 
@@ -420,17 +485,17 @@ namespace FloatableUserControl
                 if (tempParent != null)
                 {
                     _gridParent = tempParent;
-                    _rowOfThis = (int)this.GetValue(Grid.RowProperty);
-                    _columnOfThis = (int)this.GetValue(Grid.ColumnProperty);
-                    if (_gridParent.RowDefinitions.Count > _rowOfThis)
+                    RowOfThis = (int)this.GetValue(Grid.RowProperty);
+                    ColumnOfThis = (int)this.GetValue(Grid.ColumnProperty);
+                    if (_gridParent.RowDefinitions.Count > RowOfThis)
                     {
-                        GridLength heightLength = _gridParent.RowDefinitions[_rowOfThis].Height;
+                        GridLength heightLength = _gridParent.RowDefinitions[RowOfThis].Height;
                         _originalHeightType = heightLength.GridUnitType;
                         _originalHeight = heightLength.Value;
                     }
-                    if (_gridParent.ColumnDefinitions.Count > _columnOfThis)
+                    if (_gridParent.ColumnDefinitions.Count > ColumnOfThis)
                     {
-                        GridLength widthLength = _gridParent.ColumnDefinitions[_columnOfThis].Width;
+                        GridLength widthLength = _gridParent.ColumnDefinitions[ColumnOfThis].Width;
                         _originalWidthType = widthLength.GridUnitType;
                         _originalWidth = widthLength.Value;
                     }
@@ -511,7 +576,7 @@ namespace FloatableUserControl
 
         public void FloatableUserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            _miFloat.Header ="悬浮";
+            _miFloat.Header = "悬浮";
             _miDock.Header = "停靠";
             _txtTitle.Text = StrTitle;
             //保存原始长度和宽度

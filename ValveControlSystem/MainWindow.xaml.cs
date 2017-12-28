@@ -690,8 +690,8 @@ namespace ValveControlSystem
                     break;
                 }
             }
-            bringCurveLookBackFront();
-            this.fucCurveLookBack.FocusTitleRect();
+            this.rbLookBack.IsEnabled = true;
+            this.rbLookBack.IsChecked = true;
         }
 
         private void miCurveRealtime_Click(object sender, RoutedEventArgs e)
@@ -706,8 +706,8 @@ namespace ValveControlSystem
                     break;
                 }
             }
-            bringCurveRealtimeFront();
-            this.fucCurveRealtime.FocusTitleRect();
+            this.rbRealtime.IsEnabled = true;
+            this.rbRealtime.IsChecked = true;
         }
 
         private void bringCurveRealtimeFront()
@@ -840,13 +840,32 @@ namespace ValveControlSystem
             {
                 _floatUserCtrlList.Add(fucCurveLookBack);
             }
+            disableLookBackAndSelectRealtime(true);
+            if (fucCurveLookBack.ZeroGrid)
+            {
+                this.rbRealtime.IsEnabled = false;
+            }
         }
+
+        private void disableLookBackAndSelectRealtime(bool enable)
+        {
+            this.rbLookBack.IsEnabled = !enable;
+            this.rbRealtime.IsEnabled = enable;
+            this.rbRealtime.IsChecked = enable;
+            this.rbLookBack.IsChecked = !enable;
+        }
+
 
         private void FucCurveRealtime_Closed()
         {
             if (!_floatUserCtrlList.Contains(fucCurveRealtime))
             {
                 _floatUserCtrlList.Add(fucCurveRealtime);
+            }
+            disableLookBackAndSelectRealtime(false);
+            if (fucCurveRealtime.ZeroGrid)
+            {
+                this.rbLookBack.IsEnabled = false;
             }
         }
 
