@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="ValveControlSystem.UserControls.ValveStateUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ValveControlSystem.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:Bool2OpenColorConverter x:Key="bool2OpenColorConverter"/>
+        <local:Bool2CloseColorConverter x:Key="bool2CloseColorConverter"/>
+        <local:Bool2OpenWordConverter x:Key="bool2OpenWordConverter"/>
+        <local:Bool2CloseWordConverter x:Key="bool2CloseWordConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <Grid>
+                <Ellipse Fill="{Binding State,Converter={StaticResource bool2OpenColorConverter}}" Width="25" Height="25"></Ellipse>
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding State}"></Label>
+            </Grid>
+            <Grid>
+                <Ellipse Fill="{Binding State,Converter={StaticResource bool2CloseColorConverter}}" Width="25" Height="25"></Ellipse>
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

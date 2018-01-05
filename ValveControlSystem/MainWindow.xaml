@@ -8,13 +8,15 @@
         xmlns:floatable="clr-namespace:FloatableUserControl;assembly=FloatableUserControl"
         mc:Ignorable="d"
         Title="智能高温脉冲接收系统"
-        Height="700" Width="1000"
+        Height="800" Width="1000"
         MinHeight="300" MinWidth="450"
+        Background="AliceBlue"
         Closed="Window_Closed"
         Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="57"/>
             <RowDefinition Height="350*"/>
         </Grid.RowDefinitions>
         <Menu x:Name="menuMain" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -42,7 +44,8 @@
             <RadioButton x:Name="rbRealtime" Checked="rbRealtime_Checked">实时</RadioButton>
             <RadioButton x:Name="rbLookBack" Checked="rbLookBack_Checked">回放</RadioButton>
         </StackPanel>
-        <Grid x:Name="gridCurveAndOriginData" Grid.Row="1">
+        <userCtrl:WellInfoUserControl Grid.Row="1"></userCtrl:WellInfoUserControl>
+        <Grid x:Name="gridCurveAndOriginData" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="360*"/>
                 <RowDefinition Height="3"/>

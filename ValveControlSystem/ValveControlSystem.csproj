@@ -115,6 +115,12 @@
     <Compile Include="UserControls\PortSettingUserControl.xaml.cs">
       <DependentUpon>PortSettingUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ValveStateUserControl.xaml.cs">
+      <DependentUpon>ValveStateUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\WellInfoUserControl.xaml.cs">
+      <DependentUpon>WellInfoUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\CurveContainWindow.xaml.cs">
       <DependentUpon>CurveContainWindow.xaml</DependentUpon>
     </Compile>
@@ -165,6 +171,14 @@
     <Page Include="UserControls\PortSettingUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\ValveStateUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\WellInfoUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\CurveContainWindow.xaml">
       <SubType>Designer</SubType>

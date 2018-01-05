@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="ValveControlSystem.UserControls.WellInfoUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ValveControlSystem.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="55" d:DesignWidth="900">
+    <Grid HorizontalAlignment="Center" Height="55">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.Column="0">
+            <Label Content="客户"></Label>
+            <TextBlock TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding Path=ConfigImport.OperatingCompany ,ElementName=winMain}" Background="White"></TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="0">
+            <Label Content="注意"></Label>
+            <TextBlock TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding Path=ConfigImport.PartyAName,ElementName=winMain}" Background="White"></TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="0" Grid.Column="1">
+            <Label Content="井号"></Label>
+            <TextBlock TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding Path=ConfigImport.Platform ,ElementName=winMain}" Background="White"></TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="1">
+            <Label Content="井的位置"></Label>
+            <TextBlock TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding Path=ConfigImport.Staff ,ElementName=winMain}" Background="White"></TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="0" Grid.Column="2">
+            <Label Content="服务订单号"></Label>
+            <TextBlock TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding Path=ConfigImport.WellNameAndNo ,ElementName=winMain}" Background="White"></TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="2">
+            <Label Content="运行数量"></Label>
+            <TextBlock TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding Path=ConfigImport.WellDepth ,ElementName=winMain}" Background="White"></TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="0" Grid.Column="3">
+            <Label Content="时间"></Label>
+            <TextBlock TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding Path=ConfigImport.Layer ,ElementName=winMain}" Background="White"></TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="3">
+            <Label Content="工程师"></Label>
+            <TextBlock TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding Path=ConfigImport.PerforatedInterval ,ElementName=winMain}" Background="White"></TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="0" Grid.Column="4">
+            <Label Content="测试阀状态"></Label>
+            <local:ValveStateUserControl></local:ValveStateUserControl>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="4">
+            <Label Content="循环阀状态"></Label>
+            <local:ValveStateUserControl></local:ValveStateUserControl>
+        </DockPanel>
+    </Grid>
+</UserControl>

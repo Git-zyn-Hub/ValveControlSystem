@@ -7,7 +7,7 @@
         xmlns:root="clr-namespace:ValveControlSystem"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="地面预设窗口" Height="500" Width="700">
+        Title="地面预设窗口" Height="700" Width="900">
     <Window.Resources>
         <root:IntToBoolConverter x:Key="int2BoolConverter"/>
     </Window.Resources>
@@ -34,8 +34,8 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="5*"/>
             <RowDefinition Height="1.5*"/>
             <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
@@ -49,22 +49,25 @@
         </GroupBox>
         <GroupBox Header="AVS A选项" Grid.Row="1">
             <WrapPanel Orientation="Horizontal">
-                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">none</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Close TV</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=2,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Close TV, 30 sec, Open CV</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=3,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Open TV</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=4,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Perf-Pac: Open TV, 2 min,Open CV, delay, Close CV</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=5,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Close TV, 30 sec, Open CV,(apply Pavs), Close CV, Ena SM</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">0.none</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">1.Close TV</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=2,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">2.Close TV, 30 sec, Open CV</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=3,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">3.Open TV</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=4,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">4.Perf-Pac: Open TV, 2 min,Open CV, delay, Close CV</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=5,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">5.Close TV, 30 sec, Open CV,(apply Pavs), Close CV, Ena SM</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=6,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">6.Close TV, wait 30 sec, N2 Open</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=7,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">7.Open TV, Close TV when annular pressure below 200 psi, SM not exited</RadioButton>
             </WrapPanel>
         </GroupBox>
         <GroupBox Header="AVS B选项" Grid.Row="2">
             <WrapPanel Orientation="Horizontal">
-                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">none</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Close TV</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=2,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Close TV, 30 sec, Open CV</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=3,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Open TV</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=4,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Perf-Pac: Open TV, 2 min,Open CV, delay, Close CV</RadioButton>
-                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=5,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Close TV, 30 sec, Open CV,(apply Pavs), Close CV, Ena SM</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">0.none</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">1.Close TV</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=2,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">2.Close TV, 30 sec, Open CV</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=3,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">3.Open TV</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=4,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">4.Perf-Pac: Open TV, 2 min,Open CV, delay, Close CV</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=5,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">5.Close TV, 30 sec, Open CV,(apply Pavs), Close CV, Ena SM</RadioButton>
+                <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=6,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">6.Close TV, wait 30 sec, N2 Open</RadioButton>
             </WrapPanel>
         </GroupBox>
         <GroupBox Header="AVS 4时间限制" Grid.Row="3">
