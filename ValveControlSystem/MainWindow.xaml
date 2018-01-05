@@ -44,7 +44,7 @@
             <RadioButton x:Name="rbRealtime" Checked="rbRealtime_Checked">实时</RadioButton>
             <RadioButton x:Name="rbLookBack" Checked="rbLookBack_Checked">回放</RadioButton>
         </StackPanel>
-        <userCtrl:WellInfoUserControl Grid.Row="1"></userCtrl:WellInfoUserControl>
+        <userCtrl:WellInfoUserControl Grid.Row="1" WellInfoUserCtrlMode="主页"></userCtrl:WellInfoUserControl>
         <Grid x:Name="gridCurveAndOriginData" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="360*"/>

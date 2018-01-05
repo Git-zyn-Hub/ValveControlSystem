@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ValveControlSystem.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             Width="60" Height="25">
     <UserControl.Resources>
         <local:Bool2OpenColorConverter x:Key="bool2OpenColorConverter"/>
         <local:Bool2CloseColorConverter x:Key="bool2CloseColorConverter"/>
@@ -15,12 +16,12 @@
     <Grid>
         <StackPanel Orientation="Horizontal">
             <Grid>
-                <Ellipse Fill="{Binding State,Converter={StaticResource bool2OpenColorConverter}}" Width="25" Height="25"></Ellipse>
-                <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding State}"></Label>
+                <Ellipse Fill="{Binding State,Converter={StaticResource bool2OpenColorConverter}}" Width="24" Height="24"></Ellipse>
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding State,Converter={StaticResource bool2OpenWordConverter}}"></Label>
             </Grid>
-            <Grid>
-                <Ellipse Fill="{Binding State,Converter={StaticResource bool2CloseColorConverter}}" Width="25" Height="25"></Ellipse>
-                <Label HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+            <Grid Margin="10 0 0 0">
+                <Ellipse Fill="{Binding State,Converter={StaticResource bool2CloseColorConverter}}" Width="24" Height="24"></Ellipse>
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding State,Converter={StaticResource bool2CloseWordConverter}}"></Label>
             </Grid>
         </StackPanel>
     </Grid>

@@ -22,7 +22,8 @@ namespace ValveControlSystem.UserControls
     /// </summary>
     public partial class ValveStateUserControl : UserControl, INotifyPropertyChanged
     {
-        private bool? _state = null;
+        public static readonly DependencyProperty StateProperty = DependencyProperty.Register("State",
+            typeof(bool?), typeof(ValveStateUserControl), new PropertyMetadata(null));
         public ValveStateUserControl()
         {
             InitializeComponent();
@@ -35,16 +36,12 @@ namespace ValveControlSystem.UserControls
         {
             get
             {
-                return _state;
+                return (bool?)this.GetValue(StateProperty);
             }
 
             set
             {
-                if (_state != value)
-                {
-                    _state = value;
-                    OnPropertyChanged("State");
-                }
+                this.SetValue(StateProperty, value);
             }
         }
 
@@ -69,11 +66,11 @@ namespace ValveControlSystem.UserControls
             switch (state)
             {
                 case true:
-                    return Colors.LightGreen;
+                    return new SolidColorBrush(Colors.LightGreen);
                 case null:
                 case false:
                 default:
-                    return Colors.Gray;
+                    return new SolidColorBrush(Colors.Gray);
             }
         }
 
@@ -91,11 +88,11 @@ namespace ValveControlSystem.UserControls
             switch (state)
             {
                 case false:
-                    return Colors.Red;
+                    return new SolidColorBrush(Colors.Red);
                 case null:
                 case true:
                 default:
-                    return Colors.Gray;
+                    return new SolidColorBrush(Colors.Gray);
             }
         }
 

@@ -4,10 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ValveControlSystem.Windows"
+        xmlns:userCtrl="clr-namespace:ValveControlSystem.UserControls"
         xmlns:root="clr-namespace:ValveControlSystem"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="地面预设窗口" Height="700" Width="900">
+        Background="AliceBlue"
+        Title="地面预设窗口" Height="680" Width="760">
     <Window.Resources>
         <root:IntToBoolConverter x:Key="int2BoolConverter"/>
     </Window.Resources>
@@ -33,13 +35,15 @@
             <ColumnDefinition  Width="1.5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="57"/>
             <RowDefinition Height="1.5*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="3.9*"/>
+            <RowDefinition Height="3.3*"/>
             <RowDefinition Height="1.5*"/>
             <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
-        <GroupBox Header="阀自动关闭AVC">
+        <userCtrl:WellInfoUserControl Grid.ColumnSpan="2" WellInfoUserCtrlMode="地面预设"></userCtrl:WellInfoUserControl>
+        <GroupBox Header="阀自动关闭AVC" Grid.Row="1">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">none</RadioButton>
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">CV</RadioButton>
@@ -47,7 +51,7 @@
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=3,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">TV with N2 Open CV</RadioButton>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="AVS A选项" Grid.Row="1">
+        <GroupBox Header="AVS A选项" Grid.Row="2">
             <WrapPanel Orientation="Horizontal">
                 <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">0.none</RadioButton>
                 <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">1.Close TV</RadioButton>
@@ -59,7 +63,7 @@
                 <RadioButton IsChecked="{Binding AVS_A_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=7,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">7.Open TV, Close TV when annular pressure below 200 psi, SM not exited</RadioButton>
             </WrapPanel>
         </GroupBox>
-        <GroupBox Header="AVS B选项" Grid.Row="2">
+        <GroupBox Header="AVS B选项" Grid.Row="3">
             <WrapPanel Orientation="Horizontal">
                 <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">0.none</RadioButton>
                 <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">1.Close TV</RadioButton>
@@ -70,7 +74,7 @@
                 <RadioButton IsChecked="{Binding AVS_B_Option,Converter={StaticResource int2BoolConverter},ConverterParameter=6,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">6.Close TV, wait 30 sec, N2 Open</RadioButton>
             </WrapPanel>
         </GroupBox>
-        <GroupBox Header="AVS 4时间限制" Grid.Row="3">
+        <GroupBox Header="AVS 4时间限制" Grid.Row="4">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <RadioButton IsChecked="{Binding AVS4TimeLimit,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">15 min</RadioButton>
                 <RadioButton IsChecked="{Binding AVS4TimeLimit,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">30 min</RadioButton>
@@ -78,13 +82,13 @@
                 <RadioButton IsChecked="{Binding AVS4TimeLimit,Converter={StaticResource int2BoolConverter},ConverterParameter=3,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">60 min</RadioButton>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="工具编号" Grid.Row="4">
+        <GroupBox Header="工具编号" Grid.Row="5">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <RadioButton IsChecked="{Binding ToolNumber,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">工具1</RadioButton>
                 <RadioButton IsChecked="{Binding ToolNumber,Converter={StaticResource int2BoolConverter},ConverterParameter=2,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">工具2</RadioButton>
             </StackPanel>
         </GroupBox>
-        <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="3">
+        <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="3">
             <StackPanel.Resources>
                 <Style TargetType="TextBox">
                     <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -114,7 +118,7 @@
                 <TextBox x:Name="txtSUD_Setting" Text="{Binding SUD_Setting,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </DockPanel>
         </StackPanel>
-        <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="3" Margin="0,30">
+        <StackPanel Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" Margin="0,30">
             <GroupBox Header="循环阀状态">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <RadioButton IsChecked="{Binding CircleValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">开</RadioButton>
@@ -128,9 +132,9 @@
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-        <Button x:Name="btnDefault" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30,0"
+        <Button x:Name="btnDefault" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30,0"
                 Click="btnDefault_Click">默认</Button>
-        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnCancel" Click="btnCancel_Click">取消</Button>
             <Button x:Name="btnOK" Margin="30,0">确认</Button>
         </StackPanel>
