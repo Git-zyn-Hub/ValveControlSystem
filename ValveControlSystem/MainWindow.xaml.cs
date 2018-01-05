@@ -38,6 +38,7 @@ namespace ValveControlSystem
         private double _rowDataTableAndOriginDataHeight;
         private ToolNo _toolNoSetted = ToolNo.Undefined;
         private SaveData2Xml _saveData2Xml;
+        private SurfacePresetXmlHelper _surfacePresetXmlHelper = new SurfacePresetXmlHelper();
 
         public List<Window> ChildrenWindow
         {
@@ -312,10 +313,10 @@ namespace ValveControlSystem
         {
             try
             {
-                //string strIP = "192.168.1.10";
-                string strIP = "103.44.145.248";
-                //int port = 1032;
-                int port = 24473;
+                string strIP = "192.168.1.10";
+                //string strIP = "103.44.145.248";
+                int port = 1032;
+                //int port = 24473;
                 IPEndPoint groundBoxIP = new IPEndPoint(IPAddress.Parse(strIP), port);
                 _socketConnect = new Socket(groundBoxIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 _socketConnect.Connect(groundBoxIP);
@@ -455,11 +456,19 @@ namespace ValveControlSystem
                     this.miCommand.Items.Add(oneMenuItem);
                 }
                 this.rbRealtime.IsChecked = true;
+                refreshWellInfo();
             }
             catch (Exception ee)
             {
                 MessageBox.Show("窗口加载异常：" + ee.Message);
             }
+        }
+
+        private void refreshWellInfo()
+        {
+            _surfacePresetXmlHelper.SurfacePresetXmlInitial();
+            WellInfomation wellInfo = _surfacePresetXmlHelper.GetWellInfomation();
+            wiucMainWin.WellInfo = wellInfo;
         }
 
         private void CommandMenuItem_Click(object sender, RoutedEventArgs e)
@@ -989,6 +998,7 @@ namespace ValveControlSystem
                     return;
                 }
                 SurfacePresetWindow presetWin = new SurfacePresetWindow();
+                presetWin.Refresh += refreshWellInfo;
                 bool? dialogResult = presetWin.ShowDialog();
                 if (dialogResult.HasValue && dialogResult.Value)
                 {

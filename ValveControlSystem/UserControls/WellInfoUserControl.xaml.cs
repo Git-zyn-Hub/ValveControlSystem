@@ -24,7 +24,7 @@ namespace ValveControlSystem.UserControls
     public partial class WellInfoUserControl : UserControl, INotifyPropertyChanged
     {
         private WellInfoMode _wellInfoUserCtrlMode;
-        private WellInfomation _wellInfo;
+        private WellInfomation _wellInfo = new WellInfomation();
 
         public WellInfoMode WellInfoUserCtrlMode
         {

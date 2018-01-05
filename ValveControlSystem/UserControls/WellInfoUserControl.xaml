@@ -4,11 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ValveControlSystem.UserControls"
+             xmlns:root="clr-namespace:ValveControlSystem"
              mc:Ignorable="d" 
+             x:Name="wellInfoUserCtrl"
              d:DesignHeight="55" d:DesignWidth="900">
     <UserControl.Resources>
         <local:Mode2TextBlockVisibilityConverter x:Key="mode2TextBlockVisibilityConverter"/>
         <local:Mode2TextBoxVisibilityConverter x:Key="mode2TextBoxVisibilityConverter"/>
+        <root:TestConverter x:Key="testConverter"/>
     </UserControl.Resources>
     <Grid HorizontalAlignment="Center" Height="55">
         <Grid.RowDefinitions>
@@ -27,6 +30,9 @@
             <Style TargetType="Label">
                 <Setter Property="HorizontalAlignment" Value="Center"/>
             </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Padding" Value="3"/>
+            </Style>
         </Grid.Resources>
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.ColumnDefinitions>
@@ -36,7 +42,8 @@
             <Label Content="客户" Grid.Column="0"></Label>
             <TextBlock Grid.Column="1" TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding WellInfo.Client}" Background="White"
                        Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBlockVisibilityConverter}}"></TextBlock>
-            <TextBox Grid.Column="1" Background="White"  Text="{Binding WellInfo.Client}" Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
+            <TextBox Grid.Column="1" Background="White"  Text="{Binding WellInfo.Client,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="0">
             <Grid.ColumnDefinitions>
@@ -46,7 +53,8 @@
             <Label Content="注意"></Label>
             <TextBlock Grid.Column="1" TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding WellInfo.Note}" Background="White"
                        Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBlockVisibilityConverter}}"></TextBlock>
-            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.Client}" Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
+            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.Note,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1">
             <Grid.ColumnDefinitions>
@@ -56,7 +64,8 @@
             <Label Content="井号"></Label>
             <TextBlock Grid.Column="1" TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding WellInfo.WellNo}" Background="White"
                        Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBlockVisibilityConverter}}"></TextBlock>
-            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.Client}" Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
+            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.WellNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="1">
             <Grid.ColumnDefinitions>
@@ -66,7 +75,8 @@
             <Label Content="井的位置"></Label>
             <TextBlock Grid.Column="1" TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding WellInfo.WellLocation}" Background="White"
                        Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBlockVisibilityConverter}}"></TextBlock>
-            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.Client}" Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
+            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.WellLocation,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="2">
             <Grid.ColumnDefinitions>
@@ -76,7 +86,8 @@
             <Label Content="服务订单号"></Label>
             <TextBlock Grid.Column="1" TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding WellInfo.ServiceOrderNo}" Background="White"
                        Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBlockVisibilityConverter}}"></TextBlock>
-            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.Client}" Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
+            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.ServiceOrderNo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="2">
             <Grid.ColumnDefinitions>
@@ -86,7 +97,8 @@
             <Label Content="运行数量"></Label>
             <TextBlock Grid.Column="1" TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding WellInfo.RunNumber}" Background="White"
                        Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBlockVisibilityConverter}}"></TextBlock>
-            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.Client}" Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
+            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.RunNumber,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="3">
             <Grid.ColumnDefinitions>
@@ -96,7 +108,8 @@
             <Label Content="时间"></Label>
             <TextBlock Grid.Column="1" TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding WellInfo.Time}" Background="White"
                        Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBlockVisibilityConverter}}"></TextBlock>
-            <TextBox Grid.Column="1"  Text="{Binding WellInfo.Client}" Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
+            <TextBox Grid.Column="1"  Text="{Binding WellInfo.Time,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="3">
             <Grid.ColumnDefinitions>
@@ -106,7 +119,8 @@
             <Label Content="工程师"></Label>
             <TextBlock Grid.Column="1" TextAlignment="Left" Padding="5" TextWrapping="Wrap" Text="{Binding WellInfo.Engineer}" Background="White"
                        Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBlockVisibilityConverter}}"></TextBlock>
-            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.Client}" Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
+            <TextBox Grid.Column="1" Background="White" Text="{Binding WellInfo.Engineer,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding WellInfoUserCtrlMode,Converter={StaticResource mode2TextBoxVisibilityConverter}}"></TextBox>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="4">
             <Grid.ColumnDefinitions>
@@ -114,7 +128,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Label Content="测试阀状态"></Label>
-            <local:ValveStateUserControl Grid.Column="1" State="{Binding WellInfo.TestValveState}"></local:ValveStateUserControl>
+            <local:ValveStateUserControl x:Name="vsucTestValve" Grid.Column="1" State="{Binding WellInfo.TestValveState, ElementName=wellInfoUserCtrl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></local:ValveStateUserControl>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="4">
             <Grid.ColumnDefinitions>
@@ -122,7 +136,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Label Content="循环阀状态"></Label>
-            <local:ValveStateUserControl Grid.Column="1" State="{Binding WellInfo.CircleValveState}"></local:ValveStateUserControl>
+            <local:ValveStateUserControl x:Name="vsucCircleValve" Grid.Column="1" State="{Binding WellInfo.CircleValveState,ElementName=wellInfoUserCtrl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></local:ValveStateUserControl>
         </Grid>
     </Grid>
 </UserControl>

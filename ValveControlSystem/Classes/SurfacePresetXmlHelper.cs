@@ -42,8 +42,8 @@ namespace ValveControlSystem.Classes
                 AVS4OverPressureLimit = 500,
                 SUD_Setting = 100,
                 ToolNumber = 1,
-                CircleValveState=0,
-                TestValveState=1
+                CircleValveState = 0,
+                TestValveState = 1
             };
 
             XDocument doc = new XDocument
@@ -55,7 +55,6 @@ namespace ValveControlSystem.Classes
                     new XElement
                     (
                         "SurfacePreset",
-
                         new XAttribute("AutomaticClosureValve", preset.AutomaticClosureValve),
                         new XAttribute("AutomaticClosurePressure", preset.AutomaticClosurePressure),
                         new XAttribute("AVS_A_Option", preset.AVS_A_Option),
@@ -68,6 +67,20 @@ namespace ValveControlSystem.Classes
                         new XAttribute("ToolNumber", preset.ToolNumber),
                         new XAttribute("CircleValveState", preset.CircleValveState),
                         new XAttribute("TestValveState", preset.TestValveState)
+                    ),
+                    new XElement
+                    (
+                        "WellInfo",
+                        new XAttribute("Time", string.Empty),
+                        new XAttribute("Engineer", string.Empty),
+                        new XAttribute("Client", string.Empty),
+                        new XAttribute("WellNo", string.Empty),
+                        new XAttribute("WellLocation", string.Empty),
+                        new XAttribute("ServiceOrderNo", string.Empty),
+                        new XAttribute("RunNumber", string.Empty),
+                        new XAttribute("Note", string.Empty),
+                        new XAttribute("CircleValveState", "false"),
+                        new XAttribute("TestValveState", "true")
                     )
                 )
             );
@@ -106,6 +119,29 @@ namespace ValveControlSystem.Classes
             xd.Save(XmlPath);
         }
 
+        public void ModifyXmlWellInfoElement(WellInfomation wellinfo)
+        {
+            XDocument xd = XDocument.Load(XmlPath);
+            ///查询修改的元素  
+            XElement element = xd.Root.Element("WellInfo");
+            ///修改元素  
+            if (element != null)
+            {
+                ///设置新的属性  
+                element.SetAttributeValue("Time", wellinfo.Time);
+                element.SetAttributeValue("Engineer", wellinfo.Engineer);
+                element.SetAttributeValue("Client", wellinfo.Client);
+                element.SetAttributeValue("WellNo", wellinfo.WellNo);
+                element.SetAttributeValue("WellLocation", wellinfo.WellLocation);
+                element.SetAttributeValue("ServiceOrderNo", wellinfo.ServiceOrderNo);
+                element.SetAttributeValue("RunNumber", wellinfo.RunNumber);
+                element.SetAttributeValue("Note", wellinfo.Note);
+                element.SetAttributeValue("CircleValveState", wellinfo.CircleValveState);
+                element.SetAttributeValue("TestValveState", wellinfo.TestValveState);
+            }
+            xd.Save(XmlPath);
+        }
+
         private string getXmlAttributeValue(string Attribute)
         {
             XDocument xd = XDocument.Load(XmlPath);
@@ -116,6 +152,34 @@ namespace ValveControlSystem.Classes
                 return element.Attribute(Attribute).Value;
             }
             return string.Empty;
+        }
+
+        private string getXmlAttributeValue(string NodeName, string Attribute)
+        {
+            XDocument xd = XDocument.Load(XmlPath);
+            ///查询修改的元素  
+            XElement element = xd.Root.Element(NodeName);
+            if (element != null)
+            {
+                return element.Attribute(Attribute).Value;
+            }
+            return string.Empty;
+        }
+
+        public WellInfomation GetWellInfomation()
+        {
+            WellInfomation wellInfo = new WellInfomation();
+            wellInfo.Time = getXmlAttributeValue("WellInfo", "Time");
+            wellInfo.Engineer = getXmlAttributeValue("WellInfo", "Engineer");
+            wellInfo.Client = getXmlAttributeValue("WellInfo", "Client");
+            wellInfo.WellNo = getXmlAttributeValue("WellInfo", "WellNo");
+            wellInfo.WellLocation = getXmlAttributeValue("WellInfo", "WellLocation");
+            wellInfo.ServiceOrderNo = getXmlAttributeValue("WellInfo", "ServiceOrderNo");
+            wellInfo.RunNumber = getXmlAttributeValue("WellInfo", "RunNumber");
+            wellInfo.Note = getXmlAttributeValue("WellInfo", "Note");
+            wellInfo.CircleValveState = bool.Parse(getXmlAttributeValue("WellInfo", "CircleValveState"));
+            wellInfo.TestValveState = bool.Parse(getXmlAttributeValue("WellInfo", "TestValveState"));
+            return wellInfo;
         }
 
         public SurfacePreset GetSurfacePreset()

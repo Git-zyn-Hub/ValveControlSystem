@@ -29,7 +29,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _time = value;
+                if (_time != value)
+                {
+                    _time = value;
+                    OnPropertyChanged("Time");
+                }
             }
         }
 
@@ -42,7 +46,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _engineer = value;
+                if (_engineer != value)
+                {
+                    _engineer = value;
+                    OnPropertyChanged("Engineer");
+                }
             }
         }
 
@@ -55,7 +63,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _client = value;
+                if (_client != value)
+                {
+                    _client = value;
+                    OnPropertyChanged("Client");
+                }
             }
         }
 
@@ -68,7 +80,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _wellNo = value;
+                if (_wellNo != value)
+                {
+                    _wellNo = value;
+                    OnPropertyChanged("WellNo");
+                }
             }
         }
 
@@ -81,7 +97,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _wellLocation = value;
+                if (_wellLocation != value)
+                {
+                    _wellLocation = value;
+                    OnPropertyChanged("WellLocation");
+                }
             }
         }
 
@@ -94,7 +114,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _serviceOrderNo = value;
+                if (_serviceOrderNo != value)
+                {
+                    _serviceOrderNo = value;
+                    OnPropertyChanged("ServiceOrderNo");
+                }
             }
         }
 
@@ -107,7 +131,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _runNumber = value;
+                if (_runNumber != value)
+                {
+                    _runNumber = value;
+                    OnPropertyChanged("RunNumber");
+                }
             }
         }
 
@@ -133,7 +161,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _circleValveState = value;
+                if (_circleValveState != value)
+                {
+                    _circleValveState = value;
+                    OnPropertyChanged("CircleValveState");
+                }
             }
         }
 
@@ -146,7 +178,11 @@ namespace ValveControlSystem.Classes
 
             set
             {
-                _testValveState = value;
+                if (_testValveState != value)
+                {
+                    _testValveState = value;
+                    OnPropertyChanged("TestValveState");
+                }
             }
         }
 

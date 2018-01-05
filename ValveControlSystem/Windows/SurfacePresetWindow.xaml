@@ -7,6 +7,7 @@
         xmlns:userCtrl="clr-namespace:ValveControlSystem.UserControls"
         xmlns:root="clr-namespace:ValveControlSystem"
         mc:Ignorable="d"
+        x:Name="presetWin"
         ResizeMode="NoResize"
         Background="AliceBlue"
         Title="地面预设窗口" Height="680" Width="760">
@@ -42,7 +43,7 @@
             <RowDefinition Height="1.5*"/>
             <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
-        <userCtrl:WellInfoUserControl Grid.ColumnSpan="2" WellInfoUserCtrlMode="地面预设"></userCtrl:WellInfoUserControl>
+        <userCtrl:WellInfoUserControl x:Name="wiucPreset" Grid.ColumnSpan="2" WellInfoUserCtrlMode="地面预设"></userCtrl:WellInfoUserControl>
         <GroupBox Header="阀自动关闭AVC" Grid.Row="1">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">none</RadioButton>
@@ -121,14 +122,18 @@
         <StackPanel Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" Margin="0,30">
             <GroupBox Header="循环阀状态">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton IsChecked="{Binding CircleValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">开</RadioButton>
-                    <RadioButton IsChecked="{Binding CircleValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">关</RadioButton>
+                    <RadioButton IsChecked="{Binding CircleValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                x:Name="rbCircleValveOpen"  Checked="rbCircleValveOpen_Checked">开</RadioButton>
+                    <RadioButton IsChecked="{Binding CircleValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                  x:Name="rbCircleValveClose" Checked="rbCircleValveClose_Checked">关</RadioButton>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="测试阀状态">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <RadioButton IsChecked="{Binding TestValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">开</RadioButton>
-                    <RadioButton IsChecked="{Binding TestValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">关</RadioButton>
+                    <RadioButton IsChecked="{Binding TestValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="rbTestValveOpen" Checked="rbTestValveOpen_Checked">开</RadioButton>
+                    <RadioButton IsChecked="{Binding TestValveState,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="rbTestValveClose" Checked="rbTestValveClose_Checked">关</RadioButton>
                 </StackPanel>
             </GroupBox>
         </StackPanel>

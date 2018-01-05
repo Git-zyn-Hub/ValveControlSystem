@@ -23,6 +23,9 @@ namespace ValveControlSystem.Windows
         private SurfacePreset _surfacePrs = new SurfacePreset();
         private SurfacePresetXmlHelper _presetXmlHelper = new SurfacePresetXmlHelper();
         private ToolNo _toolNoSet = ToolNo.Undefined;
+        private WellInfomation _wellInfoOfPreset;
+        public delegate void RefreshEventHandler();
+        public event RefreshEventHandler Refresh;
 
         public SurfacePreset SurfacePrs
         {
@@ -55,12 +58,26 @@ namespace ValveControlSystem.Windows
             }
         }
 
+        public WellInfomation WellInfoOfPreset
+        {
+            get
+            {
+                return _wellInfoOfPreset;
+            }
+
+            set
+            {
+                _wellInfoOfPreset = value;
+            }
+        }
+
         public SurfacePresetWindow()
         {
             InitializeComponent();
             _presetXmlHelper.SurfacePresetXmlInitial();
             SurfacePrs = _presetXmlHelper.GetSurfacePreset();
             this.DataContext = SurfacePrs;
+            wiucPreset.WellInfo = _presetXmlHelper.GetWellInfomation();
             ButtonOK.Click += ButtonOK_Click;
         }
 
@@ -82,6 +99,8 @@ namespace ValveControlSystem.Windows
             }
 
             _presetXmlHelper.ModifyXmlSurfacePresetElement(SurfacePrs);
+            _presetXmlHelper.ModifyXmlWellInfoElement(wiucPreset.WellInfo);
+            Refresh?.Invoke();
             this.DialogResult = true;
             this.Close();
         }
@@ -98,6 +117,7 @@ namespace ValveControlSystem.Windows
             File.Delete(_presetXmlHelper.XmlPath);
             _presetXmlHelper.SurfacePresetXmlInitial();
             SurfacePrs = _presetXmlHelper.GetSurfacePreset();
+            wiucPreset.WellInfo = _presetXmlHelper.GetWellInfomation();
             this.DataContext = SurfacePrs;
         }
 
@@ -105,6 +125,26 @@ namespace ValveControlSystem.Windows
         {
             this.DialogResult = false;
             this.Close();
+        }
+
+        private void rbCircleValveOpen_Checked(object sender, RoutedEventArgs e)
+        {
+            wiucPreset.vsucCircleValve.State = true;
+        }
+
+        private void rbCircleValveClose_Checked(object sender, RoutedEventArgs e)
+        {
+            wiucPreset.vsucCircleValve.State = false;
+        }
+
+        private void rbTestValveOpen_Checked(object sender, RoutedEventArgs e)
+        {
+            wiucPreset.vsucTestValve.State = true;
+        }
+
+        private void rbTestValveClose_Checked(object sender, RoutedEventArgs e)
+        {
+            wiucPreset.vsucTestValve.State = false;
         }
     }
 }
