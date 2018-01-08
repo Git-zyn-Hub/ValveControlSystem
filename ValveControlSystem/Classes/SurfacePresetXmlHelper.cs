@@ -199,5 +199,49 @@ namespace ValveControlSystem.Classes
             preset.TestValveState = int.Parse(getXmlAttributeValue("TestValveState"));
             return preset;
         }
+
+        /// <summary>
+        /// 改变xml文件中循环阀的状态
+        /// </summary>
+        /// <param name="state">状态，true代表开，false代表关</param>
+        public void SetCircleValveState(bool state)
+        {
+            XDocument xd = XDocument.Load(XmlPath);
+            ///查询修改的元素  
+            XElement elementSurfacePreset = xd.Root.Element("SurfacePreset");
+            ///修改元素  
+            if (elementSurfacePreset != null)
+            {
+                elementSurfacePreset.SetAttributeValue("CircleValveState", state ? 1 : 0);
+            }
+            XElement eWellInfo = xd.Root.Element("WellInfo");
+            if (eWellInfo != null)
+            {
+                eWellInfo.SetAttributeValue("CircleValveState", state);
+            }
+            xd.Save(XmlPath);
+        }
+
+        /// <summary>
+        /// 改变xml文件中测试阀的状态
+        /// </summary>
+        /// <param name="state">状态，true代表开，false代表关</param>
+        public void SetTestValveState(bool state)
+        {
+            XDocument xd = XDocument.Load(XmlPath);
+            ///查询修改的元素  
+            XElement elementSurfacePreset = xd.Root.Element("SurfacePreset");
+            ///修改元素  
+            if (elementSurfacePreset != null)
+            {
+                elementSurfacePreset.SetAttributeValue("TestValveState", state ? 1 : 0);
+            }
+            XElement eWellInfo = xd.Root.Element("WellInfo");
+            if (eWellInfo != null)
+            {
+                eWellInfo.SetAttributeValue("TestValveState", state);
+            }
+            xd.Save(XmlPath);
+        }
     }
 }

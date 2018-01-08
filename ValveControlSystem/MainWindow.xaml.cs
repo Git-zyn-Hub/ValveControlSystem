@@ -620,6 +620,7 @@ namespace ValveControlSystem
                                             string receiveDataInfo = CommandType2StringConverter.CommandType2StringWithNo(cmdType) + " ";
                                             receiveDataInfo += CommandState.状态正常.ToString();
                                             this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                            changeValveState(cmdType);
                                         }
                                     }
                                     break;
@@ -684,6 +685,61 @@ namespace ValveControlSystem
             catch (Exception ee)
             {
                 MessageBox.Show("处理接收数据异常：" + ee.Message);
+            }
+        }
+
+        private void changeValveState(CommandType cmdType)
+        {
+            switch (cmdType)
+            {
+                case CommandType.工具循环阀关闭指令:
+                    {
+                        wiucMainWin.vsucCircleValve.State = false;
+                        _surfacePresetXmlHelper.SetCircleValveState(false);
+                    }
+                    break;
+                case CommandType.工具循环阀打开指令:
+                    {
+                        wiucMainWin.vsucCircleValve.State = true;
+                        _surfacePresetXmlHelper.SetCircleValveState(true);
+                    }
+                    break;
+                case CommandType.工具测试阀关闭指令:
+                    {
+                        wiucMainWin.vsucTestValve.State = false;
+                        _surfacePresetXmlHelper.SetTestValveState(false);
+                    }
+                    break;
+                case CommandType.工具测试阀打开指令:
+                    {
+                        wiucMainWin.vsucTestValve.State = true;
+                        _surfacePresetXmlHelper.SetTestValveState(true);
+                    }
+                    break;
+                case CommandType.工具氮气打开循环阀指令:
+                    break;
+                case CommandType.工具唤醒指令:
+                    break;
+                case CommandType.工具休眠指令:
+                    break;
+                case CommandType.循环阀氮气关闭指令:
+                    break;
+                case CommandType.工具高压启用指令:
+                    break;
+                case CommandType.低压禁用指令:
+                    break;
+                case CommandType.高压禁用指令_测试阀可能处于锁定开井状态:
+                    break;
+                case CommandType.高压禁用指令:
+                    break;
+                case CommandType.软件欠压禁用指令:
+                    break;
+                case CommandType.序列模式测试阀打开指令:
+                    break;
+                case CommandType.序列模式测试阀关闭指令:
+                    break;
+                default:
+                    break;
             }
         }
 
