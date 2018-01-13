@@ -56,7 +56,8 @@ namespace ValveControlSystem
         擦除指令 = 0x02,
         地面预设指令 = 0x04,
         对时指令 = 0x05,
-        实时数据 = 0x06
+        实时数据 = 0x06,
+        开始or停止实时数据 = 0x07
     }
 
     public enum ToolNo

@@ -319,12 +319,19 @@ namespace ValveControlSystem
                 //int port = 24473;
                 IPEndPoint groundBoxIP = new IPEndPoint(IPAddress.Parse(strIP), port);
                 _socketConnect = new Socket(groundBoxIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                _socketConnect.Connect(groundBoxIP);
 
-                MessageBox.Show("以太网连接成功！");
-                EnableEthernetConnect();
-                _socketListenThread = new Thread(socketListening);
-                _socketListenThread.Start();
+                new Thread(() =>
+                {
+                    _socketConnect.Connect(groundBoxIP);
+
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("以太网连接成功！");
+                        EnableEthernetConnect();
+                        _socketListenThread = new Thread(socketListening);
+                        _socketListenThread.Start();
+                    }));
+                }).Start();
             }
             catch (Exception ee)
             {
@@ -1032,6 +1039,30 @@ namespace ValveControlSystem
                 {
                     this._originData.AddSendData(sendData);
                     this._originData.AddDataInfo("擦除Flash", DataLevel.Default);
+                }));
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message);
+            }
+        }
+
+        private void miStartStopRealtimeData_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_connType == ConnectType.Notconnected)
+                {
+                    MessageBox.Show("未连接，请先连接！");
+                    return;
+                }
+                byte[] sendData = _sendDataPackage.PackageSendData(CommandTypeCommon.开始or停止实时数据, new byte[2] { 0, 0 });
+
+                Send(sendData);
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this._originData.AddSendData(sendData);
+                    this._originData.AddDataInfo("开始/停止实时数据", DataLevel.Default);
                 }));
             }
             catch (Exception ee)

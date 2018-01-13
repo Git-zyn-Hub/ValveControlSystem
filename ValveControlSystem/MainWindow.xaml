@@ -37,6 +37,7 @@
                 <MenuItem x:Name="miTimeSet" Header="对时" Click="miTimeSet_Click"></MenuItem>
                 <MenuItem x:Name="miSurfacePreset" Header="地面预设" Click="miSurfacePreset_Click"></MenuItem>
                 <MenuItem x:Name="miEraseFlash" Header="擦除Flash" Click="miEraseFlash_Click"></MenuItem>
+                <MenuItem x:Name="miStartStopRealtimeData" Header="开始/停止实时数据" Click="miStartStopRealtimeData_Click"></MenuItem>
             </MenuItem>
             <MenuItem x:Name="miCurveSet" Header="曲线设置" Click="miCurveSet_Click"></MenuItem>
         </Menu>
