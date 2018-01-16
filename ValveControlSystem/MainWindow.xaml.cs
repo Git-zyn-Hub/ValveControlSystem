@@ -313,10 +313,10 @@ namespace ValveControlSystem
         {
             try
             {
-                string strIP = "192.168.1.10";
-                //string strIP = "103.44.145.248";
-                int port = 1032;
-                //int port = 24473;
+                //string strIP = "192.168.1.10";
+                string strIP = "103.44.145.248";
+                //int port = 1032;
+                int port = 24473;
                 IPEndPoint groundBoxIP = new IPEndPoint(IPAddress.Parse(strIP), port);
                 _socketConnect = new Socket(groundBoxIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 

@@ -90,7 +90,7 @@ namespace ValveControlSystem.UserControls
                     _dataSeries2.RenderAs = RenderAs.Line;
                     _dataSeries2.XValueType = ChartValueTypes.Numeric;
                     _dataSeries2.AxisYType = AxisTypes.Secondary;
-                    _dataSeries2.MarkerEnabled = false;
+                    _dataSeries2.MarkerEnabled = true;
                     _dataSeries2.LegendText = "温度";
                 }
             }
@@ -329,11 +329,11 @@ namespace ValveControlSystem.UserControls
 
                     //}
                     _dataPointsTemp = new DataPoint[4];
-                    _dataPointsPres = new DataPoint[80];
-                    if (_xAxisMax != ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80)
+                    _dataPointsPres = new DataPoint[76];
+                    if (_xAxisMax != ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 76)
                     {
                         Debug.WriteLine("修改X轴最大范围！");
-                        _xAxisMax = ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 80;
+                        _xAxisMax = ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 76;
                         changeXAxis(_xAxisMax);
                     }
                     int packageNo = (dataArray[_headerLength + 2] << 8) + dataArray[_headerLength + 3];
@@ -341,22 +341,22 @@ namespace ValveControlSystem.UserControls
                     {
                         DataPoint dataPointTemperature;
                         dataPointTemperature = new DataPoint();
-                        dataPointTemperature.XValue = packageNo * 80 + i * 20 + 19;
+                        dataPointTemperature.XValue = packageNo * 76 + i * 19 + 18;
                         dataPointTemperature.YValue = DataUnitConvert.TemperatureUnitConvert(GetTempFromVoltage.GetTemperatureNew(
                             (dataArray[_headerLength + i * 56 + 44] << 8) + dataArray[_headerLength + i * 56 + 45]),
                             (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), TemperatureUnit4Binding));
-                        dataPointTemperature.MarkerEnabled = false;
+                        dataPointTemperature.MarkerEnabled = true;
                         _dataPointsTemp[i] = dataPointTemperature;
-                        for (int j = 0; j < 40; j++, j++)
+                        for (int j = 0; j < 38; j++, j++)
                         {
                             DataPoint dataPointPressure;
                             dataPointPressure = new DataPoint();
-                            dataPointPressure.XValue = packageNo * 80 + i * 20 + j / 2;
+                            dataPointPressure.XValue = packageNo * 76 + i * 19 + j / 2;
                             dataPointPressure.YValue = DataUnitConverter.PressureUnitConvert(GetPressureFromVoltage.GetPressure(
-                                (dataArray[_headerLength + i * 56 + j + 4] << 8) + dataArray[_headerLength + i * 56 + j + 5]),
+                                (dataArray[_headerLength + i * 56 + j + 6] << 8) + dataArray[_headerLength + i * 56 + j + 7]),
                                 (PressureUnit)Enum.Parse(typeof(PressureUnit), PressureUnit4Binding));
                             dataPointPressure.MarkerEnabled = false;
-                            _dataPointsPres[i * 20 + j / 2] = dataPointPressure;
+                            _dataPointsPres[i * 19 + j / 2] = dataPointPressure;
                         }
                     }
                     addData(_dataPointsTemp, _dataPointsPres);
@@ -372,7 +372,7 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                if (dataPointsPres != null && dataPointsPres.Length == 80)
+                if (dataPointsPres != null && dataPointsPres.Length == 76)
                 {
                     foreach (var presPoint in dataPointsPres)
                     {
