@@ -10,7 +10,7 @@ namespace ValveControlSystem.Classes
 {
     public class CurveSetXmlHelper
     {
-        private string _xmlPath;
+        private string _xmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
 
         public string XmlPath
         {

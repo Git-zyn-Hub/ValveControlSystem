@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ValveControlSystem.Windows"
         xmlns:root="clr-namespace:ValveControlSystem"
+        xmlns:userCtrl="clr-namespace:ValveControlSystem.UserControls"
         mc:Ignorable="d"
         x:Name="showLogWin"
         Loaded="Window_Loaded" Closed="showLogWin_Closed"
         Title="显示日志" Height="600" Width="947">
     <Window.Resources>
         <root:DateTimeConverter x:Key="dateTimeConverter"/>
+        <userCtrl:Int2WordConverter x:Key="int2WordConverter"/>
         <Style x:Key="dgCell" TargetType="{x:Type TextBlock}">
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -65,31 +67,31 @@
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="温度" MinWidth="60" Binding="{Binding Temperature}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
-                                    IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="电磁阀监视电压" MinWidth="60" Binding="{Binding SolenoidValveVoltage}" 
+                                    IsReadOnly="True" Width="*" x:Name="dgtcTemperature"></DataGridTextColumn>
+                <DataGridTextColumn Header="电磁阀监视电压(V)" MinWidth="60" Binding="{Binding SolenoidValveVoltage}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="负电源监视" MinWidth="60" Binding="{Binding NegativePowerMonitor}" 
+                <DataGridTextColumn Header="负电源监视(V)" MinWidth="60" Binding="{Binding NegativePowerMonitor}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="正电源监视" MinWidth="60" Binding="{Binding PositivePowerMonitor}" 
+                <DataGridTextColumn Header="正电源监视(V)" MinWidth="60" Binding="{Binding PositivePowerMonitor}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="循环阀打开驱动电流" MinWidth="60" Binding="{Binding CycleValveOpenDriveCurrent}" 
+                <DataGridTextColumn Header="循环阀打开" MinWidth="60" Binding="{Binding CycleValveOpenDriveCurrent,Converter={StaticResource int2WordConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="循环阀关闭驱动电流" MinWidth="60" Binding="{Binding CycleValveCloseDriveCurrent}" 
+                <DataGridTextColumn Header="循环阀关闭" MinWidth="60" Binding="{Binding CycleValveCloseDriveCurrent,Converter={StaticResource int2WordConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="测试阀打开驱动电流" MinWidth="60" Binding="{Binding TestValveOpenDriveCurrent}" 
+                <DataGridTextColumn Header="测试阀打开" MinWidth="60" Binding="{Binding TestValveOpenDriveCurrent,Converter={StaticResource int2WordConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="测试阀关闭驱动电流" MinWidth="60" Binding="{Binding TestValveCloseDriveCurrent}" 
+                <DataGridTextColumn Header="测试阀关闭" MinWidth="60" Binding="{Binding TestValveCloseDriveCurrent,Converter={StaticResource int2WordConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="压力（20个）" MinWidth="300" Binding="{Binding Pressure20}" 
+                <DataGridTextColumn Header="压力（19个）" MinWidth="300" Binding="{Binding Pressure20}" 
                                     ElementStyle="{StaticResource dgCell}"
-                                    IsReadOnly="True" Width="Auto"></DataGridTextColumn>
+                                    IsReadOnly="True" Width="Auto" x:Name="dgtcPressure"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

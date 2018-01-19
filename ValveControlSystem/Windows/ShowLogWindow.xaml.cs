@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
+using FastLinkSystem.Classes;
 
 namespace ValveControlSystem.Windows
 {
@@ -28,6 +29,9 @@ namespace ValveControlSystem.Windows
         private DateTime _endTime = new DateTime();
         private ObservableCollection<Log> _logs = new ObservableCollection<Log>();
         private XmlDocument _xmlDoc = new XmlDocument();
+        private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
+        private CurveSetting _curveSetPressure;
+        private CurveSetting _curveSetTemperature;
         public DateTime StartTime
         {
             get
@@ -67,6 +71,12 @@ namespace ValveControlSystem.Windows
         private ShowLogWindow()
         {
             InitializeComponent();
+
+            _curveSetPressure = _curveSetXmlHelper.GetCurveSetting("PressureCurve");
+            _curveSetTemperature = _curveSetXmlHelper.GetCurveSetting("TemperatureCurve");
+            UnitConverter unitConverter = new UnitConverter();
+            this.dgtcPressure.Header += ("(" + _curveSetPressure.Unit + ")");
+            this.dgtcTemperature.Header += ("(" + unitConverter.Convert(_curveSetTemperature.Unit, typeof(string), null, null).ToString() + ")");
         }
 
         public static ShowLogWindow GetInstance()
@@ -191,21 +201,28 @@ namespace ValveControlSystem.Windows
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < 40; i++, i++)
             {
-                sb.Append((bytesData[11 + i + offset * 56] << 8) + bytesData[12 + i + offset * 56]);
+                if (i == 0)
+                {
+                    continue;
+                }
+                sb.Append(Math.Round(DataUnitConverter.PressureUnitConvert(GetPressureFromVoltage.GetPressure(
+                    ((bytesData[11 + i + offset * 56] << 8) + bytesData[12 + i + offset * 56])),
+                    (PressureUnit)Enum.Parse(typeof(PressureUnit), _curveSetPressure.Unit)),2));
                 if (i != 38)
                 {
                     sb.Append(",");
                 }
             }
             oneLog.Pressure20 = sb.ToString();
-            oneLog.Temperature = GetTempFromVoltage.GetTemperatureNew(monitorDataArray[0]);
+            oneLog.Temperature = Math.Round(DataUnitConvert.TemperatureUnitConvert(GetTempFromVoltage.GetTemperatureNew(monitorDataArray[0]),
+                (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), _curveSetTemperature.Unit)),2);
             oneLog.SolenoidValveVoltage = (double)monitorDataArray[1] * 2 / 1000;
             oneLog.NegativePowerMonitor = (double)monitorDataArray[2] * 8.5 / 1000;
             oneLog.PositivePowerMonitor = (double)monitorDataArray[3] * 6 / 1000;
-            oneLog.CycleValveOpenDriveCurrent = (int)(monitorDataArray[4] / 1.5);
-            oneLog.CycleValveCloseDriveCurrent = (int)(monitorDataArray[5] / 1.5);
-            oneLog.TestValveOpenDriveCurrent = (int)(monitorDataArray[6] / 1.5);
-            oneLog.TestValveCloseDriveCurrent = (int)(monitorDataArray[7] / 1.5);
+            oneLog.CycleValveOpenDriveCurrent = monitorDataArray[4];
+            oneLog.CycleValveCloseDriveCurrent = monitorDataArray[5];
+            oneLog.TestValveOpenDriveCurrent = monitorDataArray[6];
+            oneLog.TestValveCloseDriveCurrent = monitorDataArray[7];
 
             oneLog.SolenoidValveVoltage = save2FractionalPart(oneLog.SolenoidValveVoltage);
             oneLog.NegativePowerMonitor = save2FractionalPart(oneLog.NegativePowerMonitor);

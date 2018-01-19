@@ -103,10 +103,10 @@ namespace ValveControlSystem.UserControls
             tableData.SolenoidValveVoltage = (double)monitorDataArray[2] * 2 / 1000;
             tableData.NegativePowerMonitor = (double)monitorDataArray[1] * 8.5 / 1000;
             tableData.PositivePowerMonitor = (double)monitorDataArray[0] * 6 / 1000;
-            tableData.Tool2CycleValveDriveCurrent = (int)(monitorDataArray[3] / 1.5);
-            tableData.Tool2TestValveDriveCurrent = (int)(monitorDataArray[4] / 1.5);
-            tableData.Tool1CycleValveDriveCurrent = (int)(monitorDataArray[5] / 1.5);
-            tableData.Tool1TestValveDriveCurrent = (int)(monitorDataArray[6] / 1.5);
+            tableData.Tool2CycleValveDriveCurrent = monitorDataArray[3];
+            tableData.Tool2TestValveDriveCurrent = monitorDataArray[4];
+            tableData.Tool1CycleValveDriveCurrent = monitorDataArray[5];
+            tableData.Tool1TestValveDriveCurrent = monitorDataArray[6];
 
             tableData.SolenoidValveVoltage = save2FractionalPart(tableData.SolenoidValveVoltage);
             tableData.NegativePowerMonitor = save2FractionalPart(tableData.NegativePowerMonitor);
@@ -277,5 +277,27 @@ namespace ValveControlSystem.UserControls
         public int Tool1CycleValveDriveCurrent { get; set; }
         public int Tool2TestValveDriveCurrent { get; set; }
         public int Tool2CycleValveDriveCurrent { get; set; }
+    }
+
+    public class Int2WordConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int iValue = (int)value;
+            switch (iValue)
+            {
+                case 1:
+                    return "激活";
+                case 0:
+                    return "关闭";
+                default:
+                    return "错误";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

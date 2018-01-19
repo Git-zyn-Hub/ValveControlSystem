@@ -10,6 +10,7 @@ using Microsoft.Win32;
 using System.Security.AccessControl;
 using System.Collections.ObjectModel;
 using ValveControlSystem.Windows;
+using ValveControlSystem.UserControls;
 
 namespace ValveControlSystem.Classes
 {
@@ -25,6 +26,7 @@ namespace ValveControlSystem.Classes
         private static Logs2Excel _uniqueInstance;
         private string _fName;
         public bool SaveDialogResult { get; set; }
+        private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
 
         public static Logs2Excel GetInstance(ObservableCollection<Log> logs)
         {
@@ -44,18 +46,22 @@ namespace ValveControlSystem.Classes
         {
             try
             {
+                CurveSetting curveSetPressure = _curveSetXmlHelper.GetCurveSetting("PressureCurve");
+                CurveSetting curveSetTemperature = _curveSetXmlHelper.GetCurveSetting("TemperatureCurve");
+                UnitConverter unitConverter = new UnitConverter();
+
                 _excelHeader[0] = "时间";
                 _excelHeader[1] = "总包数";
                 _excelHeader[2] = "当前包号";
-                _excelHeader[3] = "温度";
-                _excelHeader[4] = "电磁阀监视电压";
-                _excelHeader[5] = "负电源监视";
-                _excelHeader[6] = "正电源监视";
-                _excelHeader[7] = "循环阀打开驱动电流";
-                _excelHeader[8] = "循环阀关闭驱动电流";
-                _excelHeader[9] = "测试阀打开驱动电流";
-                _excelHeader[10] = "测试阀关闭驱动电流";
-                _excelHeader[11] = "压力（20个）";
+                _excelHeader[3] = "温度(" + unitConverter.Convert(curveSetTemperature.Unit, typeof(string), null, null) + ")";
+                _excelHeader[4] = "电磁阀监视电压(V)";
+                _excelHeader[5] = "负电源监视(V)";
+                _excelHeader[6] = "正电源监视(V)";
+                _excelHeader[7] = "循环阀打开";
+                _excelHeader[8] = "循环阀关闭";
+                _excelHeader[9] = "测试阀打开";
+                _excelHeader[10] = "测试阀关闭";
+                _excelHeader[11] = "压力（20个）(" + curveSetPressure.Unit + ")";
 
                 _workBook = new excel.XLWorkbook();
                 _workSheet = _workBook.AddWorksheet("Sheet1");
@@ -71,7 +77,7 @@ namespace ValveControlSystem.Classes
                 _workSheet.Column(4).Width = 7;
                 _workSheet.Column(5).Width = 14;
                 _workSheet.Columns(6, 7).Width = 10;
-                _workSheet.Columns(8, 11).Width = 18;
+                _workSheet.Columns(8, 11).Width = 10;
                 _workSheet.Column(12).Width = 80;
 
                 for (int i = 0; i < _excelHeader.Length; i++)
@@ -90,6 +96,7 @@ namespace ValveControlSystem.Classes
         {
             try
             {
+                Int2WordConverter converter = new Int2WordConverter();
                 LineCount = _logs.Count;
                 for (int i = 0; i < LineCount; i++)
                 {
@@ -100,10 +107,10 @@ namespace ValveControlSystem.Classes
                     _workSheet.Cell(i + 2, 5).Value = _logs[i].SolenoidValveVoltage;
                     _workSheet.Cell(i + 2, 6).Value = _logs[i].NegativePowerMonitor;
                     _workSheet.Cell(i + 2, 7).Value = _logs[i].PositivePowerMonitor;
-                    _workSheet.Cell(i + 2, 8).Value = _logs[i].CycleValveOpenDriveCurrent;
-                    _workSheet.Cell(i + 2, 9).Value = _logs[i].CycleValveCloseDriveCurrent;
-                    _workSheet.Cell(i + 2, 10).Value = _logs[i].TestValveOpenDriveCurrent;
-                    _workSheet.Cell(i + 2, 11).Value = _logs[i].TestValveCloseDriveCurrent;
+                    _workSheet.Cell(i + 2, 8).Value = converter.Convert(_logs[i].CycleValveOpenDriveCurrent, typeof(string), null, null);
+                    _workSheet.Cell(i + 2, 9).Value = converter.Convert(_logs[i].CycleValveCloseDriveCurrent, typeof(string), null, null);
+                    _workSheet.Cell(i + 2, 10).Value = converter.Convert(_logs[i].TestValveOpenDriveCurrent, typeof(string), null, null);
+                    _workSheet.Cell(i + 2, 11).Value = converter.Convert(_logs[i].TestValveCloseDriveCurrent, typeof(string), null, null);
                     _workSheet.Cell(i + 2, 12).Value = _logs[i].Pressure20;
                 }
                 this.SaveEnd();

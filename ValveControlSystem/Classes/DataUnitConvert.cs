@@ -24,7 +24,12 @@ namespace FastLinkSystem.Classes
                     return 0;
             }
         }
-
+        /// <summary>
+        /// 通过目标温度单位，转换温度值，如果目标单位是摄氏度则直接返回，因为数据本身就是以摄氏度为单位的。如果目标单位是华氏度，则通过计算再返回。
+        /// </summary>
+        /// <param name="inputData"></param>
+        /// <param name="destTempUnit"></param>
+        /// <returns></returns>
         public static double TemperatureUnitConvert(double inputData, TemperatureUnit destTempUnit)
         {
             switch (destTempUnit)

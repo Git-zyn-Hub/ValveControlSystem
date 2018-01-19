@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ValveControlSystem.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="900"
              x:Name="dataTableUserCtrl" Loaded="dataTableUserCtrl_Loaded">
@@ -38,6 +39,7 @@
             </Style.Triggers>
         </Style>
         <RoutedUICommand x:Key="CopyCell" Text="Copy Cell"/>
+        <local:Int2WordConverter x:Key="int2WordConverter"/>
     </UserControl.Resources>
     <UserControl.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="D" Command="{StaticResource CopyCell}"/>
@@ -61,16 +63,16 @@
                 <DataGridTextColumn Header="负电源监视(V)" MinWidth="40" Binding="{Binding NegativePowerMonitor}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="*" x:Name="dgtcNegativePowerMonitor"></DataGridTextColumn>
-                <DataGridTextColumn Header="循环阀打开驱动电流(mA)" MinWidth="40" Binding="{Binding Tool2CycleValveDriveCurrent}" 
+                <DataGridTextColumn Header="循环阀打开" MinWidth="40" Binding="{Binding Tool2CycleValveDriveCurrent,Converter={StaticResource int2WordConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="1.8*" x:Name="dgtcTool2CycleValveDriveCurrent"></DataGridTextColumn>
-                <DataGridTextColumn Header="循环阀关闭驱动电流(mA)" MinWidth="40" Binding="{Binding Tool2TestValveDriveCurrent}" 
+                <DataGridTextColumn Header="循环阀关闭" MinWidth="40" Binding="{Binding Tool2TestValveDriveCurrent,Converter={StaticResource int2WordConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="1.8*" x:Name="dgtcTool2TestValveDriveCurrent"></DataGridTextColumn>
-                <DataGridTextColumn Header="测试阀打开驱动电流(mA)" MinWidth="40" Binding="{Binding Tool1CycleValveDriveCurrent}" 
+                <DataGridTextColumn Header="测试阀打开" MinWidth="40" Binding="{Binding Tool1CycleValveDriveCurrent,Converter={StaticResource int2WordConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="1.8*" x:Name="dgtcTool1CycleValveDriveCurrent"></DataGridTextColumn>
-                <DataGridTextColumn Header="测试阀关闭驱动电流(mA)" MinWidth="40" Binding="{Binding Tool1TestValveDriveCurrent}" 
+                <DataGridTextColumn Header="测试阀关闭" MinWidth="40" Binding="{Binding Tool1TestValveDriveCurrent,Converter={StaticResource int2WordConverter}}" 
                                     ElementStyle="{StaticResource dgCell}" HeaderStyle="{StaticResource dgHeader}"
                                     IsReadOnly="True" Width="1.8*" x:Name="dgtcTool1TestValveDriveCurrent"></DataGridTextColumn>
             </DataGrid.Columns>
