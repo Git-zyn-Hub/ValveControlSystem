@@ -655,9 +655,17 @@ namespace ValveControlSystem
                                     break;
                                 case (byte)CommandTypeCommon.擦除指令:
                                     {
-                                        string receiveDataInfo = "指令 擦除Flash ";
-                                        receiveDataInfo += CommandState.状态正常.ToString();
-                                        this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                        if (receivedData[8] == 0x28)
+                                        {
+                                            string receiveDataInfo = "指令 擦除Flash ";
+                                            receiveDataInfo += CommandState.状态正常.ToString();
+                                            this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                        }
+                                        else if (receivedData[8] == 0x27)
+                                        {
+                                            string receiveDataInfo = "擦除Flash 成功结束";
+                                            this._originData.AddDataInfo(receiveDataInfo, DataLevel.Normal);
+                                        }
                                     }
                                     break;
                                 case (byte)CommandTypeCommon.地面预设指令:

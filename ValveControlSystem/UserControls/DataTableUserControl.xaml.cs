@@ -100,7 +100,7 @@ namespace ValveControlSystem.UserControls
         {
             //需要对原始数据进行，数值转换，乘或除对应的系数。
             TableData tableData = new TableData();
-            tableData.SolenoidValveVoltage = (double)monitorDataArray[2] * 2 / 1000;
+            tableData.SolenoidValveVoltage = (double)monitorDataArray[2] * 5 / 1000;
             tableData.NegativePowerMonitor = (double)monitorDataArray[1] * 8.5 / 1000;
             tableData.PositivePowerMonitor = (double)monitorDataArray[0] * 6 / 1000;
             tableData.Tool2CycleValveDriveCurrent = monitorDataArray[3];
