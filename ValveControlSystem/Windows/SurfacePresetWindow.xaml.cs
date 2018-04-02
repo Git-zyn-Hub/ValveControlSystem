@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace ValveControlSystem.Windows
     /// <summary>
     /// Interaction logic for SurfacePresetWindow.xaml
     /// </summary>
-    public partial class SurfacePresetWindow : Window
+    public partial class SurfacePresetWindow : Window, INotifyPropertyChanged
     {
         private SurfacePreset _surfacePrs = new SurfacePreset();
         private SurfacePresetXmlHelper _presetXmlHelper = new SurfacePresetXmlHelper();
@@ -26,6 +27,8 @@ namespace ValveControlSystem.Windows
         private WellInfomation _wellInfoOfPreset;
         public delegate void RefreshEventHandler();
         public event RefreshEventHandler Refresh;
+        private string _pressureUnit;
+        private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
 
         public SurfacePreset SurfacePrs
         {
@@ -70,6 +73,22 @@ namespace ValveControlSystem.Windows
                 _wellInfoOfPreset = value;
             }
         }
+        public string PressureUnit4Binding
+        {
+            get
+            {
+                return _pressureUnit;
+            }
+
+            set
+            {
+                if (_pressureUnit != value)
+                {
+                    _pressureUnit = value;
+                    OnPropertyChanged("PressureUnit4Binding");
+                }
+            }
+        }
 
         public SurfacePresetWindow()
         {
@@ -79,6 +98,12 @@ namespace ValveControlSystem.Windows
             this.DataContext = SurfacePrs;
             wiucPreset.WellInfo = _presetXmlHelper.GetWellInfomation();
             ButtonOK.Click += ButtonOK_Click;
+
+
+            _curveSetXmlHelper.XmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
+            _curveSetXmlHelper.CurveSettingXmlInitial();
+            CurveSetting preCurveSetting = _curveSetXmlHelper.GetCurveSetting("PressureCurveRealtime");
+            PressureUnit4Binding = preCurveSetting.Unit;
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
@@ -146,5 +171,17 @@ namespace ValveControlSystem.Windows
         {
             wiucPreset.vsucTestValve.State = false;
         }
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        #endregion
     }
 }

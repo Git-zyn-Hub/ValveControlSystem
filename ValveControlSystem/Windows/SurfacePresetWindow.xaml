@@ -13,6 +13,7 @@
         Title="地面预设窗口" Height="680" Width="760">
     <Window.Resources>
         <root:IntToBoolConverter x:Key="int2BoolConverter"/>
+        <root:UnitConverter x:Key="unitConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.Resources>
@@ -93,30 +94,45 @@
             <StackPanel.Resources>
                 <Style TargetType="TextBox">
                     <Setter Property="HorizontalAlignment" Value="Right"/>
-                    <Setter Property="Width" Value="80"></Setter>
+                    <Setter Property="Width" Value="70"></Setter>
                     <Setter Property="Height" Value="30"></Setter>
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                 </Style>
             </StackPanel.Resources>
             <DockPanel Margin="5">
                 <Label>自动关闭压力</Label>
-                <TextBox x:Name="txtAutomaticClosurePressure" Text="{Binding AutomaticClosurePressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <DockPanel HorizontalAlignment="Right">
+                    <TextBox x:Name="txtAutomaticClosurePressure" Text="{Binding AutomaticClosurePressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <Label Width="35" Content="{Binding PressureUnit4Binding,ElementName=presetWin,Converter={StaticResource unitConverter}}"></Label>
+                </DockPanel>
             </DockPanel>
             <DockPanel Margin="5">
                 <Label>AVS触发压力</Label>
-                <TextBox x:Name="txtAVS_TriggerPressure" Text="{Binding AVS_TriggerPressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <DockPanel HorizontalAlignment="Right">
+                    <TextBox x:Name="txtAVS_TriggerPressure" Text="{Binding AVS_TriggerPressure,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <Label Width="35" Content="{Binding PressureUnit4Binding,ElementName=presetWin,Converter={StaticResource unitConverter}}"></Label>
+                </DockPanel>
             </DockPanel>
             <DockPanel Margin="5">
                 <Label>AVS 4压力下门限</Label>
-                <TextBox x:Name="txtAVS4UnderPressureLimit" Text="{Binding AVS4UnderPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <DockPanel HorizontalAlignment="Right">
+                    <TextBox x:Name="txtAVS4UnderPressureLimit" Text="{Binding AVS4UnderPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <Label Width="35" Content="{Binding PressureUnit4Binding,ElementName=presetWin,Converter={StaticResource unitConverter}}"></Label>
+                </DockPanel>
             </DockPanel>
             <DockPanel Margin="5">
                 <Label>AVS 4压力上门限</Label>
-                <TextBox x:Name="txtAVS4OverPressureLimit" Text="{Binding AVS4OverPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <DockPanel HorizontalAlignment="Right">
+                    <TextBox x:Name="txtAVS4OverPressureLimit" Text="{Binding AVS4OverPressureLimit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <Label Width="35" Content="{Binding PressureUnit4Binding,ElementName=presetWin,Converter={StaticResource unitConverter}}"></Label>
+                </DockPanel>
             </DockPanel>
             <DockPanel Margin="5">
                 <Label>SUD设置</Label>
-                <TextBox x:Name="txtSUD_Setting" Text="{Binding SUD_Setting,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <DockPanel HorizontalAlignment="Right">
+                    <TextBox x:Name="txtSUD_Setting" Text="{Binding SUD_Setting,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <Label Width="35" Content="{Binding PressureUnit4Binding,ElementName=presetWin,Converter={StaticResource unitConverter}}"></Label>
+                </DockPanel>
             </DockPanel>
         </StackPanel>
         <StackPanel Grid.Row="3" Grid.Column="1" Grid.RowSpan="3" Margin="0,30">
