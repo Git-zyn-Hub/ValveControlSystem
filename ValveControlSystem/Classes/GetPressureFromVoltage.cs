@@ -13,9 +13,19 @@ namespace ValveControlSystem.Classes
         /// </summary>
         /// <param name="voltage">电压，单位mv</param>
         /// <returns>压力单位MPa</returns>
-        public static double GetPressure(double voltage)
+        public static double GetPressureOld(double voltage)
         {
             return 0.1586 * voltage - 0.6932;
+        }
+
+        /// <summary>
+        /// 根据电压得到压力值，拟合曲线的公式y=0.0805x+1.0881
+        /// </summary>
+        /// <param name="voltage">电压，单位mv</param>
+        /// <returns>压力单位MPa</returns>
+        public static double GetPressure(double voltage)
+        {
+            return voltage == 0 ? 0 : (0.0805 * voltage + 1.0881);
         }
     }
 }
