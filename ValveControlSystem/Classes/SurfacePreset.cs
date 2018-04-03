@@ -20,6 +20,7 @@ namespace ValveControlSystem.Classes
         private int _ToolNumber;
         private int _circleValveState;
         private int _testValveState;
+        private string _pressUnit;
         public int AutomaticClosureValve
         {
             get
@@ -219,6 +220,23 @@ namespace ValveControlSystem.Classes
                 {
                     _testValveState = value;
                     OnPropertyChanged("TestValveState");
+                }
+            }
+        }
+
+        public string PressUnit
+        {
+            get
+            {
+                return _pressUnit;
+            }
+
+            set
+            {
+                if (_pressUnit != value)
+                {
+                    _pressUnit = value;
+                    OnPropertyChanged("PressUnit");
                 }
             }
         }

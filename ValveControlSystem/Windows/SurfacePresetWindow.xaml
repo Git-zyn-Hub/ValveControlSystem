@@ -10,6 +10,7 @@
         x:Name="presetWin"
         ResizeMode="NoResize"
         Background="AliceBlue"
+        Loaded="presetWin_Loaded"
         Title="地面预设窗口" Height="680" Width="760">
     <Window.Resources>
         <root:IntToBoolConverter x:Key="int2BoolConverter"/>

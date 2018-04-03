@@ -43,7 +43,8 @@ namespace ValveControlSystem.Classes
                 SUD_Setting = 100,
                 ToolNumber = 1,
                 CircleValveState = 0,
-                TestValveState = 1
+                TestValveState = 1,
+                PressUnit = PressureUnit.PSI.ToString()
             };
 
             XDocument doc = new XDocument
@@ -66,7 +67,8 @@ namespace ValveControlSystem.Classes
                         new XAttribute("SUD_Setting", preset.SUD_Setting),
                         new XAttribute("ToolNumber", preset.ToolNumber),
                         new XAttribute("CircleValveState", preset.CircleValveState),
-                        new XAttribute("TestValveState", preset.TestValveState)
+                        new XAttribute("TestValveState", preset.TestValveState),
+                        new XAttribute("PressUnit", preset.PressUnit)
                     ),
                     new XElement
                     (
@@ -115,6 +117,7 @@ namespace ValveControlSystem.Classes
                 element.SetAttributeValue("ToolNumber", preset.ToolNumber);
                 element.SetAttributeValue("CircleValveState", preset.CircleValveState);
                 element.SetAttributeValue("TestValveState", preset.TestValveState);
+                element.SetAttributeValue("PressUnit", preset.PressUnit);
             }
             xd.Save(XmlPath);
         }
@@ -197,6 +200,7 @@ namespace ValveControlSystem.Classes
             preset.ToolNumber = int.Parse(getXmlAttributeValue("ToolNumber"));
             preset.CircleValveState = int.Parse(getXmlAttributeValue("CircleValveState"));
             preset.TestValveState = int.Parse(getXmlAttributeValue("TestValveState"));
+            preset.PressUnit = getXmlAttributeValue("PressUnit");
             return preset;
         }
 

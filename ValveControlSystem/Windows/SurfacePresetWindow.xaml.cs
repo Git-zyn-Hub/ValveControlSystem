@@ -138,6 +138,7 @@ namespace ValveControlSystem.Windows
             SurfacePrs = _presetXmlHelper.GetSurfacePreset();
             wiucPreset.WellInfo = _presetXmlHelper.GetWellInfomation();
             this.DataContext = SurfacePrs;
+            presetWin_Loaded(sender, e);
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -169,11 +170,25 @@ namespace ValveControlSystem.Windows
         private void rbUnitMPa_Checked(object sender, RoutedEventArgs e)
         {
             this.PressureUnit4Binding = PressureUnit.MPa.ToString();
+            SurfacePrs.PressUnit = PressureUnit.MPa.ToString();
         }
 
         private void rbUnitPSI_Checked(object sender, RoutedEventArgs e)
         {
             this.PressureUnit4Binding = PressureUnit.PSI.ToString();
+            SurfacePrs.PressUnit = PressureUnit.PSI.ToString();
+        }
+
+        private void presetWin_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (SurfacePrs.PressUnit==PressureUnit.MPa.ToString())
+            {
+                this.rbUnitMPa.IsChecked = true;
+            }
+            else
+            {
+                this.rbUnitPSI.IsChecked = true;
+            }
         }
 
         #region INotifyPropertyChanged Members
