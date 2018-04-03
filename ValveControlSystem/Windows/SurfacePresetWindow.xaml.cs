@@ -98,12 +98,6 @@ namespace ValveControlSystem.Windows
             this.DataContext = SurfacePrs;
             wiucPreset.WellInfo = _presetXmlHelper.GetWellInfomation();
             ButtonOK.Click += ButtonOK_Click;
-
-
-            _curveSetXmlHelper.XmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
-            _curveSetXmlHelper.CurveSettingXmlInitial();
-            CurveSetting preCurveSetting = _curveSetXmlHelper.GetCurveSetting("PressureCurveRealtime");
-            PressureUnit4Binding = preCurveSetting.Unit;
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
@@ -170,6 +164,16 @@ namespace ValveControlSystem.Windows
         private void rbTestValveClose_Checked(object sender, RoutedEventArgs e)
         {
             wiucPreset.vsucTestValve.State = false;
+        }
+
+        private void rbUnitMPa_Checked(object sender, RoutedEventArgs e)
+        {
+            this.PressureUnit4Binding = PressureUnit.MPa.ToString();
+        }
+
+        private void rbUnitPSI_Checked(object sender, RoutedEventArgs e)
+        {
+            this.PressureUnit4Binding = PressureUnit.PSI.ToString();
         }
 
         #region INotifyPropertyChanged Members

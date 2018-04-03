@@ -1094,11 +1094,16 @@ namespace ValveControlSystem
                 if (dialogResult.HasValue && dialogResult.Value)
                 {
                     this._toolNoSetted = presetWin.ToolNoSet;
-                    byte[] bytesAutomaticClosurePressure = convertInt2Bytes(presetWin.SurfacePrs.AutomaticClosurePressure);
-                    byte[] bytesAVS_TriggerPressure = convertInt2Bytes(presetWin.SurfacePrs.AVS_TriggerPressure);
-                    byte[] bytesAVS4UnderPressureLimit = convertInt2Bytes(presetWin.SurfacePrs.AVS4UnderPressureLimit);
-                    byte[] bytesAVS4OverPressureLimit = convertInt2Bytes(presetWin.SurfacePrs.AVS4OverPressureLimit);
-                    byte[] bytesSUD_Setting = convertInt2Bytes(presetWin.SurfacePrs.SUD_Setting);
+                    byte[] bytesAutomaticClosurePressure = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AutomaticClosurePressure, 
+                        (PressureUnit)Enum.Parse(typeof(PressureUnit),presetWin.PressureUnit4Binding)));
+                    byte[] bytesAVS_TriggerPressure = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AVS_TriggerPressure,
+                        (PressureUnit)Enum.Parse(typeof(PressureUnit),presetWin.PressureUnit4Binding)));
+                    byte[] bytesAVS4UnderPressureLimit = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AVS4UnderPressureLimit,
+                        (PressureUnit)Enum.Parse(typeof(PressureUnit), presetWin.PressureUnit4Binding)));
+                    byte[] bytesAVS4OverPressureLimit = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AVS4OverPressureLimit,
+                        (PressureUnit)Enum.Parse(typeof(PressureUnit), presetWin.PressureUnit4Binding)));
+                    byte[] bytesSUD_Setting = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.SUD_Setting,
+                        (PressureUnit)Enum.Parse(typeof(PressureUnit), presetWin.PressureUnit4Binding)));
 
                     byte[] content = new byte[17]
                     {

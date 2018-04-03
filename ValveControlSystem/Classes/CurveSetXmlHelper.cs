@@ -154,6 +154,20 @@ namespace ValveControlSystem.Classes
             xd.Save(XmlPath);
         }
 
+        public void ModifyXmlCurveSettingUnit(string strElement, PressureUnit unit)
+        {
+            XDocument xd = XDocument.Load(XmlPath);
+            ///查询修改的元素  
+            XElement element = xd.Root.Element("CurveSet").Element(strElement);
+            ///修改元素  
+            if (element != null)
+            {
+                ///设置新的属性  
+                element.SetAttributeValue("Unit", unit.ToString());
+            }
+            xd.Save(XmlPath);
+        }
+
         public void ModifyXmlCurveGeneralSettingElement(CurveGeneralSetting curveGeneralSet)
         {
             XDocument xd = XDocument.Load(XmlPath);

@@ -48,8 +48,8 @@
         <GroupBox Header="阀自动关闭AVC" Grid.Row="1">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=0,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">none</RadioButton>
-                <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">CV</RadioButton>
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=2,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">TV</RadioButton>
+                <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=1,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">CV</RadioButton>
                 <RadioButton IsChecked="{Binding AutomaticClosureValve,Converter={StaticResource int2BoolConverter},ConverterParameter=3,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">TV with N2 Open CV</RadioButton>
             </StackPanel>
         </GroupBox>
@@ -99,6 +99,13 @@
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                 </Style>
             </StackPanel.Resources>
+            <DockPanel Margin="0 10 0 0">
+                <Label>单位</Label>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 20 0">
+                    <RadioButton x:Name="rbUnitMPa" Checked="rbUnitMPa_Checked">MPa</RadioButton>
+                    <RadioButton  x:Name="rbUnitPSI" Checked="rbUnitPSI_Checked">PSI</RadioButton>
+                </StackPanel>
+            </DockPanel>
             <DockPanel Margin="5">
                 <Label>自动关闭压力</Label>
                 <DockPanel HorizontalAlignment="Right">
