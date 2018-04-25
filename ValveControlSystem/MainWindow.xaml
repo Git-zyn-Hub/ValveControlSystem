@@ -36,6 +36,7 @@
                 <MenuItem x:Name="miReadData" Header="读取" Click="miReadData_Click"></MenuItem>
                 <MenuItem x:Name="miTimeSet" Header="对时" Click="miTimeSet_Click"></MenuItem>
                 <MenuItem x:Name="miSurfacePreset" Header="地面预设" Click="miSurfacePreset_Click"></MenuItem>
+                <MenuItem x:Name="miPowerOnTime" Header="上电时间设置" Click="miPowerOnTime_Click"></MenuItem>
                 <MenuItem x:Name="miEraseFlash" Header="擦除Flash" Click="miEraseFlash_Click"></MenuItem>
                 <MenuItem x:Name="miStartStopRealtimeData" Header="开始/停止实时数据" Click="miStartStopRealtimeData_Click"></MenuItem>
             </MenuItem>

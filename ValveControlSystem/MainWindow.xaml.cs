@@ -1161,5 +1161,12 @@ namespace ValveControlSystem
             bringCurveRealtimeFront();
             this.fucCurveRealtime.FocusTitleRect();
         }
+
+        private void miPowerOnTime_Click(object sender, RoutedEventArgs e)
+        {
+            SetPowerOnTimeWindow winPowerOn = new SetPowerOnTimeWindow();
+            winPowerOn.Owner = this;
+            winPowerOn.ShowDialog();
+        }
     }
 }

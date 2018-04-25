@@ -1,0 +1,31 @@
+﻿<Window x:Class="ValveControlSystem.Windows.SetPowerOnTimeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ValveControlSystem.Windows"
+        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Background="AliceBlue" WindowStartupLocation="CenterOwner"
+        Title="设置上电时间" Height="200" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <Label Content="上电时间"></Label>
+            <StackPanel Orientation="Horizontal">
+                <DatePicker x:Name="dpEndDate" Width="110" Height="25" HorizontalAlignment="Left" Margin="0 16 0 0"
+                            Language="zh-cn"></DatePicker>
+                <toolkit:TimePicker x:Name="tpEndTime" Width="100" Height="25" Format="Custom" FormatString="HH:mm:ss" Margin="15 16 0 0"></toolkit:TimePicker>
+                <Button x:Name="btnToNow" Margin="10 16 0 0" Click="btnToNow_Click" Width="50" Height="26" Content="现在"></Button>
+            </StackPanel>
+        </StackPanel>
+
+        <DockPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button x:Name="btnEnter" Width="70" Click="btnEnter_Click" Height="26" IsDefault="True" Content="确认"></Button>
+            <Button x:Name="btnCancel" Width="70" Margin="30,0,0,0" Height="26" Click="btnCancel_Click" Content="取消"></Button>
+        </DockPanel>
+    </Grid>
+</Window>
