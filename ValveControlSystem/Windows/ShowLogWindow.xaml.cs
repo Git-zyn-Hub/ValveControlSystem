@@ -182,7 +182,7 @@ namespace ValveControlSystem.Windows
         /// <param name="offset">一条日志包含4组Log，表示第几组，可取值0,1,2,3</param>
         private void AnalyzeLog(ref Log oneLog, byte[] bytesData, int offset)
         {
-            if (bytesData.Length != 241)
+            if (bytesData.Length != 242)
             {
                 return;
             }

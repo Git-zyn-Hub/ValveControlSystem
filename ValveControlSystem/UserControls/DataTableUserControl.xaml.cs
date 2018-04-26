@@ -49,7 +49,7 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                if (dataArray.Length == 237)
+                if (dataArray.Length == 242)
                 {
                     for (int i = 0; i < 4; i++)
                     {

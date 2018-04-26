@@ -96,9 +96,9 @@ namespace ValveControlSystem.Classes
         {
             try
             {
-                if (length != 241)
+                if (length != 242)
                 {
-                    ShowMessage?.Invoke("数据长度不是241！", DataLevel.Error);
+                    ShowMessage?.Invoke("数据长度不是242！", DataLevel.Error);
                     return;
                 }
                 DateTime? powerOnTime = _dateTimeXmlHelper.GetPowerOnDateAndTime();

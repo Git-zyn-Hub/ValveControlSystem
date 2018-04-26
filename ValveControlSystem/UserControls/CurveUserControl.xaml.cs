@@ -27,6 +27,7 @@ namespace ValveControlSystem.UserControls
         private int _xAxisMax = 0;
         private string _pressureUnit;
         private string _temperatureUnit;
+        private DateTimeXmlHelper _dateTimeXmlHelper = new DateTimeXmlHelper();
         //private int _hitCount = 0;
 
 
@@ -320,22 +321,22 @@ namespace ValveControlSystem.UserControls
         {
             try
             {
-                //GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
-                if (dataArray.Length == 237)
+                if (dataArray.Length == 242)
                 {
-                    //_hitCount++;
-                    //if (_hitCount == 27)
-                    //{
-
-                    //}
+                    DateTime? powerOnTime = _dateTimeXmlHelper.GetPowerOnDateAndTime();
+                    if (powerOnTime == null)
+                    {
+                        return;
+                    }
+                    uint secondFromStart = (uint)(dataArray[235] << 24) + (uint)(dataArray[236] << 16) + (uint)(dataArray[237] << 8) + (uint)(dataArray[238]);
                     _dataPointsTemp = new DataPoint[4];
                     _dataPointsPres = new DataPoint[76];
-                    if (_xAxisMax != ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 76)
-                    {
-                        Debug.WriteLine("修改X轴最大范围！");
-                        _xAxisMax = ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 76;
-                        changeXAxis(_xAxisMax);
-                    }
+                    //if (_xAxisMax != ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 76)
+                    //{
+                    //    Debug.WriteLine("修改X轴最大范围！");
+                    //    _xAxisMax = ((dataArray[_headerLength] << 8) + dataArray[_headerLength + 1]) * 76;
+                    //    changeXAxis(_xAxisMax);
+                    //}
                     int packageNo = (dataArray[_headerLength + 2] << 8) + dataArray[_headerLength + 3];
                     for (int i = 0; i < 4; i++)
                     {
