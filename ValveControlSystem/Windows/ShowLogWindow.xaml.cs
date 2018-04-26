@@ -182,6 +182,10 @@ namespace ValveControlSystem.Windows
         /// <param name="offset">一条日志包含4组Log，表示第几组，可取值0,1,2,3</param>
         private void AnalyzeLog(ref Log oneLog, byte[] bytesData, int offset)
         {
+            if (bytesData.Length != 241)
+            {
+                return;
+            }
             int[] monitorDataArray = new int[8];
             //GetTempFromVoltage getDoubleTemp = new GetTempFromVoltage();
 
@@ -207,7 +211,7 @@ namespace ValveControlSystem.Windows
                 }
                 sb.Append(Math.Round(DataUnitConverter.PressureUnitConvert(GetPressureFromVoltage.GetPressure(
                     ((bytesData[11 + i + offset * 56] << 8) + bytesData[12 + i + offset * 56])),
-                    (PressureUnit)Enum.Parse(typeof(PressureUnit), _curveSetPressure.Unit)),2));
+                    (PressureUnit)Enum.Parse(typeof(PressureUnit), _curveSetPressure.Unit)), 2));
                 if (i != 38)
                 {
                     sb.Append(",");
@@ -215,7 +219,7 @@ namespace ValveControlSystem.Windows
             }
             oneLog.Pressure20 = sb.ToString();
             oneLog.Temperature = Math.Round(DataUnitConvert.TemperatureUnitConvert(GetTempFromVoltage.GetTemperatureNew(monitorDataArray[0]),
-                (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), _curveSetTemperature.Unit)),2);
+                (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), _curveSetTemperature.Unit)), 2);
             oneLog.SolenoidValveVoltage = (double)monitorDataArray[1] * 2 / 1000;
             oneLog.NegativePowerMonitor = (double)monitorDataArray[2] * 8.5 / 1000;
             oneLog.PositivePowerMonitor = (double)monitorDataArray[3] * 6 / 1000;

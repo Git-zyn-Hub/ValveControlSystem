@@ -8,15 +8,13 @@ using System.Xml;
 
 namespace ValveControlSystem.Classes
 {
-    public class SaveData2Xml
+    public class SaveRealData2Xml
     {
         private string _fileName;
         private string _directoryName = string.Empty;
-        private static SaveData2Xml _uniqueInstance;
+        private static SaveRealData2Xml _uniqueInstance;
         private DateTimeXmlHelper _dateTimeXmlHelper = new DateTimeXmlHelper();
         private DateTime? _lastCreateDateTime = null;
-        public delegate void ShowMessageEventHandler(string info, DataLevel level);
-        public event ShowMessageEventHandler ShowMessage;
 
         public string DirectoryName
         {
@@ -31,16 +29,16 @@ namespace ValveControlSystem.Classes
             }
         }
 
-        private SaveData2Xml()
+        private SaveRealData2Xml()
         {
 
         }
 
-        public static SaveData2Xml GetInstance()
+        public static SaveRealData2Xml GetInstance()
         {
             if (_uniqueInstance == null)
             {
-                _uniqueInstance = new SaveData2Xml();
+                _uniqueInstance = new SaveRealData2Xml();
             }
             return _uniqueInstance;
         }
@@ -55,7 +53,7 @@ namespace ValveControlSystem.Classes
             XmlTextWriter writer = new XmlTextWriter(directoryName + @"\" + fileName, null);
             writer.Formatting = Formatting.Indented;
             writer.WriteStartDocument();
-            writer.WriteStartElement("Log");
+            writer.WriteStartElement("LogReal");
             writer.WriteStartElement("Datas");
             writer.WriteEndElement();
             writer.WriteEndElement();
@@ -69,12 +67,12 @@ namespace ValveControlSystem.Classes
         {
             try
             {
-                if (!Directory.Exists(System.Environment.CurrentDirectory + @"\Log"))
+                if (!Directory.Exists(System.Environment.CurrentDirectory + @"\LogReal"))
                 {
-                    Directory.CreateDirectory(System.Environment.CurrentDirectory + @"\Log");
+                    Directory.CreateDirectory(System.Environment.CurrentDirectory + @"\LogReal");
                 }
                 DateTime logTime = _lastCreateDateTime.Value;
-                DirectoryName = System.Environment.CurrentDirectory + @"\Log\" + logTime.ToString("yyyy") + "\\" + logTime.ToString("yyyy-MM") + "\\" + logTime.ToString("yyyy-MM-dd");
+                DirectoryName = System.Environment.CurrentDirectory + @"\LogReal\" + logTime.ToString("yyyy") + "\\" + logTime.ToString("yyyy-MM") + "\\" + logTime.ToString("yyyy-MM-dd");
                 if (!Directory.Exists(DirectoryName))
                 {
                     Directory.CreateDirectory(DirectoryName);
@@ -96,22 +94,10 @@ namespace ValveControlSystem.Classes
         {
             try
             {
-                if (length != 241)
-                {
-                    ShowMessage?.Invoke("数据长度不是241！", DataLevel.Error);
-                    return;
-                }
-                DateTime? powerOnTime = _dateTimeXmlHelper.GetPowerOnDateAndTime();
-                if (powerOnTime == null)
-                {
-                    ShowMessage?.Invoke("未设置上电时间，该条数据无法保存，且无法显示曲线", DataLevel.Error);
-                    return;
-                }
-                uint secondFromStart = (uint)(data[235] << 24) + (uint)(data[236] << 16) + (uint)(data[237] << 8) + (uint)(data[238]);
-                createNewFile(powerOnTime.Value.AddSeconds(secondFromStart));
+                createNewFile();
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(DirectoryName + @"\" + _fileName);
-                XmlNode nodeDatas = xmlDoc.SelectSingleNode("/Log/Datas");
+                XmlNode nodeDatas = xmlDoc.SelectSingleNode("/LogReal/Datas");
                 if (nodeDatas != null)
                 {
                     XmlElement xe = (XmlElement)nodeDatas;//将子节点类型转换为XmlElement类型  
@@ -135,29 +121,25 @@ namespace ValveControlSystem.Classes
             creatFile(DirectoryName, _fileName);
         }
 
-        private DateTime getLastCreateFileDateTime(DateTime newestDateTime)
+        private DateTime getLastCreateFileDateTime()
         {
             if (_lastCreateDateTime == null)
             {
-                _lastCreateDateTime = _dateTimeXmlHelper.GetLastCreateDateAndTime();
-                if (_lastCreateDateTime == null)
-                {
-                    _lastCreateDateTime = newestDateTime;
-                    CreatNewFile(_lastCreateDateTime.Value);
-                    _dateTimeXmlHelper.ModifyLastCreateFileDateTimeXml(_lastCreateDateTime.Value, _lastCreateDateTime.Value);
-                }
+                DateTime now = DateTime.Now;
+                _lastCreateDateTime = now;
+                CreatNewFile(now);
             }
             return _lastCreateDateTime.Value;
         }
 
-        private void createNewFile(DateTime newestDateTime)
+        private void createNewFile()
         {
-            TimeSpan span = newestDateTime.Subtract(getLastCreateFileDateTime(newestDateTime));
+            DateTime now = DateTime.Now;
+            TimeSpan span = now.Subtract(getLastCreateFileDateTime());
             if (span.TotalMinutes > 30)
             {
-                _fileName = newestDateTime.ToString("yyyy-MM-dd HHmmss") + ".xml";
-                _lastCreateDateTime = newestDateTime;
-                _dateTimeXmlHelper.ModifyLastCreateFileDateTimeXml(_lastCreateDateTime.Value, _lastCreateDateTime.Value);
+                _fileName = now.ToString("yyyy-MM-dd HHmmss") + ".xml";
+                _lastCreateDateTime = now;
                 checkDirectory();
                 creatFile(DirectoryName, _fileName);
             }

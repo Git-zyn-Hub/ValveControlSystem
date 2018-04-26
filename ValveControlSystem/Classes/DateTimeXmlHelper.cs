@@ -63,6 +63,19 @@ namespace ValveControlSystem.Classes
                         (
                             "PowerOnTime"
                         )
+                    ),
+                    new XElement
+                    (
+                        "LastCreateFileDateTime",
+
+                        new XElement
+                        (
+                            "CreateDate"
+                        ),
+                        new XElement
+                        (
+                            "CreateTime"
+                        )
                     )
                 )
 
@@ -107,6 +120,18 @@ namespace ValveControlSystem.Classes
             setTime(powerOnTimeElement, powerOnTime);
             xd.Save(_xmlPath);
         }
+        public void ModifyLastCreateFileDateTimeXml(DateTime createDate, DateTime createTime)
+        {
+            XDocument xd = XDocument.Load(_xmlPath);
+            ///查询修改的元素  
+            XElement root = xd.Root;
+            XElement createDateElement = root.Element("LastCreateFileDateTime").Element("CreateDate");
+            XElement createTimeElement = root.Element("LastCreateFileDateTime").Element("CreateTime");
+            ///修改元素  
+            setDate(createDateElement, createDate);
+            setTime(createTimeElement, createTime);
+            xd.Save(_xmlPath);
+        }
         private void setDate(XElement e, DateTime date)
         {
             if (e != null)
@@ -138,6 +163,18 @@ namespace ValveControlSystem.Classes
             XDocument xd = XDocument.Load(_xmlPath);
             ///查询修改的元素  
             XElement element = xd.Root.Element("PowerOnDateTime").Element(Node);
+            if (element != null)
+            {
+                return element.Value;
+            }
+            return string.Empty;
+        }
+
+        private string getXmlLastCreateNodeValue(string Node)
+        {
+            XDocument xd = XDocument.Load(_xmlPath);
+            ///查询修改的元素  
+            XElement element = xd.Root.Element("LastCreateFileDateTime").Element(Node);
             if (element != null)
             {
                 return element.Value;
@@ -179,6 +216,20 @@ namespace ValveControlSystem.Classes
         {
             string date = getXmlPowerOnNodeValue("PowerOnDate");
             string time = getXmlPowerOnNodeValue("PowerOnTime");
+
+            if (date != string.Empty && time != string.Empty)
+            {
+                return DateTime.Parse(date + " " + time);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public DateTime? GetLastCreateDateAndTime()
+        {
+            string date = getXmlLastCreateNodeValue("CreateDate");
+            string time = getXmlLastCreateNodeValue("CreateTime");
 
             if (date != string.Empty && time != string.Empty)
             {

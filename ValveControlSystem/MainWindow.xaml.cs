@@ -38,6 +38,7 @@ namespace ValveControlSystem
         private double _rowDataTableAndOriginDataHeight;
         private ToolNo _toolNoSetted = ToolNo.Undefined;
         private SaveData2Xml _saveData2Xml;
+        private SaveRealData2Xml _saveRealData2Xml;
         private SurfacePresetXmlHelper _surfacePresetXmlHelper = new SurfacePresetXmlHelper();
 
         public List<Window> ChildrenWindow
@@ -67,6 +68,8 @@ namespace ValveControlSystem
         {
             InitializeComponent();
             _saveData2Xml = SaveData2Xml.GetInstance();
+            _saveData2Xml.ShowMessage += this._originData.AddDataInfo;
+            _saveRealData2Xml = SaveRealData2Xml.GetInstance();
         }
 
         private void socketListening()
@@ -264,7 +267,7 @@ namespace ValveControlSystem
 
                                 _dataTable.ClearTable();
                                 _curveLookBack.ClearCurve();
-                                _saveData2Xml.CreatNewFile();
+                                //_saveData2Xml.CreatNewFile();
                                 //}
                             }
                             else
@@ -290,7 +293,7 @@ namespace ValveControlSystem
 
                                 _dataTable.ClearTable();
                                 _curveLookBack.ClearCurve();
-                                _saveData2Xml.CreatNewFile();
+                                //_saveData2Xml.CreatNewFile();
                                 //}
                             }
                             else
@@ -633,22 +636,22 @@ namespace ValveControlSystem
                                     break;
                                 case (byte)CommandTypeCommon.回放指令:
                                     {
+                                        this._originData.AddDataInfo("回放数据", DataLevel.Default);
                                         _dataTable.HandleData(receivedData);
                                         _curveLookBack.HandleData(receivedData);
                                         if (_saveData2Xml.DirectoryName != string.Empty)
                                         {
                                             _saveData2Xml.SaveData(receivedData, receivedData.Length);
                                         }
-                                        this._originData.AddDataInfo("回放数据", DataLevel.Default);
                                         this.rbLookBack.IsChecked = true;
                                     }
                                     break;
                                 case (byte)CommandTypeCommon.实时数据:
                                     {
                                         _curveRealtime.HandleData(receivedData);
-                                        if (_saveData2Xml.DirectoryName != string.Empty)
+                                        if (_saveRealData2Xml.DirectoryName != string.Empty)
                                         {
-                                            _saveData2Xml.SaveData(receivedData, receivedData.Length);
+                                            _saveRealData2Xml.SaveData(receivedData, receivedData.Length);
                                         }
                                         this._originData.AddDataInfo("实时数据", DataLevel.Default);
                                     }
