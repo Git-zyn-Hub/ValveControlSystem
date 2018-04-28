@@ -50,16 +50,20 @@ namespace ValveControlSystem.Classes
 
         private void creatFile(string directoryName, string fileName)
         {
-            XmlTextWriter writer = new XmlTextWriter(directoryName + @"\" + fileName, null);
-            writer.Formatting = Formatting.Indented;
-            writer.WriteStartDocument();
-            writer.WriteStartElement("LogReal");
-            writer.WriteStartElement("Datas");
-            writer.WriteEndElement();
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            writer.Close();
+            string filePath = directoryName + @"\" + fileName;
+            if (!File.Exists(filePath))
+            {
+                XmlTextWriter writer = new XmlTextWriter(filePath, null);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartDocument();
+                writer.WriteStartElement("LogReal");
+                writer.WriteStartElement("Datas");
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
+                writer.Close();
+            }
         }
 
 

@@ -33,7 +33,6 @@ namespace ValveControlSystem.Classes
 
         private SaveData2Xml()
         {
-
         }
 
         public static SaveData2Xml GetInstance()
@@ -52,16 +51,20 @@ namespace ValveControlSystem.Classes
 
         private void creatFile(string directoryName, string fileName)
         {
-            XmlTextWriter writer = new XmlTextWriter(directoryName + @"\" + fileName, null);
-            writer.Formatting = Formatting.Indented;
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Log");
-            writer.WriteStartElement("Datas");
-            writer.WriteEndElement();
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            writer.Close();
+            string filePath = directoryName + @"\" + fileName;
+            if (!File.Exists(filePath))
+            {
+                XmlTextWriter writer = new XmlTextWriter(filePath, null);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Log");
+                writer.WriteStartElement("Datas");
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
+                writer.Close();
+            }
         }
 
 
@@ -108,7 +111,8 @@ namespace ValveControlSystem.Classes
                     return;
                 }
                 uint secondFromStart = (uint)(data[235] << 24) + (uint)(data[236] << 16) + (uint)(data[237] << 8) + (uint)(data[238]);
-                createNewFile(powerOnTime.Value.AddSeconds(secondFromStart));
+                DateTime occurTime = powerOnTime.Value.AddSeconds(secondFromStart);
+                createNewFile(occurTime);
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(DirectoryName + @"\" + _fileName);
                 XmlNode nodeDatas = xmlDoc.SelectSingleNode("/Log/Datas");
@@ -117,7 +121,7 @@ namespace ValveControlSystem.Classes
                     XmlElement xe = (XmlElement)nodeDatas;//将子节点类型转换为XmlElement类型  
                     XmlElement xe1 = xmlDoc.CreateElement("Data");//创建一个<Data>节点
                     xe.AppendChild(xe1);//添加到<Datas>节点中
-                    xe1.SetAttribute("Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));//设置该节点Time属性
+                    xe1.SetAttribute("Time", occurTime.ToString("yyyy-MM-dd HH:mm:ss"));//设置该节点Time属性
                     xe1.InnerText = BitConverter.ToString(data, 0, length);
                 }
                 xmlDoc.Save(DirectoryName + @"\" + _fileName);
@@ -143,9 +147,14 @@ namespace ValveControlSystem.Classes
                 if (_lastCreateDateTime == null)
                 {
                     _lastCreateDateTime = newestDateTime;
-                    CreatNewFile(_lastCreateDateTime.Value);
-                    _dateTimeXmlHelper.ModifyLastCreateFileDateTimeXml(_lastCreateDateTime.Value, _lastCreateDateTime.Value);
                 }
+                CreatNewFile(_lastCreateDateTime.Value);
+                _dateTimeXmlHelper.ModifyLastCreateFileDateTimeXml(_lastCreateDateTime.Value, _lastCreateDateTime.Value);
+                //else
+                //{
+                //    checkDirectory();
+                //    _fileName = _lastCreateDateTime.Value.ToString("yyyy-MM-dd HHmmss") + ".xml";
+                //}
             }
             return _lastCreateDateTime.Value;
         }

@@ -148,12 +148,16 @@ namespace ValveControlSystem.Windows
                                                 {
                                                     bytesData[i] = Convert.ToByte(data[i], 16);
                                                 }
-                                                for (int i = 0; i < 4; i++)
+
+                                                if (bytesData.Length == 242)
                                                 {
-                                                    Log oneLog = new Log();
-                                                    oneLog.Time = tempTime;
-                                                    AnalyzeLog(ref oneLog, bytesData, i);
-                                                    Logs.Add(oneLog);
+                                                    for (int i = 0; i < 4; i++)
+                                                    {
+                                                        Log oneLog = new Log();
+                                                        oneLog.Time = tempTime;
+                                                        AnalyzeLog(ref oneLog, bytesData, i);
+                                                        Logs.Add(oneLog);
+                                                    }
                                                 }
                                             }
                                         }

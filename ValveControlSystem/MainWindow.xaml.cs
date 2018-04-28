@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NearBitAnalysis.Windows;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Ports;
@@ -69,6 +70,7 @@ namespace ValveControlSystem
             InitializeComponent();
             _saveData2Xml = SaveData2Xml.GetInstance();
             _saveData2Xml.ShowMessage += this._originData.AddDataInfo;
+            //_saveData2Xml.checkDirectory();
             _saveRealData2Xml = SaveRealData2Xml.GetInstance();
         }
 
@@ -639,20 +641,20 @@ namespace ValveControlSystem
                                         this._originData.AddDataInfo("回放数据", DataLevel.Default);
                                         _dataTable.HandleData(receivedData);
                                         _curveLookBack.HandleData(receivedData);
-                                        if (_saveData2Xml.DirectoryName != string.Empty)
-                                        {
-                                            _saveData2Xml.SaveData(receivedData, receivedData.Length);
-                                        }
+                                        //if (_saveData2Xml.DirectoryName != string.Empty)
+                                        //{
+                                        _saveData2Xml.SaveData(receivedData, receivedData.Length);
+                                        //}
                                         this.rbLookBack.IsChecked = true;
                                     }
                                     break;
                                 case (byte)CommandTypeCommon.实时数据:
                                     {
                                         _curveRealtime.HandleData(receivedData);
-                                        if (_saveRealData2Xml.DirectoryName != string.Empty)
-                                        {
-                                            _saveRealData2Xml.SaveData(receivedData, receivedData.Length);
-                                        }
+                                        //if (_saveRealData2Xml.DirectoryName != string.Empty)
+                                        //{
+                                        _saveRealData2Xml.SaveData(receivedData, receivedData.Length);
+                                        //}
                                         this._originData.AddDataInfo("实时数据", DataLevel.Default);
                                     }
                                     break;
@@ -1097,10 +1099,10 @@ namespace ValveControlSystem
                 if (dialogResult.HasValue && dialogResult.Value)
                 {
                     this._toolNoSetted = presetWin.ToolNoSet;
-                    byte[] bytesAutomaticClosurePressure = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AutomaticClosurePressure, 
-                        (PressureUnit)Enum.Parse(typeof(PressureUnit),presetWin.PressureUnit4Binding)));
+                    byte[] bytesAutomaticClosurePressure = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AutomaticClosurePressure,
+                        (PressureUnit)Enum.Parse(typeof(PressureUnit), presetWin.PressureUnit4Binding)));
                     byte[] bytesAVS_TriggerPressure = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AVS_TriggerPressure,
-                        (PressureUnit)Enum.Parse(typeof(PressureUnit),presetWin.PressureUnit4Binding)));
+                        (PressureUnit)Enum.Parse(typeof(PressureUnit), presetWin.PressureUnit4Binding)));
                     byte[] bytesAVS4UnderPressureLimit = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AVS4UnderPressureLimit,
                         (PressureUnit)Enum.Parse(typeof(PressureUnit), presetWin.PressureUnit4Binding)));
                     byte[] bytesAVS4OverPressureLimit = convertInt2Bytes(DataUnitConverter.ConvertPressureUnit2PSI(presetWin.SurfacePrs.AVS4OverPressureLimit,
@@ -1170,6 +1172,31 @@ namespace ValveControlSystem
             SetPowerOnTimeWindow winPowerOn = new SetPowerOnTimeWindow();
             winPowerOn.Owner = this;
             winPowerOn.ShowDialog();
+        }
+
+
+        public bool SendWithoutSave(byte[] sendData)
+        {
+            if (_serialPort1.IsOpen)
+            {
+                _serialPort1.Write(sendData, 0, sendData.Length);
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this._originData.AddSendData(sendData);
+                }));
+                return true;
+            }
+            else
+            {
+                MessageBox.Show("串口已经关闭。");
+                return false;
+            }
+        }
+
+        private void miSendTest_Click(object sender, RoutedEventArgs e)
+        {
+            WindowSendTest winSend = new WindowSendTest(this);
+            winSend.Show();
         }
     }
 }

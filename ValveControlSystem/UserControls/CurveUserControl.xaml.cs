@@ -19,6 +19,10 @@ namespace ValveControlSystem.UserControls
         private DataSeries _dataSeries1;
         //温度曲线
         private DataSeries _dataSeries2;
+        //指令采集压力
+        private DataSeries _dataSeries3;
+        //指令采集温度
+        private DataSeries _dataSeries4;
         private bool _showChartGrid;
         private CurveSetXmlHelper _curveSetXmlHelper = new CurveSetXmlHelper();
         private const int _headerLength = 7;
