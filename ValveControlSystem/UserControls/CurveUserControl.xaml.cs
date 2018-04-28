@@ -83,20 +83,40 @@ namespace ValveControlSystem.UserControls
                     _dataSeries1 = new DataSeries();
                     chartCurve.Series.Add(_dataSeries1);
                     _dataSeries1.RenderAs = RenderAs.Line;
-                    _dataSeries1.XValueType = ChartValueTypes.Numeric;
+                    _dataSeries1.XValueType = ChartValueTypes.DateTime;
                     _dataSeries1.AxisYType = AxisTypes.Primary;
                     _dataSeries1.MarkerEnabled = false;
-                    _dataSeries1.LegendText = "压力";
+                    _dataSeries1.LegendText = "常规采集压力";
                 }
                 if (chartCurve.Series.Count == 1)
                 {
                     _dataSeries2 = new DataSeries();
                     chartCurve.Series.Add(_dataSeries2);
                     _dataSeries2.RenderAs = RenderAs.Line;
-                    _dataSeries2.XValueType = ChartValueTypes.Numeric;
+                    _dataSeries2.XValueType = ChartValueTypes.DateTime;
                     _dataSeries2.AxisYType = AxisTypes.Secondary;
                     _dataSeries2.MarkerEnabled = true;
-                    _dataSeries2.LegendText = "温度";
+                    _dataSeries2.LegendText = "常规采集温度";
+                }
+                if (chartCurve.Series.Count == 2)
+                {
+                    _dataSeries3 = new DataSeries();
+                    chartCurve.Series.Add(_dataSeries3);
+                    _dataSeries3.RenderAs = RenderAs.Line;
+                    _dataSeries3.XValueType = ChartValueTypes.DateTime;
+                    _dataSeries3.AxisYType = AxisTypes.Primary;
+                    _dataSeries3.MarkerEnabled = false;
+                    _dataSeries3.LegendText = "指令采集压力";
+                }
+                if (chartCurve.Series.Count == 3)
+                {
+                    _dataSeries4 = new DataSeries();
+                    chartCurve.Series.Add(_dataSeries4);
+                    _dataSeries4.RenderAs = RenderAs.Line;
+                    _dataSeries4.XValueType = ChartValueTypes.DateTime;
+                    _dataSeries4.AxisYType = AxisTypes.Secondary;
+                    _dataSeries4.MarkerEnabled = true;
+                    _dataSeries4.LegendText = "指令采集温度";
                 }
             }
             catch (Exception ee)
@@ -277,8 +297,12 @@ namespace ValveControlSystem.UserControls
             {
                 CurveSetting preCurveSetting = _curveSetXmlHelper.GetCurveSetting("PressureCurve");
                 CurveSetting tempCurveSetting = _curveSetXmlHelper.GetCurveSetting("TemperatureCurve");
+                CurveSetting preCurveCmdSetting = _curveSetXmlHelper.GetCurveSetting("PressureCurveCmd");
+                CurveSetting tempCurveCmdSetting = _curveSetXmlHelper.GetCurveSetting("TemperatureCurveCmd");
                 setCurveColorAndLineThickness(_dataSeries1, preCurveSetting);
                 setCurveColorAndLineThickness(_dataSeries2, tempCurveSetting);
+                setCurveColorAndLineThickness(_dataSeries3, preCurveCmdSetting);
+                setCurveColorAndLineThickness(_dataSeries4, tempCurveCmdSetting);
 
                 PressureUnit4Binding = preCurveSetting.Unit;
                 TemperatureUnit4Binding = tempCurveSetting.Unit;
@@ -398,6 +422,37 @@ namespace ValveControlSystem.UserControls
             }
         }
 
+        private void addDataCommand(DataPoint[] dataPointsTemp, DataPoint[] dataPointsPres)
+        {
+            try
+            {
+                if (dataPointsPres != null && dataPointsPres.Length == 76)
+                {
+                    foreach (var presPoint in dataPointsPres)
+                    {
+                        _dataSeries3.DataPoints.Add(presPoint);
+                    }
+                    DataPoint voidPoint = new DataPoint();
+                    voidPoint.XValue = ((DateTime)(dataPointsPres[dataPointsPres.Length - 1].XValue)).AddSeconds(1);
+                    _dataSeries3.DataPoints.Add(voidPoint);
+                }
+                if (dataPointsTemp != null && dataPointsTemp.Length == 4)
+                {
+                    foreach (var tempPoint in dataPointsTemp)
+                    {
+                        _dataSeries4.DataPoints.Add(tempPoint);
+                    }
+                    DataPoint voidPoint = new DataPoint();
+                    voidPoint.XValue = ((DateTime)(dataPointsTemp[dataPointsTemp.Length - 1].XValue)).AddSeconds(1);
+                    _dataSeries4.DataPoints.Add(voidPoint);
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("添加数据异常：" + ee.Message);
+            }
+        }
+
         public void ClearCurve()
         {
             try
@@ -406,6 +461,11 @@ namespace ValveControlSystem.UserControls
                 {
                     _dataSeries1.DataPoints.Clear();
                     _dataSeries2.DataPoints.Clear();
+                }
+                if (_dataSeries3 != null && _dataSeries4 != null)
+                {
+                    _dataSeries3.DataPoints.Clear();
+                    _dataSeries4.DataPoints.Clear();
                 }
             }
             catch (Exception ee)
@@ -424,6 +484,13 @@ namespace ValveControlSystem.UserControls
                     item.YValue = DataUnitConvert.PressureUnitConvertEachOther(item.YValue, (PressureUnit)Enum.Parse(typeof(PressureUnit), _pressureUnit));
                 }
             }
+            if (_dataSeries3 != null)
+            {
+                foreach (var item in _dataSeries3.DataPoints)
+                {
+                    item.YValue = DataUnitConvert.PressureUnitConvertEachOther(item.YValue, (PressureUnit)Enum.Parse(typeof(PressureUnit), _pressureUnit));
+                }
+            }
         }
 
         private void changeTemperatureAfterUnitChanged()
@@ -431,6 +498,13 @@ namespace ValveControlSystem.UserControls
             if (_dataSeries2 != null)
             {
                 foreach (var item in _dataSeries2.DataPoints)
+                {
+                    item.YValue = DataUnitConvert.TemperatureUnitConvertEachOther(item.YValue, (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), _temperatureUnit));
+                }
+            }
+            if (_dataSeries4 != null)
+            {
+                foreach (var item in _dataSeries4.DataPoints)
                 {
                     item.YValue = DataUnitConvert.TemperatureUnitConvertEachOther(item.YValue, (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), _temperatureUnit));
                 }

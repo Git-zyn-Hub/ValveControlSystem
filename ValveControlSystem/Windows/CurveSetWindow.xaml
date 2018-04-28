@@ -9,7 +9,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         x:Name="curveSetWin"
-        Title="曲线设置窗口" Height="350" Width="500"
+        Title="曲线设置窗口" Height="420" Width="500"
         Loaded="Window_Loaded"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="AliceBlue">
     <Window.Resources>
@@ -113,7 +113,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40*"/>
+            <RowDefinition Height="50*"/>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>

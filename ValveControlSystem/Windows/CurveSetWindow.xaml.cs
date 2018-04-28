@@ -138,6 +138,12 @@ namespace ValveControlSystem.Windows
                 CurveSetting curveSetTemperature = _curveSetXmlHelper.GetCurveSetting("TemperatureCurve");
                 this.CurveSettingList.Add(curveSetTemperature);
 
+                CurveSetting curveSetPressureCmd = _curveSetXmlHelper.GetCurveSetting("PressureCurveCmd");
+                this.CurveSettingList.Add(curveSetPressureCmd);
+
+                CurveSetting curveSetTemperatureCmd = _curveSetXmlHelper.GetCurveSetting("TemperatureCurveCmd");
+                this.CurveSettingList.Add(curveSetTemperatureCmd);
+
                 setUnit(curveSetPressure.Unit, curveSetTemperature.Unit);
 
                 CurveGeneralSetting newCGS = _curveSetXmlHelper.GetCurveGeneralSetting();
@@ -180,9 +186,9 @@ namespace ValveControlSystem.Windows
         {
             try
             {
-                if (CurveSettingList.Count != 3)
+                if (CurveSettingList.Count != 5)
                 {
-                    MessageBox.Show("曲线个数不为3，无法设置。");
+                    MessageBox.Show("曲线个数不为5，无法设置。");
                     return;
                 }
                 File.Delete(_xmlPath);
@@ -346,11 +352,13 @@ namespace ValveControlSystem.Windows
             {
                 updataSource(txtPressureRange);
                 updataSource(txtPressureThreshold);
-                if (CurveSettingList.Count == 3)
+                if (CurveSettingList.Count == 5)
                 {
                     _curveSetXmlHelper.ModifyXmlCurveSettingElement("PressureCurveRealtime", CurveSettingList[0]);
                     _curveSetXmlHelper.ModifyXmlCurveSettingElement("PressureCurve", CurveSettingList[1]);
                     _curveSetXmlHelper.ModifyXmlCurveSettingElement("TemperatureCurve", CurveSettingList[2]);
+                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("PressureCurveCmd", CurveSettingList[3]);
+                    _curveSetXmlHelper.ModifyXmlCurveSettingElement("TemperatureCurveCmd", CurveSettingList[4]);
                     _curveSetXmlHelper.ModifyXmlCurveGeneralSettingElement(CurveGeneralSet);
                 }
                 else
@@ -543,10 +551,14 @@ namespace ValveControlSystem.Windows
                 return;
 
             //Unit那一列是第4列
-            if (num == 0 || num == 1)
+            if (num == 0 || num == 1 || num == 3)
             {
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 4; i++)
                 {
+                    if (i == 2)
+                    {
+                        continue;
+                    }
                     //获取索引为i的行
                     DataGridRow row = this.dgCurveSetting.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
                     if (row != null)
@@ -570,8 +582,9 @@ namespace ValveControlSystem.Windows
                     this.txtPressureThreshold.Text = (Math.Round(DataUnitConvert.PressureUnitConvertEachOther(pressureThreshold, (PressureUnit)Enum.Parse(typeof(PressureUnit), unit.ToString())), 2)).ToString();
                 }
             }
-            if (num == 2)
+            if (num == 2 || num == 4)
             {
+                changeUnitSycn(num == 2 ? 4 : 2, unit);
                 this.lblTemperatureUnit.Content = unit;
                 UnitConverter unitConverter = new UnitConverter();
                 string tempUnit = unitConverter.ConvertBack(unit, null, null, null).ToString();
@@ -580,6 +593,19 @@ namespace ValveControlSystem.Windows
                 {
                     this.txtTemperatureRange.Text = (Math.Round(DataUnitConvert.TemperatureUnitConvertEachOther(temperatureRange, (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), tempUnit.ToString())))).ToString();
                 }
+            }
+        }
+
+        private void changeUnitSycn(int i,string unit)
+        {
+            //获取索引为i的行
+            DataGridRow row = this.dgCurveSetting.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
+            if (row != null)
+            {
+                ComboBox cb = this.dgCurveSetting.Columns[3].GetCellContent(row) as ComboBox;
+                cb.SelectedItem = unit;
+                BindingExpression be = cb.GetBindingExpression(ComboBox.SelectedItemProperty);
+                be.UpdateSource();
             }
         }
         private void setUnit(string preUnit, string tempUnit)

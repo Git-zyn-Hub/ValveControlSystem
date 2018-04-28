@@ -46,7 +46,7 @@ namespace ValveControlSystem.Classes
             };
             CurveSetting pressureCurve = new CurveSetting()
             {
-                CurveName = "回放压力",
+                CurveName = "常规采集压力",
                 LineThickness = 2,
                 LineColor = Colors.Red,
                 Unit = PressureUnit.PSI.ToString(),
@@ -54,9 +54,25 @@ namespace ValveControlSystem.Classes
             };
             CurveSetting temperatureCurve = new CurveSetting()
             {
-                CurveName = "回放温度",
+                CurveName = "常规采集温度",
                 LineThickness = 2,
                 LineColor = Colors.Green,
+                Unit = TemperatureUnit.摄氏度.ToString(),
+                Show = true
+            };
+            CurveSetting pressureCurveCmd = new CurveSetting()
+            {
+                CurveName = "指令采集压力",
+                LineThickness = 2,
+                LineColor = Colors.Orange,
+                Unit = PressureUnit.PSI.ToString(),
+                Show = true
+            };
+            CurveSetting temperatureCurveCmd = new CurveSetting()
+            {
+                CurveName = "指令采集温度",
+                LineThickness = 2,
+                LineColor = Colors.Blue,
                 Unit = TemperatureUnit.摄氏度.ToString(),
                 Show = true
             };
@@ -108,6 +124,24 @@ namespace ValveControlSystem.Classes
                             new XAttribute("LineColor", temperatureCurve.LineColor),
                             new XAttribute("Unit", temperatureCurve.Unit),
                             new XAttribute("Show", temperatureCurve.Show)
+                        ),
+                        new XElement
+                        (
+                            "PressureCurveCmd",
+                            new XAttribute("CurveName", pressureCurveCmd.CurveName),
+                            new XAttribute("LineThickness", pressureCurveCmd.LineThickness),
+                            new XAttribute("LineColor", pressureCurveCmd.LineColor),
+                            new XAttribute("Unit", pressureCurveCmd.Unit),
+                            new XAttribute("Show", pressureCurveCmd.Show)
+                        ),
+                        new XElement
+                        (
+                            "TemperatureCurveCmd",
+                            new XAttribute("CurveName", temperatureCurveCmd.CurveName),
+                            new XAttribute("LineThickness", temperatureCurveCmd.LineThickness),
+                            new XAttribute("LineColor", temperatureCurveCmd.LineColor),
+                            new XAttribute("Unit", temperatureCurveCmd.Unit),
+                            new XAttribute("Show", temperatureCurveCmd.Show)
                         ),
                         new XElement
                         (
