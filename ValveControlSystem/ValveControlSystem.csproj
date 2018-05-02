@@ -102,6 +102,7 @@
     <Compile Include="Classes\WellInfomation.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="GlobalVariable.cs" />
     <Compile Include="UserControls\CurveRealtimeUserControl.xaml.cs">
       <DependentUpon>CurveRealtimeUserControl.xaml</DependentUpon>
     </Compile>
