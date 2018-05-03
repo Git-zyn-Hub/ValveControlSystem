@@ -41,7 +41,7 @@
                 <MenuItem x:Name="miStartStopRealtimeData" Header="开始/停止实时数据" Click="miStartStopRealtimeData_Click"></MenuItem>
             </MenuItem>
             <MenuItem x:Name="miCurveSet" Header="曲线设置" Click="miCurveSet_Click"></MenuItem>
-            <MenuItem x:Name="miSendTest" Header="发送测试" Click="miSendTest_Click"></MenuItem>
+            <MenuItem x:Name="miSendTest" Header="发送测试" Click="miSendTest_Click" Visibility="Collapsed"></MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="3">
             <RadioButton x:Name="rbRealtime" Checked="rbRealtime_Checked">实时</RadioButton>
