@@ -389,7 +389,33 @@ namespace ValveControlSystem.UserControls
                     }
                     else if (dataArray[GlobalVariable.INDEX_CMD_OR_NORMAL_FLAG] == 2)
                     {
-
+                        int secondFromStart = (dataArray[235] << 24) + (dataArray[236] << 16) + (dataArray[237] << 8) + (dataArray[238]);
+                        _dataPointsTemp = new DataPoint[4];
+                        _dataPointsPres = new DataPoint[76];
+                        int packageNo = (dataArray[_headerLength + 2] << 8) + dataArray[_headerLength + 3];
+                        for (int i = 0; i < 4; i++)
+                        {
+                            DataPoint dataPointTemperature;
+                            dataPointTemperature = new DataPoint();
+                            dataPointTemperature.XValue = powerOnTime.Value.AddSeconds(secondFromStart - 4 + i);
+                            dataPointTemperature.YValue = DataUnitConvert.TemperatureUnitConvert(GetTempFromVoltage.GetTemperatureNew(
+                                (dataArray[_headerLength + i * 56 + 44] << 8) + dataArray[_headerLength + i * 56 + 45]),
+                                (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), TemperatureUnit4Binding));
+                            dataPointTemperature.MarkerEnabled = true;
+                            _dataPointsTemp[i] = dataPointTemperature;
+                            for (int j = 0; j < 38; j++, j++)
+                            {
+                                DataPoint dataPointPressure;
+                                dataPointPressure = new DataPoint();
+                                dataPointPressure.XValue = powerOnTime.Value.AddSeconds(secondFromStart - 4 + 4d / 76d * (i * 19 + j / 2));
+                                dataPointPressure.YValue = DataUnitConverter.PressureUnitConvert(GetPressureFromVoltage.GetPressure(
+                                    (dataArray[_headerLength + i * 56 + j + 6] << 8) + dataArray[_headerLength + i * 56 + j + 7]),
+                                    (PressureUnit)Enum.Parse(typeof(PressureUnit), PressureUnit4Binding));
+                                dataPointPressure.MarkerEnabled = false;
+                                _dataPointsPres[i * 19 + j / 2] = dataPointPressure;
+                            }
+                        }
+                        addDataCommand(_dataPointsTemp, _dataPointsPres);
                     }
                 }
             }
