@@ -86,7 +86,8 @@ namespace ValveControlSystem.Classes
                 BackgroundColor = Colors.White,
                 DisplayGrid = true,
                 MoveLeftRealtime = true,
-                RetainMinutes = 2000
+                RetainMinutes = 2000,
+                DayCount1Page = "全部"
             };
 
             XDocument doc = new XDocument
@@ -154,7 +155,8 @@ namespace ValveControlSystem.Classes
                             new XAttribute("BackgroundColor", curveGeneralSet.BackgroundColor),
                             new XAttribute("DisplayGrid", curveGeneralSet.DisplayGrid),
                             new XAttribute("MoveLeftRealtime", curveGeneralSet.MoveLeftRealtime),
-                            new XAttribute("RetainMinutes", curveGeneralSet.RetainMinutes)
+                            new XAttribute("RetainMinutes", curveGeneralSet.RetainMinutes),
+                            new XAttribute("DayCount1Page", curveGeneralSet.DayCount1Page)
                         )
                     )
                 )
@@ -220,6 +222,7 @@ namespace ValveControlSystem.Classes
                 element.SetAttributeValue("DisplayGrid", curveGeneralSet.DisplayGrid);
                 element.SetAttributeValue("MoveLeftRealtime", curveGeneralSet.MoveLeftRealtime);
                 element.SetAttributeValue("RetainMinutes", curveGeneralSet.RetainMinutes);
+                element.SetAttributeValue("DayCount1Page", curveGeneralSet.DayCount1Page);
             }
             xd.Save(XmlPath);
         }
@@ -259,6 +262,7 @@ namespace ValveControlSystem.Classes
             newCGS.DisplayGrid = bool.Parse(getXmlAttributeValue("CurveGeneralSetting", "DisplayGrid"));
             newCGS.MoveLeftRealtime = bool.Parse(getXmlAttributeValue("CurveGeneralSetting", "MoveLeftRealtime"));
             newCGS.RetainMinutes = int.Parse(getXmlAttributeValue("CurveGeneralSetting", "RetainMinutes"));
+            newCGS.DayCount1Page = getXmlAttributeValue("CurveGeneralSetting", "DayCount1Page");
             return newCGS;
         }
     }

@@ -114,7 +114,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50*"/>
-            <RowDefinition Height="40*"/>
+            <RowDefinition Height="50*"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
         <DataGrid ItemsSource="{Binding CurveSettingList,ElementName=curveSetWin}"
@@ -176,6 +176,7 @@
         </DataGrid>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -264,6 +265,24 @@
                 <Label Content="个点" Margin="0" Padding="0 5" HorizontalAlignment="Left" Grid.Column="1"></Label>
                 <Label x:Name="lblRetainMinutes" Content="约100分钟" HorizontalAlignment="Left" Grid.Column="2"></Label>
             </Grid>
+            <DockPanel Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" VerticalAlignment="Center">
+                <Label HorizontalAlignment="Left">一页显示</Label>
+                <ComboBox x:Name="cbDayCount1Page" HorizontalAlignment="Left" Width="68" SelectedValuePath="Content"
+                           SelectedValue="{Binding CurveGeneralSet.DayCount1Page,ElementName=curveSetWin}" >
+                    <ComboBoxItem>1天</ComboBoxItem>
+                    <ComboBoxItem>2天</ComboBoxItem>
+                    <ComboBoxItem>3天</ComboBoxItem>
+                    <ComboBoxItem>4天</ComboBoxItem>
+                    <ComboBoxItem>5天</ComboBoxItem>
+                    <ComboBoxItem>6天</ComboBoxItem>
+                    <ComboBoxItem>7天</ComboBoxItem>
+                    <ComboBoxItem>8天</ComboBoxItem>
+                    <ComboBoxItem>9天</ComboBoxItem>
+                    <ComboBoxItem>10天</ComboBoxItem>
+                    <ComboBoxItem>全部</ComboBoxItem>
+                </ComboBox>
+                <Label>回放曲线数据点</Label>
+            </DockPanel>
         </Grid>
         <DockPanel Grid.Row="2" HorizontalAlignment="Center">
             <Button x:Name="btnDefault" Width="70" Height="26" Content="默认" Click="btnDefault_Click"></Button>

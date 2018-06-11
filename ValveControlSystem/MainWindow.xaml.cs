@@ -122,7 +122,10 @@ namespace ValveControlSystem
                     }
                     if (!checkCheckSum(checkSum, bytesActualRecv))
                     {
-                        MessageBox.Show("校验和出错！");
+                        this.Dispatcher.Invoke(new Action(() =>
+                        {
+                            this._originData.AddDataInfo("校验和出错！", DataLevel.Error);
+                        }));
                         continue;
                     }
 

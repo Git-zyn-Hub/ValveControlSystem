@@ -32,5 +32,6 @@ namespace ValveControlSystem.Classes
         public bool MoveLeftRealtime { get; set; }
         public bool DisplayGrid { get; set; }
         public int RetainMinutes { get; set; }
+        public string DayCount1Page { get; set; }
     }
 }
