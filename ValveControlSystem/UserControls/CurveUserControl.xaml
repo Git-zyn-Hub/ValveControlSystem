@@ -33,5 +33,26 @@
                 </chart:Axis>
             </chart:Chart.AxesX>
         </chart:Chart>
+
+        <StackPanel x:Name="stpLookBack" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Visibility="Visible">
+            <Button x:Name="btnLookBackFullScreen" Height="18" Width="18" BorderThickness="0" Background="Transparent"
+                    Click="btnLookBackFullScreen_Click" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave">
+                <Path Fill="Black" Width="10" Height="10" Stretch="Fill"
+                      Data="M18.41,7.41L17,6L11,12L17,18L18.41,16.59L13.83,12L18.41,7.41M12.41,7.41L11,6L5,12L11,18L12.41,16.59L7.83,12L12.41,7.41Z">
+                </Path>
+            </Button>
+            <Label x:Name="lblBackPageCount" Padding="0"></Label>
+            <Label Padding="0">页</Label>
+        </StackPanel>
+        <StackPanel x:Name="stpLookForward" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="Visible">
+            <Label x:Name="lblForwardPageCount" Padding="0"></Label>
+            <Label Padding="0">页</Label>
+            <Button x:Name="btnLookForwardFullScreen" Height="18" Width="18" BorderThickness="0" Background="Transparent"
+                    Click="btnLookForwardFullScreen_Click" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave">
+                <Path Fill="Black" Width="10" Height="10" Stretch="Fill" 
+                      Data="M5.59,7.41L7,6L13,12L7,18L5.59,16.59L10.17,12L5.59,7.41M11.59,7.41L13,6L19,12L13,18L11.59,16.59L16.17,12L11.59,7.41Z">
+                </Path>
+            </Button>
+        </StackPanel>
     </Grid>
 </UserControl>

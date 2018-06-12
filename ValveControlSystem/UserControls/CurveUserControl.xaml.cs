@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using ValveControlSystem.Classes;
 using Visifire.Charts;
 
@@ -32,6 +34,8 @@ namespace ValveControlSystem.UserControls
         private string _pressureUnit;
         private string _temperatureUnit;
         private DateTimeXmlHelper _dateTimeXmlHelper = new DateTimeXmlHelper();
+        private LookBackManager _lookBackMgr;
+        private DispatcherTimer _showLastPageTimer = new DispatcherTimer();
         //private int _hitCount = 0;
 
 
@@ -78,6 +82,9 @@ namespace ValveControlSystem.UserControls
                 InitializeComponent();
                 _curveSetXmlHelper.XmlPath = System.Environment.CurrentDirectory + @"\Config.xml";
                 _curveSetXmlHelper.CurveSettingXmlInitial();
+                _lookBackMgr = LookBackManager.GetInstance();
+                _showLastPageTimer.Interval = TimeSpan.FromMinutes(3);
+                _showLastPageTimer.Tick += ShowLastPageTimer_Tick;
                 if (chartCurve.Series.Count == 0)
                 {
                     _dataSeries1 = new DataSeries();
@@ -124,6 +131,21 @@ namespace ValveControlSystem.UserControls
                 MessageBox.Show("曲线用户控件初始化异常：" + ee.Message);
             }
         }
+
+        private void ShowLastPageTimer_Tick(object sender, EventArgs e)
+        {
+            _showLastPageTimer.Stop();
+            loadSomeDayDataPoints((_lookBackMgr.PagesTotal - 1) * _lookBackMgr.DayCount1Page,
+                    _lookBackMgr.ListCurveNorPres.Count);
+            _lookBackMgr.InitialParameters();
+        }
+
+        private void resetShowLastPageTimer()
+        {
+            _showLastPageTimer.Stop();
+            _showLastPageTimer.Start();
+        }
+
         private void lineChart_Rendered(object sender, EventArgs e)
         {
             try
@@ -433,14 +455,22 @@ namespace ValveControlSystem.UserControls
                 {
                     foreach (var presPoint in dataPointsPres)
                     {
-                        _dataSeries1.DataPoints.Add(presPoint);
+                        if (!_showLastPageTimer.IsEnabled)
+                        {
+                            _dataSeries1.DataPoints.Add(presPoint);
+                        }
+                        _lookBackMgr.SavePointsNorPres(presPoint);
                     }
                 }
                 if (dataPointsTemp != null && dataPointsTemp.Length == 4)
                 {
                     foreach (var tempPoint in dataPointsTemp)
                     {
-                        _dataSeries2.DataPoints.Add(tempPoint);
+                        if (!_showLastPageTimer.IsEnabled)
+                        {
+                            _dataSeries2.DataPoints.Add(tempPoint);
+                        }
+                        _lookBackMgr.SavePointsNorTemp(tempPoint);
                     }
                 }
             }
@@ -458,21 +488,37 @@ namespace ValveControlSystem.UserControls
                 {
                     foreach (var presPoint in dataPointsPres)
                     {
-                        _dataSeries3.DataPoints.Add(presPoint);
+                        if (!_showLastPageTimer.IsEnabled)
+                        {
+                            _dataSeries3.DataPoints.Add(presPoint);
+                        }
+                        _lookBackMgr.SavePointsCmdPres(presPoint);
                     }
                     DataPoint voidPoint = new DataPoint();
                     voidPoint.XValue = ((DateTime)(dataPointsPres[dataPointsPres.Length - 1].XValue)).AddSeconds(1);
-                    _dataSeries3.DataPoints.Add(voidPoint);
+                    if (!_showLastPageTimer.IsEnabled)
+                    {
+                        _dataSeries3.DataPoints.Add(voidPoint);
+                    }
+                    _lookBackMgr.SavePointsCmdPres(voidPoint);
                 }
                 if (dataPointsTemp != null && dataPointsTemp.Length == 4)
                 {
                     foreach (var tempPoint in dataPointsTemp)
                     {
-                        _dataSeries4.DataPoints.Add(tempPoint);
+                        if (!_showLastPageTimer.IsEnabled)
+                        {
+                            _dataSeries4.DataPoints.Add(tempPoint);
+                        }
+                        _lookBackMgr.SavePointsCmdTemp(tempPoint);
                     }
                     DataPoint voidPoint = new DataPoint();
                     voidPoint.XValue = ((DateTime)(dataPointsTemp[dataPointsTemp.Length - 1].XValue)).AddSeconds(1);
-                    _dataSeries4.DataPoints.Add(voidPoint);
+                    if (!_showLastPageTimer.IsEnabled)
+                    {
+                        _dataSeries4.DataPoints.Add(voidPoint);
+                    }
+                    _lookBackMgr.SavePointsCmdTemp(voidPoint);
                 }
             }
             catch (Exception ee)
@@ -537,6 +583,101 @@ namespace ValveControlSystem.UserControls
                     item.YValue = DataUnitConvert.TemperatureUnitConvertEachOther(item.YValue, (TemperatureUnit)Enum.Parse(typeof(TemperatureUnit), _temperatureUnit));
                 }
             }
+        }
+
+
+        private void Button_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Button b = sender as Button;
+            if (b != null)
+            {
+                b.BorderThickness = new Thickness(0);
+            }
+        }
+
+        private void Button_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Button b = sender as Button;
+            if (b != null)
+            {
+                b.BorderThickness = new Thickness(1);
+            }
+        }
+
+
+        private void btnLookBackFullScreen_Click(object sender, RoutedEventArgs e)
+        {
+            resetShowLastPageTimer();
+            _lookBackMgr.Back();
+            while (_dataSeries1.DataPoints.Count > 0)
+            {
+                _dataSeries1.DataPoints.RemoveAt(0);
+            };
+            if (_lookBackMgr.PagesTotal == _lookBackMgr.PageCurrent)
+            {
+                loadSomeDayDataPoints((_lookBackMgr.PageCurrent - 1) * _lookBackMgr.DayCount1Page,
+                    _lookBackMgr.ListCurveNorPres.Count);
+            }
+            else
+            {
+                loadSomeDayDataPoints((_lookBackMgr.PageCurrent - 1) * _lookBackMgr.DayCount1Page,
+                    _lookBackMgr.PageCurrent * _lookBackMgr.DayCount1Page);
+            }
+            setPageCount(_lookBackMgr.PagesBack, _lookBackMgr.PagesForward);
+        }
+
+        private void btnLookForwardFullScreen_Click(object sender, RoutedEventArgs e)
+        {
+            resetShowLastPageTimer();
+            _lookBackMgr.Forward();
+            while (_dataSeries1.DataPoints.Count > 0)
+            {
+                _dataSeries1.DataPoints.RemoveAt(0);
+            }
+            if (_lookBackMgr.PagesTotal == _lookBackMgr.PageCurrent)
+            {
+                loadSomeDayDataPoints((_lookBackMgr.PageCurrent - 1) * _lookBackMgr.DayCount1Page,
+                    _lookBackMgr.ListCurveNorPres.Count);
+            }
+            else
+            {
+                loadSomeDayDataPoints((_lookBackMgr.PageCurrent - 1) * _lookBackMgr.DayCount1Page,
+                    _lookBackMgr.PageCurrent * _lookBackMgr.DayCount1Page);
+            }
+            setPageCount(_lookBackMgr.PagesBack, _lookBackMgr.PagesForward);
+        }
+
+        private void loadSomeDayDataPoints(int dayStart, int dayEndPlus1)
+        {
+            if (dayStart < 0 || dayEndPlus1 > _lookBackMgr.ListCurveNorPres.Count)
+            {
+                return;
+            }
+            for (int i = dayStart; i < dayEndPlus1; i++)
+            {
+                foreach (var item in _lookBackMgr.ListCurveNorPres[i])
+                {
+                    _dataSeries1.DataPoints.Add(item);
+                }
+                foreach (var item in _lookBackMgr.ListCurveNorTemp[i])
+                {
+                    _dataSeries2.DataPoints.Add(item);
+                }
+                foreach (var item in _lookBackMgr.ListCurveCmdPres[i])
+                {
+                    _dataSeries3.DataPoints.Add(item);
+                }
+                foreach (var item in _lookBackMgr.ListCurveCmdTemp[i])
+                {
+                    _dataSeries4.DataPoints.Add(item);
+                }
+            }
+        }
+
+        private void setPageCount(int back, int forward)
+        {
+            this.lblBackPageCount.Content = back;
+            this.lblForwardPageCount.Content = forward;
         }
 
         #region INotifyPropertyChanged Members

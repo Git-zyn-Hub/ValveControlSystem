@@ -94,6 +94,7 @@
     <Compile Include="Classes\GetPressureFromVoltage.cs" />
     <Compile Include="Classes\GetTempFromVoltage.cs" />
     <Compile Include="Classes\Logs2Excel.cs" />
+    <Compile Include="Classes\LookBackManager.cs" />
     <Compile Include="Classes\SaveData2Xml.cs" />
     <Compile Include="Classes\SaveRealData2Xml.cs" />
     <Compile Include="Classes\SurfacePreset.cs" />
