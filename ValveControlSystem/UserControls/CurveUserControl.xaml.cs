@@ -458,6 +458,7 @@ namespace ValveControlSystem.UserControls
                         if (!_showLastPageTimer.IsEnabled)
                         {
                             _dataSeries1.DataPoints.Add(presPoint);
+                            removeOutOfDatePoints(_dataSeries1, presPoint);
                         }
                         _lookBackMgr.SavePointsNorPres(presPoint);
                     }
@@ -469,6 +470,7 @@ namespace ValveControlSystem.UserControls
                         if (!_showLastPageTimer.IsEnabled)
                         {
                             _dataSeries2.DataPoints.Add(tempPoint);
+                            removeOutOfDatePoints(_dataSeries2, tempPoint);
                         }
                         _lookBackMgr.SavePointsNorTemp(tempPoint);
                     }
@@ -491,6 +493,7 @@ namespace ValveControlSystem.UserControls
                         if (!_showLastPageTimer.IsEnabled)
                         {
                             _dataSeries3.DataPoints.Add(presPoint);
+                            removeOutOfDatePoints(_dataSeries3, presPoint);
                         }
                         _lookBackMgr.SavePointsCmdPres(presPoint);
                     }
@@ -499,6 +502,7 @@ namespace ValveControlSystem.UserControls
                     if (!_showLastPageTimer.IsEnabled)
                     {
                         _dataSeries3.DataPoints.Add(voidPoint);
+                        removeOutOfDatePoints(_dataSeries3, voidPoint);
                     }
                     _lookBackMgr.SavePointsCmdPres(voidPoint);
                 }
@@ -509,6 +513,7 @@ namespace ValveControlSystem.UserControls
                         if (!_showLastPageTimer.IsEnabled)
                         {
                             _dataSeries4.DataPoints.Add(tempPoint);
+                            removeOutOfDatePoints(_dataSeries4, tempPoint);
                         }
                         _lookBackMgr.SavePointsCmdTemp(tempPoint);
                     }
@@ -517,6 +522,7 @@ namespace ValveControlSystem.UserControls
                     if (!_showLastPageTimer.IsEnabled)
                     {
                         _dataSeries4.DataPoints.Add(voidPoint);
+                        removeOutOfDatePoints(_dataSeries4, voidPoint);
                     }
                     _lookBackMgr.SavePointsCmdTemp(voidPoint);
                 }
@@ -564,6 +570,16 @@ namespace ValveControlSystem.UserControls
                 {
                     item.YValue = DataUnitConvert.PressureUnitConvertEachOther(item.YValue, (PressureUnit)Enum.Parse(typeof(PressureUnit), _pressureUnit));
                 }
+            }
+        }
+
+        private void removeOutOfDatePoints(DataSeries dataSeries, DataPoint newPoint)
+        {
+            DateTime timeNewP = (DateTime)newPoint.XValue;
+            DateTime timeFirstP = (DateTime)dataSeries.DataPoints[0].XValue;
+            if (timeNewP.Subtract(timeFirstP).TotalDays > _lookBackMgr.DayCount1Page)
+            {
+                dataSeries.DataPoints.RemoveAt(0);
             }
         }
 
@@ -674,7 +690,7 @@ namespace ValveControlSystem.UserControls
             }
         }
 
-        private void setPageCount(int back, int forward)
+        public void setPageCount(int back, int forward)
         {
             this.lblBackPageCount.Content = back;
             this.lblForwardPageCount.Content = forward;

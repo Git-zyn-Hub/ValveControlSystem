@@ -366,6 +366,10 @@ namespace ValveControlSystem.Windows
                     MessageBox.Show("保存到配置文件失败！");
                 }
 
+                LookBackManager lbm = LookBackManager.GetInstance();
+                lbm.InitialParameters();
+                _curveLookBack.setPageCount(lbm.PagesBack, lbm.PagesForward);
+
                 bool bool1 = txtPressureRange_LostFocus(sender, e);
                 bool bool2 = txtTemperatureRange_LostFocus(sender, e);
                 bool bool3 = txtPressureThreshold_LostFocus(sender, e);
@@ -596,7 +600,7 @@ namespace ValveControlSystem.Windows
             }
         }
 
-        private void changeUnitSycn(int i,string unit)
+        private void changeUnitSycn(int i, string unit)
         {
             //获取索引为i的行
             DataGridRow row = this.dgCurveSetting.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
