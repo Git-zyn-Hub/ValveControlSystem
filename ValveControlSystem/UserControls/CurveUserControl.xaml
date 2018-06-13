@@ -26,7 +26,7 @@
                             Suffix="{Binding TemperatureUnit4Binding,ElementName=chartUserCtrl,Converter={StaticResource unitConverter}}"></chart:Axis>
             </chart:Chart.AxesY>
             <chart:Chart.AxesX>
-                <chart:Axis x:Name="axisX" Interval="1" IntervalType="Days" ValueFormatString="dd日 HH:mm:ss">
+                <chart:Axis x:Name="axisX" Interval="1" IntervalType="Hours" ValueFormatString="dd日 HH:mm:ss">
                     <chart:Axis.Grids>
                         <chart:ChartGrid x:Name="chartGrid" Enabled="True" LineStyle="Solid"/>
                     </chart:Axis.Grids>

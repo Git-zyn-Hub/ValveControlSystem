@@ -132,9 +132,10 @@ namespace ValveControlSystem.UserControls
             }
         }
 
-        private void ShowLastPageTimer_Tick(object sender, EventArgs e)
+        public void ShowLastPageTimer_Tick(object sender, EventArgs e)
         {
             _showLastPageTimer.Stop();
+            ClearCurve();
             loadSomeDayDataPoints((_lookBackMgr.PagesTotal - 1) * _lookBackMgr.DayCount1Page,
                     _lookBackMgr.ListCurveNorPres.Count);
             _lookBackMgr.InitialParameters();
@@ -237,6 +238,29 @@ namespace ValveControlSystem.UserControls
             catch (Exception ee)
             {
                 MessageBox.Show("修改横轴范围异常：" + ee.Message);
+            }
+        }
+
+        public void ChangeXAxisInterval(int dayCount1Page)
+        {
+            try
+            {
+                if (dayCount1Page == -1)
+                {
+                    throw new Exception("修改横轴间隔之前未初始化每页天数参数");
+                }
+                else if (dayCount1Page == 0)
+                {
+                    this.axisX.Interval = 24;
+                }
+                else
+                {
+                    this.axisX.Interval = dayCount1Page;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("修改横轴间隔异常：" + ee.Message);
             }
         }
 
@@ -439,6 +463,11 @@ namespace ValveControlSystem.UserControls
                         }
                         addDataCommand(_dataPointsTemp, _dataPointsPres);
                     }
+                    if (!_showLastPageTimer.IsEnabled)
+                    {
+                        _lookBackMgr.RefreshParameters();
+                        setPageCount(_lookBackMgr.PagesBack, _lookBackMgr.PagesForward);
+                    }
                 }
             }
             catch (Exception ee)
@@ -577,9 +606,12 @@ namespace ValveControlSystem.UserControls
         {
             DateTime timeNewP = (DateTime)newPoint.XValue;
             DateTime timeFirstP = (DateTime)dataSeries.DataPoints[0].XValue;
-            if (timeNewP.Subtract(timeFirstP).TotalDays > _lookBackMgr.DayCount1Page)
+            if (_lookBackMgr.DayCount1Page != 0)//全部的时候不需要删除
             {
-                dataSeries.DataPoints.RemoveAt(0);
+                if (timeNewP.Subtract(timeFirstP).TotalDays > _lookBackMgr.DayCount1Page)
+                {
+                    dataSeries.DataPoints.RemoveAt(0);
+                }
             }
         }
 
@@ -625,10 +657,7 @@ namespace ValveControlSystem.UserControls
         {
             resetShowLastPageTimer();
             _lookBackMgr.Back();
-            while (_dataSeries1.DataPoints.Count > 0)
-            {
-                _dataSeries1.DataPoints.RemoveAt(0);
-            };
+            ClearCurve();
             if (_lookBackMgr.PagesTotal == _lookBackMgr.PageCurrent)
             {
                 loadSomeDayDataPoints((_lookBackMgr.PageCurrent - 1) * _lookBackMgr.DayCount1Page,
@@ -644,12 +673,16 @@ namespace ValveControlSystem.UserControls
 
         private void btnLookForwardFullScreen_Click(object sender, RoutedEventArgs e)
         {
-            resetShowLastPageTimer();
             _lookBackMgr.Forward();
-            while (_dataSeries1.DataPoints.Count > 0)
+            if (_lookBackMgr.PagesForward == 0)
             {
-                _dataSeries1.DataPoints.RemoveAt(0);
+                _showLastPageTimer.Stop();
             }
+            else
+            {
+                resetShowLastPageTimer();
+            }
+            ClearCurve();
             if (_lookBackMgr.PagesTotal == _lookBackMgr.PageCurrent)
             {
                 loadSomeDayDataPoints((_lookBackMgr.PageCurrent - 1) * _lookBackMgr.DayCount1Page,

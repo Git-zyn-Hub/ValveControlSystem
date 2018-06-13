@@ -25,12 +25,11 @@ namespace ValveControlSystem.Classes
         private List<DataPoint> _listCmdPresLastDay;
         private List<DataPoint> _listCmdTempLastDay;
 
-        private LightDataPoint[] _points;
         private int _pageCurrent = 0;
         private int _pagesBack = 0;
         private int _pagesForward = 0;
         private int _pagesTotal = 0;
-        private int _dayCount1Page = 0;
+        private int _dayCount1Page = -1;
         private CurveSetXmlHelper _helper = new CurveSetXmlHelper();
 
         public int PageCurrent
@@ -181,6 +180,10 @@ namespace ValveControlSystem.Classes
             _uniqueInstance = null;
         }
 
+        /// <summary>
+        /// 保存常规采集压力，同步更新其他的曲线列表List，此方法必须在下面4个方法之前执行。
+        /// </summary>
+        /// <param name="p"></param>
         public void SavePointsNorPres(DataPoint p)
         {
             int countDay = _listCurveNorPres.Count;
@@ -189,6 +192,15 @@ namespace ValveControlSystem.Classes
                 _listNorPresLastDay = new List<DataPoint>();
                 _listNorPresLastDay.Add(p);
                 _listCurveNorPres.Add(_listNorPresLastDay);
+
+                _listNorTempLastDay = new List<DataPoint>();
+                _listCurveNorTemp.Add(_listNorTempLastDay);
+
+                _listCmdPresLastDay = new List<DataPoint>();
+                _listCurveCmdPres.Add(_listCmdPresLastDay);
+
+                _listCmdTempLastDay = new List<DataPoint>();
+                _listCurveCmdTemp.Add(_listCmdTempLastDay);
             }
             else
             {
@@ -200,81 +212,94 @@ namespace ValveControlSystem.Classes
                     _listNorPresLastDay = null;
                     _listNorPresLastDay = new List<DataPoint>();
                     _listCurveNorPres.Add(_listNorPresLastDay);
+                    _listNorTempLastDay = null;
+                    _listNorTempLastDay = new List<DataPoint>();
+                    _listCurveNorTemp.Add(_listNorTempLastDay);
+                    _listCmdPresLastDay = null;
+                    _listCmdPresLastDay = new List<DataPoint>();
+                    _listCurveCmdPres.Add(_listCmdPresLastDay);
+                    _listCmdTempLastDay = null;
+                    _listCmdTempLastDay = new List<DataPoint>();
+                    _listCurveCmdTemp.Add(_listCmdTempLastDay);
                     countDay++;
                 }
                 _listCurveNorPres[countDay - 1].Add(p);
             }
         }
 
-
+        /// <summary>
+        /// 保存常规采集温度，必须在SavePointsNorPres执行之后执行。
+        /// </summary>
+        /// <param name="p"></param>
         public void SavePointsNorTemp(DataPoint p)
         {
             int countDay = _listCurveNorTemp.Count;
             if (countDay == 0)
             {
-                _listNorTempLastDay = new List<DataPoint>();
-                _listNorTempLastDay.Add(p);
-                _listCurveNorTemp.Add(_listNorTempLastDay);
             }
             else
             {
                 int countPointOfLastDay = _listCurveNorTemp[countDay - 1].Count;
                 DateTime timeNewPoint = (DateTime)p.XValue;
-                DateTime timeLastPoint = (DateTime)_listCurveNorTemp[countDay - 1][countPointOfLastDay - 1].XValue;
-                if (timeNewPoint.Day != timeLastPoint.Day)
+                if (countPointOfLastDay > 0)
                 {
-                    _listNorTempLastDay = null;
-                    _listNorTempLastDay = new List<DataPoint>();
-                    _listCurveNorTemp.Add(_listNorTempLastDay);
-                    countDay++;
+                    DateTime timeLastPoint = (DateTime)_listCurveNorTemp[countDay - 1][countPointOfLastDay - 1].XValue;
+                    if (timeNewPoint.Day != timeLastPoint.Day)
+                    {
+                        countDay++;
+                    }
                 }
                 _listCurveNorTemp[countDay - 1].Add(p);
             }
         }
+
+        /// <summary>
+        /// 保存指令采集压力，必须在SavePointsNorPres执行之后执行。
+        /// </summary>
+        /// <param name="p"></param>
         public void SavePointsCmdPres(DataPoint p)
         {
             int countDay = _listCurveCmdPres.Count;
             if (countDay == 0)
             {
-                _listCmdPresLastDay = new List<DataPoint>();
-                _listCmdPresLastDay.Add(p);
-                _listCurveCmdPres.Add(_listCmdPresLastDay);
             }
             else
             {
                 int countPointOfLastDay = _listCurveCmdPres[countDay - 1].Count;
                 DateTime timeNewPoint = (DateTime)p.XValue;
-                DateTime timeLastPoint = (DateTime)_listCurveCmdPres[countDay - 1][countPointOfLastDay - 1].XValue;
-                if (timeNewPoint.Day != timeLastPoint.Day)
+                if (countPointOfLastDay > 0)
                 {
-                    _listCmdPresLastDay = null;
-                    _listCmdPresLastDay = new List<DataPoint>();
-                    _listCurveCmdPres.Add(_listCmdPresLastDay);
-                    countDay++;
+                    DateTime timeLastPoint = (DateTime)_listCurveCmdPres[countDay - 1][countPointOfLastDay - 1].XValue;
+                    if (timeNewPoint.Day != timeLastPoint.Day)
+                    {
+                        countDay++;
+                    }
                 }
                 _listCurveCmdPres[countDay - 1].Add(p);
             }
         }
+
+        /// <summary>
+        /// 保存指令采集温度，必须在SavePointsNorPres执行之后执行。
+        /// </summary>
+        /// <param name="p"></param>
         public void SavePointsCmdTemp(DataPoint p)
         {
             int countDay = _listCurveCmdTemp.Count;
             if (countDay == 0)
             {
-                _listCmdTempLastDay = new List<DataPoint>();
-                _listCmdTempLastDay.Add(p);
-                _listCurveCmdTemp.Add(_listCmdTempLastDay);
             }
             else
             {
                 int countPointOfLastDay = _listCurveCmdTemp[countDay - 1].Count;
                 DateTime timeNewPoint = (DateTime)p.XValue;
-                DateTime timeLastPoint = (DateTime)_listCurveCmdTemp[countDay - 1][countPointOfLastDay - 1].XValue;
-                if (timeNewPoint.Day != timeLastPoint.Day)
+                if (countPointOfLastDay > 0)
                 {
-                    _listCmdTempLastDay = null;
-                    _listCmdTempLastDay = new List<DataPoint>();
-                    _listCurveCmdTemp.Add(_listCmdTempLastDay);
-                    countDay++;
+                    DateTime timeLastPoint = (DateTime)_listCurveCmdTemp[countDay - 1][countPointOfLastDay - 1].XValue;
+                    if (timeNewPoint.Day != timeLastPoint.Day)
+                    {
+                        countDay++;
+                    }
                 }
                 _listCurveCmdTemp[countDay - 1].Add(p);
             }
@@ -282,7 +307,17 @@ namespace ValveControlSystem.Classes
 
         public void InitialParameters()
         {
-            int count = _listCurveNorPres.Count;
+            DayCount1Page = -1;//数据刷新的先决条件，GetAndRefreshDayCount1Page有效执行的先决条件。
+            //int count = _listCurveNorPres.Count;
+            GetAndRefreshDayCount1Page();
+            PageCurrent = PagesTotal;
+            PagesBack = PageCurrent - 1;
+            PagesBack = PagesBack < 0 ? 0 : PagesBack;
+            PagesForward = 0;
+        }
+
+        public void RefreshParameters()
+        {
             GetAndRefreshDayCount1Page();
             PageCurrent = PagesTotal;
             PagesBack = PageCurrent - 1;
@@ -355,26 +390,39 @@ namespace ValveControlSystem.Classes
 
         public int GetAndRefreshDayCount1Page()
         {
-            CurveGeneralSetting cgs = _helper.GetCurveGeneralSetting();
-            string strCount = cgs.DayCount1Page;
-            if (strCount == "全部")
+            if (DayCount1Page == -1)
             {
-                DayCount1Page = 0;
+                CurveGeneralSetting cgs = _helper.GetCurveGeneralSetting();
+                string strCount = cgs.DayCount1Page;
+                if (strCount == "全部")
+                {
+                    DayCount1Page = 0;
+                    PagesTotal = 1;
+                }
+                else
+                {
+                    string strNum = strCount.Remove(strCount.IndexOf("天"));
+                    if (!int.TryParse(strNum, out _dayCount1Page))
+                    {
+                        throw new Exception("参数错误");
+                    }
+                    else
+                    {
+                        int dayTotal = _listCurveNorTemp.Count;
+                        int temp = dayTotal / DayCount1Page;
+                        PagesTotal = dayTotal % DayCount1Page == 0 ? temp : temp + 1;
+                    }
+                }
+            }
+            else if (DayCount1Page == 0)
+            {
                 PagesTotal = 1;
             }
             else
             {
-                string strNum = strCount.Remove(strCount.IndexOf("天"));
-                if (!int.TryParse(strNum, out _dayCount1Page))
-                {
-                    throw new Exception("参数错误");
-                }
-                else
-                {
-                    int dayTotal = _listCurveNorTemp.Count;
-                    int temp = dayTotal / DayCount1Page;
-                    PagesTotal = dayTotal % DayCount1Page == 0 ? temp : temp + 1;
-                }
+                int dayTotal = _listCurveNorTemp.Count;
+                int temp = dayTotal / DayCount1Page;
+                PagesTotal = dayTotal % DayCount1Page == 0 ? temp : temp + 1;
             }
             return DayCount1Page;
         }

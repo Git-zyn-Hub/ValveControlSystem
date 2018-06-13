@@ -472,6 +472,10 @@ namespace ValveControlSystem
                 }
                 this.rbRealtime.IsChecked = true;
                 refreshWellInfo();
+
+                LookBackManager lbm = LookBackManager.GetInstance();
+                lbm.InitialParameters();
+                _curveLookBack.ChangeXAxisInterval(lbm.DayCount1Page);
             }
             catch (Exception ee)
             {

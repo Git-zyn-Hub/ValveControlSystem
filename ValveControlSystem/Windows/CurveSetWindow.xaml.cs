@@ -369,6 +369,8 @@ namespace ValveControlSystem.Windows
                 LookBackManager lbm = LookBackManager.GetInstance();
                 lbm.InitialParameters();
                 _curveLookBack.setPageCount(lbm.PagesBack, lbm.PagesForward);
+                _curveLookBack.ChangeXAxisInterval(lbm.DayCount1Page);
+                _curveLookBack.ShowLastPageTimer_Tick(sender, e);
 
                 bool bool1 = txtPressureRange_LostFocus(sender, e);
                 bool bool2 = txtTemperatureRange_LostFocus(sender, e);
